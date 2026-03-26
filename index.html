@@ -296,14 +296,15 @@ tr:hover td{background:var(--gray-50)}
 .share-btn{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);color:rgba(255,255,255,.9);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;cursor:pointer;transition:all .15s;white-space:nowrap}
 @media(max-width:640px){
   /* Header */
-  .header{padding:0 10px;gap:6px;height:56px}
+  .header{padding:0 10px;gap:4px;min-height:56px;height:auto;flex-wrap:wrap;padding-top:6px;padding-bottom:6px}
   .header-logo-img{width:32px;height:32px}
   .header-title-rest{display:none}
   .header-title{font-size:16px}
   .header-sub{display:none}
   .header-badge{display:none}
-  #lotteryCountdown{display:none!important}
-  #draftCountdown{display:none!important}
+  #lotteryCountdown,#draftCountdown{padding:3px 8px;border-radius:6px}
+  #lotteryCountdown #lotDisplay,#draftCountdown #cdDisplay{font-size:14px}
+  #lotteryCountdown #lotLabel,#draftCountdown #cdLabel{font-size:7px}
   
   
   .file-menu-btn{padding:5px 9px;font-size:11px}
@@ -924,6 +925,22 @@ tr:hover td{background:var(--gray-50)}
   border-right:1px solid rgba(255,255,255,.08);
   transition:width .25s cubic-bezier(.4,0,.2,1);
 }
+
+/* ── SIMULATOR BOARD ROWS ──────────────────────────────────────────────── */
+#simPicksBoard [data-pick]:hover{background:#F8FAFC!important}
+
+/* ── SIM TEAM TABS ────────────────────────────────────────────────────────── */
+.sim-team-tab-btn{
+  display:inline-flex;align-items:center;padding:7px 14px;border-radius:9px;
+  border:1.5px solid var(--gray-200);background:white;color:var(--gray-600);
+  font-size:12px;font-weight:700;cursor:pointer;font-family:'Barlow Condensed',sans-serif;
+  transition:all .15s;gap:4px
+}
+.sim-team-tab-btn:hover{border-color:var(--blue);color:var(--blue)}
+.sim-team-tab-btn.active{
+  background:linear-gradient(135deg,#0A1628,#1a3060);color:white;
+  border-color:transparent;box-shadow:0 2px 10px rgba(10,22,40,.2)
+}
 </style>
 </head>
 <body>
@@ -1243,7 +1260,7 @@ tr:hover td{background:var(--gray-50)}
         <div id="simPriorSidebar" class="prior-picks-sidebar" style="border-radius:10px;align-self:stretch"></div>
         <!-- Pick board left -->
         <div style="flex:1;min-width:0">
-          <div id="simPicksBoard" style="background:white;border:1.5px solid var(--gray-200);border-radius:12px;overflow:hidden;max-height:620px;overflow-y:auto"></div>
+          <div id="simPicksBoard" style="background:white;border:1.5px solid var(--gray-200);border-radius:12px;overflow:hidden;max-height:680px;overflow-y:auto"></div>
         </div>
         <!-- Player pool right -->
         <div id="simPoolPanel" style="width:264px;flex-shrink:0">
@@ -1266,9 +1283,48 @@ tr:hover td{background:var(--gray-50)}
 
       <!-- Results (shown after last pick) -->
       <div id="simResults" style="display:none;margin-top:22px">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--navy);margin-bottom:14px">📋 Draft Complete — Your Team Grades</div>
+        <!-- Header row: title + action buttons -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--navy)">🏆 Draft Complete — Your Report Card</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <button onclick="simExportCard()" id="simShareBtn"
+              style="display:none;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:white;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:.4px;display:flex;align-items:center;gap:6px">
+              📸 Save as Image
+            </button>
+            <button onclick="simReset()"
+              style="background:white;border:1.5px solid var(--gray-200);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;color:var(--gray-600);font-family:'Barlow Condensed',sans-serif">
+              🔄 New Simulation
+            </button>
+          </div>
+        </div>
+
+        <!-- Team tab selector (shown when multiple teams) -->
+        <div id="simTeamTabs" style="display:none;margin-bottom:16px">
+          <div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">View team:</div>
+          <div id="simTeamTabBtns" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        </div>
+
+        <!-- Card content (one team shown at a time) -->
         <div id="simResultsContent"></div>
-        <button onclick="simReset()" style="margin-top:18px;background:var(--navy);color:white;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer">🔄 New Simulation</button>
+
+        <!-- Share modal overlay -->
+        <div id="simShareModal" style="display:none;position:fixed;inset:0;background:rgba(10,22,40,.7);z-index:9999;align-items:center;justify-content:center;padding:20px">
+          <div style="background:white;border-radius:16px;padding:24px;max-width:500px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.4)">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:var(--navy)">📤 Share Your Draft</div>
+              <button onclick="document.getElementById('simShareModal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray-400)">✕</button>
+            </div>
+            <div id="simSharePreview" style="margin-bottom:16px;border-radius:10px;overflow:hidden;border:1.5px solid var(--gray-200)"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button onclick="simDownloadCard()" style="flex:1;background:var(--navy);color:white;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Barlow Condensed',sans-serif">⬇ Download PNG</button>
+              <button onclick="simCopyCard()" id="simCopyBtn" style="flex:1;background:white;border:1.5px solid var(--gray-200);border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;color:var(--gray-600);font-family:'Barlow Condensed',sans-serif">📋 Copy Image</button>
+            </div>
+            <div id="simShareCaption" style="margin-top:12px">
+              <textarea id="simCaptionText" style="width:100%;border:1.5px solid var(--gray-200);border-radius:8px;padding:10px;font-size:12px;font-family:'DM Sans',sans-serif;resize:vertical;min-height:60px;outline:none" placeholder="Add a caption for your post..."></textarea>
+              <button onclick="simCopyCaption()" style="margin-top:6px;background:white;border:1.5px solid var(--gray-200);border-radius:7px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer;color:var(--gray-600)">📋 Copy Caption Text</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1280,7 +1336,7 @@ tr:hover td{background:var(--gray-50)}
   <div class="print-header"><div class="print-header-title">HoopsWill NBA Draft Board — Past Boards</div><div class="print-header-sub">Analytics Model · 2019–2027 · hoopswill.com</div></div>
   <div class="history-controls">
     <label style="font-size:13px;font-weight:600;color:var(--gray-600)">Draft Class:</label>
-    <select class="filter-select" id="histYear" onchange="renderHistory()">
+    <select class="filter-select" id="histYear" onchange="_histSortKey=null;_histSortDir='desc';renderHistory()">
       <option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option>
       <option value="2022">2022</option><option value="2021">2021</option><option value="2020">2020</option><option value="2019">2019</option>
     </select>
@@ -1571,11 +1627,11 @@ const SCHOOL_LOGOS = {
   "Ohio": 195, "Ohio State": 194, "Oklahoma": 201, "Oklahoma State": 197,
   "Ole Miss": 145, "Oral Roberts": 2473, "Oregon": 2483,
   "Penn State": 213, "Pepperdine": 2492, "Pittsburgh": 221,
-  "Princeton": 163, "Providence": 2507, "Purdue": 2506, "Rutgers": 164,
+  "Princeton": 163, "Providence": 2507, "Purdue": 2509, "Rutgers": 164,
   "SMU": 2567, "SJSU": 23,
   "San Diego St.": 21, "San Diego State": 21,
-  "San Francisco": 2539, "Santa Clara": 2550,
-  "Seton Hall": 225, "South Carolina": 2579, "South Florida": 58,
+  "San Francisco": 2539, "Santa Clara": 2541,
+  "Seton Hall": 2550, "South Carolina": 2579, "South Florida": 58,
   "Stanford": 24, "Syracuse": 183,
   "TCU": 2628, "Tennessee": 2633, "Tennesse": 2633,
   "Texas": 251, "Texas A&M": 245, "Texas Tech": 2641,
@@ -1794,7 +1850,33 @@ const ESPN_IDS = {
   'Amen Thompson':4433746,'Ausar Thompson':4433747,'Taylor Hendricks':4433748,
   'Jarace Walker':4433749,'Jordan Hawkins':4433750,'Kris Murray':4433751,
   'Bilal Coulibaly':4433752,'GG Jackson':4433753,'Gradey Dick':4433754,
-  'Keyonte George':4433755,'Dereck Lively II':4433756,'Nick Smith Jr.':4433757
+  'Keyonte George':4433755,'Dereck Lively II':4433756,'Nick Smith Jr.':4433757,
+  // 2026 class additions
+    'Alex Condon':5174657,
+    'Alex Karaban':4917149,
+    'Alijah Arenas':5144495,
+    'Andrej Stojakovic':5175007,
+    'Braden Smith':5105854,
+    'Braylon Mullins':5196916,
+    'Chris Cenac Jr.':5142621,
+    'Ebuka Okorie':5258459,
+    'Flory Bidunga':5044426,
+    'Hannes Steinbach':5281370,
+    'Henri Veesar':5105571,
+    'JT Toppin':5143604,
+    'Jaden Bradley':4432737,
+    'Joshua Jefferson':4870564,
+    'Kingston Flemings':5149077,
+    'Meleek Thomas':5041951,
+    'Milan Momcilovic':4848637,
+    'Motiejus Krivas':5174954,
+    'Reuben Chinyelu':5174971,
+    'Richie Saunders':5105462,
+    'Tarris Reed':5105809,
+    'Tarris Reed Jr.':5105809,
+    'Trevon Brazile':4698719,
+    'Tyler Tanner':5187600,
+    'Zuby Ejiofor':5106262
 };
 
 const NBA_TEAM_IDS = {
@@ -2804,10 +2886,26 @@ function openTrendModal(normName, year, displayName) {
 }
 
 // ── HISTORY ───────────────────────────────────────────────
+var _histSortKey = null;
+var _histSortDir = 'desc';
+function histSetSort(key) {
+  if (_histSortKey === key) { _histSortDir = _histSortDir==='desc'?'asc':'desc'; }
+  else { _histSortKey = key; _histSortDir = 'desc'; }
+  renderHistory();
+}
+
 function renderHistory() {
   const yr = document.getElementById('histYear').value;
   const search = (document.getElementById('histSearch').value||'').toLowerCase();
   let players = (DATA.historical[yr]||[]).filter(p => !search || (p.name||'').toLowerCase().includes(search));
+  if (_histSortKey) {
+    const asc = _histSortDir === 'asc';
+    players = players.slice().sort(function(a, b) {
+      const av = (a[_histSortKey]==null) ? (asc?Infinity:-Infinity) : a[_histSortKey];
+      const bv = (b[_histSortKey]==null) ? (asc?Infinity:-Infinity) : b[_histSortKey];
+      return asc ? av - bv : bv - av;
+    });
+  }
 
   if (!players.length) {
     document.getElementById('historyContent').innerHTML = '<div class="empty"><div class="empty-icon">📅</div><p>No data found</p></div>';
@@ -2815,8 +2913,16 @@ function renderHistory() {
   }
 
   const hasDraft = players.some(p => p.team || p.draft_no);
+  function sortTh(key, label) {
+    const active = _histSortKey===key;
+    const arrow = active?(_histSortDir==='desc'?' ↓':' ↑'):'';
+    const style = active?'cursor:pointer;color:#D4A830;background:rgba(212,168,48,.08)':'cursor:pointer;opacity:.75;white-space:nowrap';
+    return `<th style="${style}" onclick="histSetSort('${key}')">${label}${arrow}</th>`;
+  }
   let html = `<div class="table-wrap"><table><thead><tr>
-    <th>Rank</th><th>Player</th><th>Role</th><th>Metric</th><th>TS%</th><th>P+A/USG</th><th>Stl+Bl</th><th>A/TO</th><th>FTAr</th><th>3PAr</th>`;
+    ` + sortTh('rank','Rank') + `<th>Player</th><th>Role</th>` +
+    sortTh('metric','Metric') + sortTh('ts_pct','TS%') + sortTh('pa2_usg','P+A/USG') +
+    sortTh('stl_bl','Stl+Bl') + sortTh('ato','A/TO') + sortTh('ftar','FTAr') + sortTh('tpar','3PAr') + ``;
   if (hasDraft) html += '<th>Team</th><th>Draft #</th><th>Rank Δ</th>';
   html += '</tr></thead><tbody>';
 
@@ -5982,13 +6088,19 @@ var SIM_NEEDS = {
 var POS_MATCH = { G:['Guard'], F:['Forward'], C:['Center'] };
 
 // ── GRADE: compare metric rank vs pick number ─────────────────────────────────
-function simGrade(metricRank, pickNum) {
-  var diff = pickNum - metricRank;
-  if (diff <= -8)  return {label:'VALUE',  color:'#059669', bg:'#D1FAE5'};
-  if (diff <= -3)  return {label:'+VALUE', color:'#2563EB', bg:'#DBEAFE'};
-  if (diff <=  3)  return {label:'FAIR',   color:'#64748B', bg:'#F1F5F9'};
-  if (diff <=  8)  return {label:'REACH',  color:'#D97706', bg:'#FEF3C7'};
-  return                  {label:'BIG ⬆', color:'#DC2626', bg:'#FEE2E2'};
+function simGrade(availableRank, total, pickNum) {
+  var ratio = (total > 1) ? ((availableRank - 1) / (total - 1)) : 0;
+  if (ratio <= 0.04) return {label:'A+', color:'#059669', bg:'#D1FAE5', tier:'elite'};
+  if (ratio <= 0.10) return {label:'A',  color:'#059669', bg:'#D1FAE5', tier:'great'};
+  if (ratio <= 0.18) return {label:'A-', color:'#16A34A', bg:'#DCFCE7', tier:'great'};
+  if (ratio <= 0.28) return {label:'B+', color:'#2563EB', bg:'#DBEAFE', tier:'good'};
+  if (ratio <= 0.42) return {label:'B',  color:'#2563EB', bg:'#DBEAFE', tier:'good'};
+  if (ratio <= 0.56) return {label:'B-', color:'#3B82F6', bg:'#EFF6FF', tier:'good'};
+  if (ratio <= 0.68) return {label:'C+', color:'#D97706', bg:'#FEF3C7', tier:'ok'};
+  if (ratio <= 0.80) return {label:'C',  color:'#D97706', bg:'#FEF3C7', tier:'ok'};
+  if (ratio <= 0.90) return {label:'C-', color:'#EA580C', bg:'#FFEDD5', tier:'bad'};
+  if (ratio <= 0.97) return {label:'D',  color:'#DC2626', bg:'#FEE2E2', tier:'bad'};
+  return                    {label:'F',  color:'#991B1B', bg:'#FEE2E2', tier:'fail'};
 }
 
 function simMetRank(rank) {
@@ -6210,7 +6322,7 @@ function simDoCpuPick(slot) {
     if(am>0) return -1; if(bm>0) return 1; return a.rank-b.rank;
   });
   var mr    = ms2.findIndex(function(p){ return p.rank===chosen.rank; })+1;
-  var grade = simGrade(mr, simCurrentPick);
+  var grade = simGrade(mr, simAvailable.length + 1, simCurrentPick);
 
   simSelections[simCurrentPick] = {
     rank:chosen.rank, name:chosen.name, team:slot.team,
@@ -6230,7 +6342,7 @@ function simPick(rank) {
   if (!player) return;
 
   var mr    = simMetRank(rank);
-  var grade = simGrade(mr, simCurrentPick);
+  var grade = simGrade(mr, simAvailable.length + 1, simCurrentPick);
 
   simSelections[simCurrentPick] = {
     rank:rank, name:player.name, team:slot.team,
@@ -6246,28 +6358,26 @@ function simPick(rank) {
 
   simCurrentPick++;
   simRenderBoard();
-  // Refresh sidebar to include the pick just made
-  (function() {
-    var prevPick = simCurrentPick - 1;
-    var prevSel  = simSelections[prevPick];
-    if (prevSel) {
-      var teamPrior = Object.keys(simSelections)
-        .filter(function(pk){ return simSelections[pk].team===prevSel.team; })
-        .sort(function(a,b){return a-b;})
-        .map(function(pk){
-          var s=simSelections[pk];
-          // Look up full player stats
-          var full=(DATA.board2026||[]).find(function(x){return x.rank===s.rank;});
-          return {pick:parseInt(pk), name:s.name, pos:s.pos, rank:s.rank,
-            metric:s.metric, stats:full||null};
-        });
-      showPriorPicksSidebar('simPriorSidebar', prevSel.team, teamPrior, prevPick);
-      // Keep sidebar visible briefly before next pick processing
+  // Refresh sidebar — if this team had prior picks, show them then delay CPU
+  var _prevPick = simCurrentPick - 1;
+  var _prevSel  = simSelections[_prevPick];
+  if (_prevSel) {
+    var _teamPrior = Object.keys(simSelections)
+      .filter(function(pk){ return simSelections[pk].team===_prevSel.team; })
+      .sort(function(a,b){return a-b;})
+      .map(function(pk){
+        var s=simSelections[pk];
+        var full=(DATA.board2026||[]).find(function(x){return x.rank===s.rank;});
+        return {pick:parseInt(pk), name:s.name, pos:s.pos, rank:s.rank,
+          metric:s.metric, stats:full||null};
+      });
+    if (_teamPrior.length > 0) {
+      showPriorPicksSidebar('simPriorSidebar', _prevSel.team, _teamPrior, _prevPick);
       setTimeout(function(){ simProcessNext(); }, 600);
-      return;
+      return; // early exit — simProcessNext fires via setTimeout
     }
-  })();
-  simProcessNext();
+  }
+  simProcessNext(); // no prior picks — continue immediately
 }
 
 // ── POOL ──────────────────────────────────────────────────────────────────────
@@ -6357,46 +6467,77 @@ function simRenderBoard() {
   slots.forEach(function(slot) {
     var round=slot.pick<=30?1:2;
     if (round!==lastRound) {
-      h+='<div style="background:var(--gray-100);padding:5px 14px;font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:800;color:var(--gray-500);text-transform:uppercase;letter-spacing:.7px">Round '+round+'</div>';
+      h+='<div style="background:linear-gradient(90deg,#0A1628,#1a2f52);padding:6px 16px;font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:900;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1.2px">Round '+round+'</div>';
       lastRound=round;
     }
-    var sel    =simSelections[slot.pick];
-    var isCur  =slot.pick===simCurrentPick;
-    var isOwned=simUserTeams[slot.team];
-    var isLotto=slot.pick<=14;
-    var pickCol=isLotto?'#D97706':'#94A3B8';
-    var bgColor=isCur?(isOwned?'#FFFBEB':'#EFF6FF'):(isOwned&&sel?'#F0F9FF':'white');
-    var borderL=isOwned?'3px solid #D97706':(isCur?'3px solid #2563EB':'3px solid transparent');
-    var pickNum=slot.pick<10?'0'+slot.pick:''+slot.pick;
-    var logoHtml=(typeof mdcTeamLogoHtml==='function')?mdcTeamLogoHtml(slot.team,'22px'):slot.team;
-    var playerCell='';
+    var sel     = simSelections[slot.pick];
+    var isCur   = slot.pick===simCurrentPick;
+    var isOwned = simUserTeams[slot.team];
+    var isLotto = slot.pick<=14;
+    var pickCol = isLotto?'#D97706':'#94A3B8';
+    var bgColor = isCur?(isOwned?'#FFFBEB':'#EFF6FF'):(isOwned&&sel?'#F0F9FF':'white');
+    var borderL = isOwned?'3px solid #D97706':(isCur?'3px solid #2563EB':'3px solid transparent');
+    var pickNum = slot.pick<10?'0'+slot.pick:''+slot.pick;
+    var logoHtml= (typeof mdcTeamLogoHtml==='function')?mdcTeamLogoHtml(slot.team,'32px'):slot.team;
+
+    var playerInner='';
     if (sel) {
-      var base=sel.name&&sel.name.indexOf(' - ')>0?sel.name.slice(0,sel.name.indexOf(' - ')):(sel.name||'');
-      var posCol=sel.pos==='Guard'?'#2563EB':sel.pos==='Center'?'#0D9488':'#7C3AED';
-      var metTxt=sel.metric>0?'<span style="font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:900;color:var(--amber);margin-left:5px">'+Number(sel.metric).toFixed(1)+'</span>':'';
-      var grBadge=sel.grade?'<span style="font-size:9px;font-weight:700;color:'+sel.grade.color+';background:'+sel.grade.bg+';border-radius:4px;padding:1px 5px;margin-left:4px;white-space:nowrap">'+sel.grade.label+'</span>':'';
-      var cpuTag=sel.cpu?'<span style="font-size:8px;color:var(--gray-300);margin-left:3px">cpu</span>':'';
-      playerCell='<span style="width:7px;height:7px;border-radius:50%;background:'+posCol+';flex-shrink:0;margin-right:3px"></span>'
-        +'<span style="font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:800;color:var(--navy)">'+base+'</span>'
-        +metTxt+grBadge+cpuTag;
+      var base    = sel.name&&sel.name.indexOf(' - ')>0?sel.name.slice(0,sel.name.indexOf(' - ')):(sel.name||'');
+      var school  = sel.name&&sel.name.indexOf(' - ')>0?sel.name.slice(sel.name.indexOf(' - ')+3):'';
+      var posCol  = sel.pos==='Guard'?'#2563EB':sel.pos==='Center'?'#0D9488':'#7C3AED';
+      var metTxt  = sel.metric>0?'<span style="font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:900;color:var(--amber)">'+Number(sel.metric).toFixed(1)+'</span>':'';
+      var grBadge = sel.grade?'<span style="font-size:9px;font-weight:700;color:'+sel.grade.color+';background:'+sel.grade.bg+';border-radius:4px;padding:2px 6px;white-space:nowrap">'+sel.grade.label+'</span>':'';
+      // Look up physical data
+      var fullP   = (DATA.board2026||[]).find(function(p){return p.rank===sel.rank;});
+      var htIn    = fullP&&fullP.ht?fullP.ht:0;
+      var wtLb    = fullP&&fullP.wt?fullP.wt:0;
+      var htStr   = htIn?(Math.floor(htIn/12)+"'"+(htIn%12)+'"'):'';
+      var wtStr   = wtLb?wtLb+'lb':'';
+      var physStr = [htStr,wtStr].filter(Boolean).join(' / ');
+      var roleStr = fullP&&fullP.torvik_role?fullP.torvik_role:'';
+
+      playerInner=
+        // Row 1: pos dot + name + metric + grade
+        '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
+          +'<span style="width:8px;height:8px;border-radius:50%;background:'+posCol+';flex-shrink:0"></span>'
+          +'<span style="font-family:Barlow Condensed,sans-serif;font-size:16px;font-weight:900;color:var(--navy)">'+base+'</span>'
+          +(sel.cpu?'<span style="font-size:9px;color:var(--gray-300)">cpu</span>':'<span style="font-size:9px;color:#D97706;font-weight:700">★ you</span>')
+          +'<span style="margin-left:auto;display:flex;align-items:center;gap:5px">'+metTxt+grBadge+'</span>'
+        +'</div>'
+        // Row 2: school + role + ht/wt
+        +'<div style="display:flex;align-items:center;gap:8px;margin-top:2px;flex-wrap:wrap">'
+          +(school?'<span style="font-size:10px;color:var(--gray-500);font-weight:600">'+school+'</span>':'')
+          +(sel.pos?'<span style="font-size:9px;font-weight:700;color:'+posCol+';background:rgba(37,99,235,.06);border:1px solid '+posCol+';border-radius:3px;padding:1px 5px">'+sel.pos+'</span>':'')
+          +(roleStr?'<span style="font-size:9px;color:var(--gray-400)">'+roleStr+'</span>':'')
+          +(physStr?'<span style="font-size:9px;color:var(--gray-400);margin-left:auto">'+physStr+'</span>':'')
+        +'</div>';
     } else if (isCur&&simRunning) {
-      var isUser=simUserTeams[slot.team];
-      playerCell='<span style="font-size:11px;color:'+(isUser?'var(--amber)':'var(--blue)')+';font-style:italic">'+(isUser?'← your pick':'⚙ CPU picking...')+'</span>';
+      var isUser2=simUserTeams[slot.team];
+      playerInner='<span style="font-size:12px;color:'+(isUser2?'#D97706':'var(--blue)')+';font-weight:600;font-style:italic">'+(isUser2?'← Your pick':'⚙ CPU selecting...')+'</span>';
     } else {
-      playerCell='<span style="font-size:11px;color:var(--gray-200)">—</span>';
+      playerInner='<span style="font-size:11px;color:var(--gray-200)">—</span>';
     }
-    h+='<div style="display:flex;align-items:center;gap:7px;padding:5px 12px;border-bottom:1px solid #F8FAFC;background:'+bgColor+';border-left:'+borderL+'">'
-      +'<span style="font-family:Barlow Condensed,sans-serif;font-size:12px;font-weight:900;color:'+pickCol+';width:22px;flex-shrink:0">'+pickNum+'</span>'
-      +'<span style="flex-shrink:0">'+logoHtml+'</span>'
-      +'<span style="font-size:10px;color:var(--gray-400);width:26px;flex-shrink:0">'+slot.team+'</span>'
-      +'<span style="flex:1;display:flex;align-items:center;min-width:0;flex-wrap:wrap;gap:2px">'+playerCell+'</span>'
+
+    h+='<div data-pick="'+slot.pick+'" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #F8FAFC;background:'+bgColor+';border-left:'+borderL+';transition:background .15s">'
+      +'<span style="font-family:Barlow Condensed,sans-serif;font-size:18px;font-weight:900;color:'+pickCol+';width:28px;flex-shrink:0;text-align:right;opacity:'+(isLotto?.85:.45)+'">'+(slot.pick<10?'0'+slot.pick:''+slot.pick)+'</span>'
+      +'<span style="flex-shrink:0;display:flex;align-items:center">'+logoHtml+'</span>'
+      +'<span style="font-family:Barlow Condensed,sans-serif;font-size:10px;color:var(--gray-400);width:28px;flex-shrink:0;font-weight:700">'+slot.team+'</span>'
+      +'<div style="flex:1;min-width:0">'+playerInner+'</div>'
       +'</div>';
   });
   el.innerHTML=h;
-  // Scroll active row into view
+  // Scroll: position active row ~25% from top of the container
   if (simFollowPicks) {
-    var active=el.querySelector('[style*="3px solid #2563EB"],[style*="3px solid #D97706"]');
-    if (active) active.scrollIntoView({behavior:'smooth',block:'nearest'});
+    var rows = el.querySelectorAll('[data-pick]');
+    var activeIdx = -1;
+    for (var ri=0; ri<rows.length; ri++) {
+      if (parseInt(rows[ri].getAttribute('data-pick'))===simCurrentPick) { activeIdx=ri; break; }
+    }
+    if (activeIdx >= 0 && rows.length > 0) {
+      var rowH  = el.scrollHeight / Math.max(rows.length, 1);
+      var target = Math.max(0, activeIdx * rowH - el.clientHeight * 0.25);
+      el.scrollTop = target;
+    }
   }
 }
 
@@ -6455,58 +6596,181 @@ function simShowResults() {
   var rc =document.getElementById('simResultsContent');
   if (!res||!rc) return;
   var ownedTeams=Object.keys(simUserTeams).filter(function(t){return simUserTeams[t];});
+
+  var STAT_DEF=[
+    {k:'metric',  l:'Metric',  fmt:function(v){return v>0?v.toFixed(1):'—';}},
+    {k:'ts_pct',  l:'TS%',     fmt:function(v){return v>0?(v*100).toFixed(1)+'%':'—';}},
+    {k:'pa2_usg', l:'P+A/USG', fmt:function(v){return v>0?Math.round(v):'—';}},
+    {k:'stl_bl',  l:'Stl+Bl',  fmt:function(v){return v>0?v.toFixed(2):'—';}},
+    {k:'ato',     l:'A/TO',    fmt:function(v){return v>0?v.toFixed(2):'—';}},
+    {k:'ftar',    l:'FTAr',    fmt:function(v){return v>0?v.toFixed(3):'—';}},
+  ];
+
+  function gradeColor(label) {
+    if (label==='A+'||label==='A') return {bg:'#059669',fg:'white'};
+    if (label==='A-'||label==='B+') return {bg:'#16A34A',fg:'white'};
+    if (label==='B'||label==='B-') return {bg:'#2563EB',fg:'white'};
+    if (label==='C+'||label==='C') return {bg:'#D97706',fg:'white'};
+    if (label==='C-'||label==='D') return {bg:'#DC2626',fg:'white'};
+    if (label==='F') return {bg:'#7F1D1D',fg:'white'};
+    return {bg:'#94A3B8',fg:'white'};
+  }
+
+  function buildTeamCard(team, picks) {
+    var sName=((DRAFT_ORDER_2026||[]).find(function(s){return s.team===team;})||{}).name||team;
+    var teamId=NBA_TEAM_IDS[team];
+    var logoUrl=teamId?'https://a.espncdn.com/i/teamlogos/nba/500/'+teamId+'.png':'';
+    var gradePoints={'A+':4.3,'A':4.0,'A-':3.7,'B+':3.3,'B':3.0,'B-':2.7,'C+':2.3,'C':2.0,'C-':1.7,'D':1.0,'F':0};
+    var total=0,cnt=0;
+    picks.forEach(function(pk){var g=(simSelections[pk].grade||{}).label||'B';total+=(gradePoints[g]||3.0);cnt++;});
+    var gpa=cnt?total/cnt:3.0;
+    var ol=gpa>=4.0?'A+':gpa>=3.7?'A':gpa>=3.3?'A-':gpa>=3.0?'B+':gpa>=2.7?'B':gpa>=2.3?'B-':gpa>=2.0?'C+':gpa>=1.7?'C':gpa>=1.3?'C-':gpa>=1.0?'D':'F';
+    var gc=gradeColor(ol);
+    var h='';
+    h+='<div style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 32px rgba(10,22,40,.12);margin-bottom:24px">';
+    h+='<div style="background:linear-gradient(135deg,#0A1628 0%,#1a3060 55%,#0f2040 100%);padding:24px 28px;position:relative;overflow:hidden">';
+    h+='<div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#D4A830,#F0C94A,#D4A830,transparent)"></div>';
+    h+='<div style="position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;border:1.5px solid rgba(212,168,48,.08)"></div>';
+    h+='<div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;border:1.5px solid rgba(212,168,48,.12)"></div>';
+    h+='<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;position:relative;z-index:1">';
+    h+='<div style="display:flex;align-items:center;gap:16px">';
+    if(logoUrl) h+='<img src="'+logoUrl+'" style="width:56px;height:56px;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,.3))" onerror="this.style.display=\'none\'">';
+    h+='<div>';
+    h+='<div style="font-size:10px;font-weight:700;color:rgba(212,168,48,.7);text-transform:uppercase;letter-spacing:1.2px;font-family:Barlow Condensed,sans-serif;margin-bottom:3px">2026 NBA Draft Recap</div>';
+    h+='<div style="font-family:Barlow Condensed,sans-serif;font-size:28px;font-weight:900;color:white;line-height:1;letter-spacing:.3px">'+sName+'</div>';
+    h+='<div style="font-size:12px;color:rgba(255,255,255,.45);margin-top:4px">'+picks.length+' pick'+(picks.length!==1?'s':'')+' \xb7 HoopsWill Draft Simulator</div>';
+    h+='</div></div>';
+    h+='<div style="display:flex;flex-direction:column;align-items:center;background:'+gc.bg+';border-radius:12px;padding:12px 20px;flex-shrink:0">';
+    h+='<div style="font-family:Barlow Condensed,sans-serif;font-size:42px;font-weight:900;color:'+gc.fg+';line-height:1">'+ol+'</div>';
+    h+='<div style="font-size:9px;font-weight:700;color:'+gc.fg+';opacity:.8;text-transform:uppercase;letter-spacing:.6px;margin-top:2px">Draft Grade</div>';
+    h+='</div>';
+    h+='</div></div>';
+    h+='<div style="padding:20px 24px">';
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">';
+    picks.forEach(function(pk){
+      var s=simSelections[pk];
+      var base=s.name&&s.name.indexOf(' - ')>0?s.name.slice(0,s.name.indexOf(' - ')):(s.name||'');
+      var school=s.name&&s.name.indexOf(' - ')>0?s.name.slice(s.name.indexOf(' - ')+3):'';
+      var g=s.grade||{label:'B',color:'#2563EB',bg:'#DBEAFE'};
+      var gc2=gradeColor(g.label);
+      var posCol=s.pos==='Guard'?'#2563EB':s.pos==='Center'?'#0D9488':'#7C3AED';
+      var posBg=s.pos==='Guard'?'#EFF6FF':s.pos==='Center'?'#F0FDFA':'#F5F3FF';
+      var fullP=(DATA.board2026||[]).find(function(p){return p.rank===s.rank;});
+      var htIn=fullP&&fullP.ht?fullP.ht:0;
+      var wtLb=fullP&&fullP.wt?fullP.wt:0;
+      var htStr=htIn?Math.floor(htIn/12)+"'"+(htIn%12)+'"':'';
+      var wtStr=wtLb?wtLb+'lb':'';
+      var roleStr=fullP&&fullP.torvik_role?fullP.torvik_role:'';
+      var clsStr=fullP&&fullP.cls?fullP.cls:'';
+      var isLotto=parseInt(pk)<=14;
+      var pickBg=isLotto?'linear-gradient(90deg,#78350F,#92400E)':'linear-gradient(90deg,#1e3a6e,#1a2f52)';
+      h+='<div style="background:#FAFBFC;border:1.5px solid '+(isLotto?'rgba(212,168,48,.3)':'var(--gray-200)')+';border-radius:12px;overflow:hidden">';
+      h+='<div style="background:'+pickBg+';padding:8px 14px;display:flex;align-items:center;justify-content:space-between">';
+      h+='<div style="display:flex;align-items:center;gap:8px">';
+      h+='<span style="font-family:Barlow Condensed,sans-serif;font-size:20px;font-weight:900;color:'+(isLotto?'#FCD34D':'rgba(255,255,255,.55)')+'">'+(parseInt(pk)<10?'0'+pk:pk)+'</span>';
+      h+='<div>';
+      h+='<div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.6px;font-weight:700">'+(isLotto?'Lottery Pick':'2nd Round')+'</div>';
+      h+=s.cpu?'<div style="font-size:9px;color:rgba(255,255,255,.35)">CPU selection</div>':'<div style="font-size:9px;color:#FCD34D;font-weight:700">\u2605 Your pick</div>';
+      h+='</div></div>';
+      h+='<div style="background:'+gc2.bg+';border-radius:8px;padding:6px 12px;text-align:center">';
+      h+='<div style="font-family:Barlow Condensed,sans-serif;font-size:22px;font-weight:900;color:'+gc2.fg+';line-height:1">'+g.label+'</div>';
+      h+='</div></div>';
+      h+='<div style="padding:12px 14px">';
+      h+='<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">';
+      h+='<span style="width:10px;height:10px;border-radius:50%;background:'+posCol+';flex-shrink:0;margin-top:4px"></span>';
+      h+='<div style="min-width:0">';
+      h+='<div style="font-family:Barlow Condensed,sans-serif;font-size:22px;font-weight:900;color:#0A1628;line-height:1">'+base+'</div>';
+      if(school) h+='<div style="font-size:11px;color:#64748B;font-weight:600;margin-top:2px">'+school+(clsStr?' \xb7 '+clsStr:'')+'</div>';
+      h+='</div></div>';
+      h+='<div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:10px">';
+      if(s.pos) h+='<span style="background:'+posBg+';color:'+posCol+';border:1px solid '+posCol+';border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;font-family:Barlow Condensed,sans-serif">'+s.pos+'</span>';
+      if(roleStr) h+='<span style="background:#F8FAFC;color:#475569;border:1px solid #E2E8F0;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:600">'+roleStr+'</span>';
+      if(htStr||wtStr) h+='<span style="background:#F8FAFC;color:#64748B;border:1px solid #E2E8F0;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:600;margin-left:auto">'+(htStr&&wtStr?htStr+' / '+wtStr:htStr||wtStr)+'</span>';
+      h+='</div>';
+      if(fullP){
+        h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px">';
+        STAT_DEF.forEach(function(sd){
+          var val=fullP[sd.k];
+          var disp=(val&&val>0)?sd.fmt(val):'\u2014';
+          var gs=(val&&val>0&&typeof gradStyle==='function')?gradStyle(val,sd.k):'';
+          var bgM=gs.match(/background:hsl\((\d+),(\d+)%,(\d+)%\)/);
+          var fgM=gs.match(/color:hsl\((\d+),(\d+)%,(\d+)%\)/);
+          var cellStyle=bgM&&fgM?'background:hsl('+bgM[1]+','+bgM[2]+'%,'+bgM[3]+'%);color:hsl('+fgM[1]+','+fgM[2]+'%,'+fgM[3]+'%)':'background:#F1F5F9;color:#64748B';
+          h+='<div style="border-radius:5px;padding:4px 6px;'+cellStyle+'">';
+          h+='<div style="font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:900;line-height:1">'+disp+'</div>';
+          h+='<div style="font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;opacity:.7;margin-top:1px">'+sd.l+'</div>';
+          h+='</div>';
+        });
+        h+='</div>';
+      }
+      h+='</div></div>';
+    });
+    h+='</div></div></div>';
+    return h;
+  }
+
   var h='';
-  if (!ownedTeams.length) {
-    // Full draft table
-    h='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">'
-      +'<thead><tr style="background:var(--navy)">'
-      +['Pick','Team','Player','Metric','Grade'].map(function(c){return'<th style="padding:7px 10px;color:rgba(255,255,255,.7);font-family:Barlow Condensed,sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;text-align:left">'+c+'</th>';}).join('')
-      +'</tr></thead><tbody>';
+  if(!ownedTeams.length){
+    h+='<div style="background:white;border-radius:14px;overflow:hidden;border:1.5px solid var(--gray-200);box-shadow:0 2px 16px rgba(10,22,40,.07)">';
+    h+='<div style="background:linear-gradient(90deg,#0A1628,#1a3060);padding:14px 20px"><div style="font-family:Barlow Condensed,sans-serif;font-size:18px;font-weight:900;color:white">\ud83d\udccb Full Draft Results</div><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px">No teams selected \u2014 showing all 60 picks</div></div>';
+    h+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">';
+    h+='<thead><tr style="background:#F8FAFC"><th style="padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.6px">Pick</th><th style="padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.6px">Team</th><th style="padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.6px">Player</th><th style="padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.6px">Metric</th><th style="padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.6px">Grade</th></tr></thead><tbody>';
     Object.keys(simSelections).sort(function(a,b){return a-b;}).forEach(function(pk,i){
       var s=simSelections[pk];
       var base=s.name&&s.name.indexOf(' - ')>0?s.name.slice(0,s.name.indexOf(' - ')):(s.name||'');
-      var met=s.metric>0?Number(s.metric).toFixed(1):'—';
-      var g=s.grade||{label:'—',color:'#94A3B8',bg:'#F1F5F9'};
-      h+='<tr style="'+(i%2?'background:#F8FAFC':'')+'">'
-        +'<td style="padding:6px 10px;font-weight:700;color:var(--gray-500)">#'+pk+'</td>'
-        +'<td style="padding:6px 10px;font-weight:700">'+s.team+'</td>'
-        +'<td style="padding:6px 10px;font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:800;color:var(--navy)">'+base+'</td>'
-        +'<td style="padding:6px 10px;font-family:Barlow Condensed,sans-serif;font-weight:900;color:var(--amber)">'+met+'</td>'
-        +'<td style="padding:6px 10px"><span style="font-size:10px;font-weight:700;color:'+g.color+';background:'+g.bg+';border-radius:4px;padding:2px 7px">'+g.label+'</span></td>'
+      var met=s.metric>0?Number(s.metric).toFixed(1):'\u2014';
+      var g=s.grade||{label:'B'};
+      var gc3=gradeColor(g.label);
+      h+='<tr style="border-bottom:1px solid #F1F5F9;'+(i%2===1?'background:#FAFBFC':'background:white')+'">'
+        +'<td style="padding:8px 12px;font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:900;color:#94A3B8">#'+pk+'</td>'
+        +'<td style="padding:8px 12px;font-weight:700;color:#0A1628;font-size:12px">'+s.team+'</td>'
+        +'<td style="padding:8px 12px;font-family:Barlow Condensed,sans-serif;font-size:15px;font-weight:800;color:#0A1628">'+base+'</td>'
+        +'<td style="padding:8px 12px;font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:900;color:#D4A830">'+met+'</td>'
+        +'<td style="padding:8px 12px"><span style="font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:900;color:'+gc3.fg+';background:'+gc3.bg+';border-radius:5px;padding:3px 8px">'+g.label+'</span></td>'
         +'</tr>';
     });
-    h+='</tbody></table></div>';
+    h+='</tbody></table></div></div>';
   } else {
     ownedTeams.forEach(function(team){
       var picks=Object.keys(simSelections).filter(function(pk){return simSelections[pk].team===team;}).sort(function(a,b){return a-b;});
-      if (!picks.length) return;
-      var sName=((DRAFT_ORDER_2026||[]).find(function(s){return s.team===team;})||{}).name||team;
-      h+='<div style="background:white;border:1.5px solid var(--gray-200);border-radius:12px;padding:16px 20px;margin-bottom:14px">'
-        +'<div style="font-family:Barlow Condensed,sans-serif;font-size:16px;font-weight:900;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:8px">'
-        +(typeof mdcTeamLogoHtml==='function'?mdcTeamLogoHtml(team,'20px'):'')
-        +'<span>'+sName+'</span></div>'
-        +'<div style="display:flex;flex-wrap:wrap;gap:8px">';
-      picks.forEach(function(pk){
-        var s=simSelections[pk];
-        var base=s.name&&s.name.indexOf(' - ')>0?s.name.slice(0,s.name.indexOf(' - ')):(s.name||'');
-        var met=s.metric>0?Number(s.metric).toFixed(1):'—';
-        var g=s.grade||{label:'—',color:'#94A3B8',bg:'#F1F5F9'};
-        var posCol=s.pos==='Guard'?'#2563EB':s.pos==='Center'?'#0D9488':'#7C3AED';
-        h+='<div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:10px 14px;min-width:140px">'
-          +'<div style="font-size:10px;font-weight:700;color:var(--gray-400);margin-bottom:3px">PICK #'+pk+'</div>'
-          +'<div style="display:flex;align-items:center;gap:5px;margin-bottom:6px">'
-          +'<span style="width:7px;height:7px;border-radius:50%;background:'+posCol+'"></span>'
-          +'<span style="font-family:Barlow Condensed,sans-serif;font-size:15px;font-weight:900;color:var(--navy)">'+base+'</span></div>'
-          +'<div style="display:flex;justify-content:space-between;align-items:center">'
-          +'<span style="font-size:11px;color:var(--gray-500)">Metric: <strong style="color:var(--amber)">'+met+'</strong></span>'
-          +'<span style="font-size:10px;font-weight:700;color:'+g.color+';background:'+g.bg+';border-radius:4px;padding:2px 7px">'+g.label+'</span>'
-          +'</div></div>';
-      });
-      h+='</div></div>';
+      if(!picks.length) return;
+      h+=buildTeamCard(team,picks);
     });
   }
   rc.innerHTML=h;
   res.style.display='';
+
+  // Build team tabs if multiple teams
+  var tabsEl  = document.getElementById('simTeamTabs');
+  var tabBtns = document.getElementById('simTeamTabBtns');
+  var shareBtn= document.getElementById('simShareBtn');
+  if (tabsEl && tabBtns) {
+    if (ownedTeams.length > 1) {
+      tabsEl.style.display = 'block';
+      tabBtns.innerHTML = '';
+      ownedTeams.forEach(function(team, idx) {
+        var slot = (DRAFT_ORDER_2026||[]).find(function(s){ return s.team===team; });
+        var teamName = slot ? slot.name : team;
+        var btn = document.createElement('button');
+        btn.className = 'sim-team-tab-btn' + (idx===0?' active':'');
+        btn.setAttribute('data-team', team);
+        btn.innerHTML = (typeof mdcTeamLogoHtml==='function' ? mdcTeamLogoHtml(team,'18px') : '') + '<span style="margin-left:5px">' + teamName + '</span>';
+        btn.onclick = function() {
+          document.querySelectorAll('.sim-team-tab-btn').forEach(function(b){ b.classList.remove('active'); });
+          btn.classList.add('active');
+          simShowTeamCard(team);
+        };
+        tabBtns.appendChild(btn);
+      });
+    } else {
+      tabsEl.style.display = 'none';
+    }
+  }
+  // Show share button only when teams are selected
+  if (shareBtn) shareBtn.style.display = ownedTeams.length ? 'flex' : 'none';
+  // Populate caption text
+  simUpdateCaption(ownedTeams);
+
   setTimeout(function(){res.scrollIntoView({behavior:'smooth',block:'start'});},100);
 }
 
@@ -6715,9 +6979,10 @@ function teamPriorPicksSidebar(teamCode, picksAlready, pickNum) {
   var STAT_COLS = [
     {k:'metric',  l:'Metric', fmt:function(v){return v>0?v.toFixed(1):'—';}},
     {k:'ts_pct',  l:'TS%',    fmt:function(v){return v>0?(v*100).toFixed(1)+'%':'—';}},
+    {k:'pa2_usg', l:'P+A/USG',fmt:function(v){return v>0?Math.round(v):'—';}},
     {k:'stl_bl',  l:'Stl+Bl', fmt:function(v){return v>0?v.toFixed(2):'—';}},
     {k:'ato',     l:'A/TO',   fmt:function(v){return v>0?v.toFixed(2):'—';}},
-    {k:'pa2_usg', l:'P+A/USG',fmt:function(v){return v>0?Math.round(v):'—';}},
+    {k:'ftar',    l:'FTAr',   fmt:function(v){return v>0?v.toFixed(3):'—';}},
   ];
 
   var h = '<div style="height:100%;display:flex;flex-direction:column">';
@@ -6760,7 +7025,7 @@ function teamPriorPicksSidebar(teamCode, picksAlready, pickNum) {
     // Stats grid with color gradients
     var st = p.stats;
     if (st) {
-      h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:7px">';
+      h += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:7px">';
       STAT_COLS.forEach(function(sc) {
         var val = st[sc.k];
         var disp = (val && val > 0) ? sc.fmt(val) : '—';
@@ -6798,7 +7063,7 @@ function showPriorPicksSidebar(panelId, teamCode, picksAlready, pickNum) {
     return;
   }
   panel.innerHTML = teamPriorPicksSidebar(teamCode, picksAlready, pickNum);
-  panel.style.width='160px';
+  panel.style.width='220px';
   panel.style.overflow='visible';
 }
 
@@ -6806,6 +7071,143 @@ function hidePriorPicksSidebar(panelId) {
   var panel = document.getElementById(panelId);
   if (!panel) return;
   panel.style.width='0'; panel.style.overflow='hidden'; panel.innerHTML='';
+}
+
+
+// ── SIM SHARE / EXPORT ────────────────────────────────────────────────────────
+
+// State for multi-team view
+var _simActiveShareTeam = null;
+var _simShareCanvas     = null;
+
+function simShowTeamCard(team) {
+  _simActiveShareTeam = team;
+  var rc = document.getElementById('simResultsContent');
+  if (!rc) return;
+  var picks = Object.keys(simSelections)
+    .filter(function(pk){ return simSelections[pk].team===team; })
+    .sort(function(a,b){ return a-b; });
+  if (!picks.length) return;
+  // Re-use buildTeamCard from simShowResults scope
+  rc.innerHTML = buildTeamCard(team, picks);
+  simUpdateCaption([team]);
+}
+
+function simUpdateCaption(teams) {
+  var cap = document.getElementById('simCaptionText');
+  if (!cap) return;
+  var lines = ['🏀 2026 NBA Draft Simulator — HoopsWill Draft Board'];
+  teams.forEach(function(team) {
+    var slot = (DRAFT_ORDER_2026||[]).find(function(s){ return s.team===team; });
+    var name = slot ? slot.name : team;
+    var picks = Object.keys(simSelections)
+      .filter(function(pk){ return simSelections[pk].team===team; })
+      .sort(function(a,b){ return a-b; });
+    var gradePoints={'A+':4.3,'A':4.0,'A-':3.7,'B+':3.3,'B':3.0,'B-':2.7,'C+':2.3,'C':2.0,'C-':1.7,'D':1.0,'F':0};
+    var tot=0, cnt=0;
+    picks.forEach(function(pk){ var g=(simSelections[pk].grade||{}).label||'B'; tot+=(gradePoints[g]||3.0); cnt++; });
+    var gpa = cnt ? tot/cnt : 3.0;
+    var ol = gpa>=4.0?'A+':gpa>=3.7?'A':gpa>=3.3?'A-':gpa>=3.0?'B+':gpa>=2.7?'B':gpa>=2.3?'B-':gpa>=2.0?'C+':gpa>=1.7?'C':gpa>=1.3?'C-':gpa>=1.0?'D':'F';
+    var pickLines = picks.map(function(pk){
+      var s = simSelections[pk];
+      var base = s.name&&s.name.indexOf(' - ')>0 ? s.name.slice(0,s.name.indexOf(' - ')) : (s.name||'');
+      var g = (s.grade||{}).label||'B';
+      return 'Pick #'+pk+': '+base+' ['+g+']';
+    });
+    lines.push('\n'+name+' — Draft Grade: '+ol);
+    pickLines.forEach(function(l){ lines.push(l); });
+  });
+  lines.push('\nhoopswill.com');
+  cap.value = lines.join('\n');
+}
+
+function simExportCard() {
+  var cardEl = document.getElementById('simResultsContent');
+  if (!cardEl) return;
+  var modal = document.getElementById('simShareModal');
+  var preview = document.getElementById('simSharePreview');
+  if (!modal || !preview) return;
+  modal.style.display = 'flex';
+  preview.innerHTML = '<div style="padding:20px;text-align:center;color:var(--gray-400);font-size:13px">⏳ Generating preview...</div>';
+
+  function doCapture() {
+    // Find the first team card div inside the content
+    var target = cardEl.querySelector('[style*="border-radius:16px"]') || cardEl;
+    html2canvas(target, {
+      scale: 2.5,
+      useCORS: true,
+      backgroundColor: '#F8FAFC',
+      logging: false,
+      windowWidth: 900
+    }).then(function(canvas) {
+      _simShareCanvas = canvas;
+      // Shrink preview
+      var maxW = Math.min(460, window.innerWidth - 48);
+      var ratio = maxW / canvas.width;
+      preview.innerHTML = '';
+      canvas.style.width  = Math.round(canvas.width  * ratio) + 'px';
+      canvas.style.height = Math.round(canvas.height * ratio) + 'px';
+      canvas.style.display = 'block';
+      canvas.style.borderRadius = '10px';
+      preview.appendChild(canvas);
+    }).catch(function(err){
+      preview.innerHTML = '<div style="padding:20px;text-align:center;color:#DC2626;font-size:12px">Error generating preview: ' + err.message + '</div>';
+    });
+  }
+
+  if (typeof html2canvas === 'undefined') {
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    s.onload = doCapture;
+    document.head.appendChild(s);
+  } else {
+    doCapture();
+  }
+}
+
+function simDownloadCard() {
+  if (!_simShareCanvas) return;
+  _simShareCanvas.toBlob(function(blob) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    // Use active team name for filename
+    var teams = Object.keys(simUserTeams).filter(function(t){ return simUserTeams[t]; });
+    var activeTeam = _simActiveShareTeam || (teams.length ? teams[0] : 'Draft');
+    var slot = (DRAFT_ORDER_2026||[]).find(function(s){ return s.team===activeTeam; });
+    var fname = (slot ? slot.name : activeTeam).replace(/\s+/g,'_');
+    a.download = 'HoopsWill_2026_Draft_' + fname + '.png';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+function simCopyCard() {
+  if (!_simShareCanvas) return;
+  var btn = document.getElementById('simCopyBtn');
+  _simShareCanvas.toBlob(function(blob) {
+    try {
+      var item = new ClipboardItem({'image/png': blob});
+      navigator.clipboard.write([item]).then(function() {
+        if (btn) { btn.textContent = '✓ Copied!'; setTimeout(function(){ btn.textContent = '📋 Copy Image'; }, 2000); }
+      }).catch(function() {
+        if (btn) { btn.textContent = '⚠ Copy failed — use Download'; setTimeout(function(){ btn.textContent = '📋 Copy Image'; }, 2500); }
+      });
+    } catch(e) {
+      if (btn) { btn.textContent = '⚠ Not supported — use Download'; setTimeout(function(){ btn.textContent = '📋 Copy Image'; }, 2500); }
+    }
+  });
+}
+
+function simCopyCaption() {
+  var cap = document.getElementById('simCaptionText');
+  if (!cap) return;
+  cap.select();
+  try {
+    document.execCommand('copy');
+    var btn = cap.nextElementSibling;
+    if (btn) { btn.textContent = '✓ Copied!'; setTimeout(function(){ btn.textContent = '📋 Copy Caption Text'; }, 1800); }
+  } catch(e) {}
 }
 
 // Load html2canvas dynamically when tweet card opens
