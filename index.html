@@ -75,17 +75,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 .player-card{background:white;border:1.5px solid var(--gray-200);border-radius:12px;padding:0;cursor:pointer;transition:all .18s;overflow:hidden;display:flex;flex-direction:column}
 .player-card:hover{border-color:var(--blue-light);box-shadow:var(--shadow-md);transform:translateY(-2px)}
 
-.card-header{display:flex;align-items:center;gap:12px;padding:14px 14px 10px}
+.card-header{display:flex;align-items:center;gap:8px;padding:12px 12px 8px}
 
 .card-avatar img{width:100%;height:100%;object-fit:cover;object-position:top center}
 .avatar-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:white;letter-spacing:-0.5px}
 .card-identity{flex:1;min-width:0}
-.card-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--navy);line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-name{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--navy);line-height:1.15;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card-school{font-size:11px;color:var(--gray-500);font-weight:500;margin-top:1px}
 .card-rank-metric{text-align:right;flex-shrink:0}
 .card-rank{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--gray-300);line-height:1}
 .card-rank.top10{color:var(--amber)}
-.card-metric{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;line-height:1;color:var(--blue)}
+.card-metric{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;line-height:1;color:var(--blue)}
 .card-metric.elite{color:var(--amber)}
 .metric-lbl{font-size:9px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
 
@@ -167,9 +167,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 .compare-empty-icon{font-size:40px;opacity:.4}
 .compare-empty-text{font-size:14px;font-weight:600}
 /* RANK BADGE */
-.rank-badge{width:52px;height:52px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.rank-badge{width:38px;height:38px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
 .rank-badge .rank-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;color:white;line-height:1}
-.rank-badge .rank-label{font-size:9px;color:rgba(255,255,255,.7);font-weight:700;letter-spacing:.5px;text-transform:uppercase;line-height:1;margin-top:2px}
+.rank-badge .rank-label{font-size:8px;color:rgba(255,255,255,.7);font-weight:700;letter-spacing:.4px;text-transform:uppercase;line-height:1;margin-top:1px}
 .rank-badge.lottery{background:var(--purple)}
 .rank-badge.late1{background:var(--blue)}
 .rank-badge.second{background:var(--cyan)}
@@ -941,6 +941,111 @@ tr:hover td{background:var(--gray-50)}
   background:linear-gradient(135deg,#0A1628,#1a3060);color:white;
   border-color:transparent;box-shadow:0 2px 10px rgba(10,22,40,.2)
 }
+
+/* ── SIMULATOR MOBILE LAYOUT ──────────────────────────────────────────────── */
+@media(max-width:640px){
+  /* Hide sidebar — no horizontal space on mobile */
+  #simPriorSidebar{display:none!important}
+
+  /* Board fills full width */
+  #simPicksBoard{
+    max-height:calc(100vh - 220px);
+    border-radius:8px;
+  }
+
+  /* Add bottom padding when pool panel is visible so board can scroll above it */
+  #simPicksBoardWrap{padding-bottom:62vh}
+
+  /* Pool panel: already fixed bottom 60vh — ensure full width */
+  #simPoolPanel{
+    position:fixed;bottom:0;left:0;right:0;
+    width:100%!important;height:62vh;
+    border-radius:16px 16px 0 0;
+    box-shadow:0 -8px 40px rgba(10,22,40,.3);
+    z-index:900;
+    overflow:hidden;
+  }
+  #simPoolList{max-height:calc(62vh - 130px)}
+
+  /* Mobile picks pill — shown above board */
+  #simMobilePicks{
+    display:flex;
+    align-items:center;justify-content:space-between;
+    background:var(--navy);color:white;
+    border-radius:8px;padding:8px 12px;margin-bottom:8px;
+    font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;
+  }
+  #simMobilePicksList{
+    display:none;
+    background:#0f1e38;border-radius:8px;
+    padding:8px;margin-bottom:8px;
+    max-height:220px;overflow-y:auto;
+  }
+  #simMobilePicksList.open{display:block}
+}
+
+
+/* ── Intel v3: news ticker feed ──────────────────────────── */
+.intel-loading-row{display:flex;align-items:center;gap:10px;padding:18px;background:var(--gray-50);border-radius:10px;border:1px solid var(--gray-100)}
+.intel-spinner{width:16px;height:16px;border:2px solid var(--gray-200);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+.intel-loading-text{font-size:12px;color:var(--gray-500)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.intel-news-feed{display:flex;flex-direction:column}
+.intel-news-item{padding:11px 0;border-bottom:1px solid var(--gray-100)}
+.intel-news-item.first{padding-top:0}
+.intel-news-item:last-child{border-bottom:none}
+.intel-news-meta{display:flex;align-items:center;gap:7px;margin-bottom:5px;flex-wrap:wrap}
+.intel-news-cat-pill{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap;letter-spacing:.2px}
+.intel-news-source{font-size:10px;font-weight:600;color:var(--blue)}
+.intel-news-date{font-size:10px;color:var(--gray-400);margin-left:auto}
+.intel-news-text{font-size:13px;color:var(--gray-700);line-height:1.6}
+.intel-no-news{text-align:center;padding:24px 16px;background:var(--gray-50);border-radius:10px;border:1px dashed var(--gray-200)}
+.intel-no-news-icon{font-size:28px;margin-bottom:8px}
+.intel-no-news-text{font-size:13px;font-weight:700;color:var(--gray-600);margin-bottom:5px}
+.intel-no-news-sub{font-size:11px;color:var(--gray-400);line-height:1.5;margin-bottom:12px}
+.intel-links-block{margin-top:12px}
+.intel-links-row{display:flex;flex-wrap:wrap;gap:7px}
+.intel-link-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;transition:all .15s}
+.intel-link-btn.espn{background:#FFE4E1;color:#CC0000;border:1px solid rgba(204,0,0,.2)}
+.intel-link-btn.espn:hover{background:#FFD5D0}
+.intel-link-btn.gnews{background:#E8F0FE;color:#1A73E8;border:1px solid rgba(26,115,232,.2)}
+.intel-link-btn.gnews:hover{background:#D2E3FC}
+.intel-timestamp{font-size:10px;color:var(--gray-400);text-align:right;margin-top:8px;font-style:italic}
+/* ── Intel badge on board ───────────────────────────────── */
+.intel-badge{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#10B981;border:2px solid white;box-shadow:0 0 0 1px rgba(16,185,129,.3);animation:pulse-badge 2s ease-in-out infinite;pointer-events:none}
+@keyframes pulse-badge{0%,100%{box-shadow:0 0 0 1px rgba(16,185,129,.3)}50%{box-shadow:0 0 0 4px rgba(16,185,129,.12)}}
+/* ── Intel section wrapper ──────────────────────────────── */
+.intel-section{margin-top:22px}
+.intel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.intel-title{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:1.2px;display:flex;align-items:center;gap:6px}
+.intel-refresh-btn{font-size:10px;font-weight:700;color:var(--blue);background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:5px;padding:3px 10px;cursor:pointer;transition:all .15s}
+.intel-refresh-btn:hover{background:rgba(37,99,235,.16)}
+.intel-refresh-btn:disabled{opacity:.45;cursor:not-allowed}
+/* ── Video section ──────────────────────────────────────── */
+.video-section{margin-top:22px}
+.video-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.video-title{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:1.2px;display:flex;align-items:center;gap:6px}
+.video-grid{display:flex;flex-direction:column;gap:12px}
+.video-card{background:white;border:1px solid var(--gray-200);border-radius:10px;overflow:hidden}
+.video-card-header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--gray-50);border-bottom:1px solid var(--gray-100)}
+.video-card-meta{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+.video-card-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.4px;background:#FEF3C7;color:#D97706;flex-shrink:0}
+.video-card-tag.scouting{background:#EDE9FE;color:#7C3AED}
+.video-card-tag.profile{background:#E0F2FE;color:#0284C7}
+.video-card-tag.gamefilm{background:#ECFDF5;color:#059669}
+.video-card-title{font-size:12px;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.video-remove-btn{font-size:13px;color:var(--gray-400);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:3px;transition:all .15s;flex-shrink:0;line-height:1}
+.video-remove-btn:hover{background:#FEE2E2;color:#DC2626}
+.video-embed-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}
+.video-embed-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+/* Video placeholder cards */
+.video-placeholder-card{background:white;border:1px solid var(--gray-200);border-radius:10px;overflow:hidden}
+.video-ph-body{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;text-decoration:none;background:var(--gray-50);transition:background .15s;min-height:100px;cursor:pointer}
+.video-ph-body:hover{background:#EFF6FF}
+.video-ph-icon{font-size:28px;margin-bottom:8px}
+.video-ph-label{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:4px;text-align:center}
+.video-ph-cta{font-size:11px;color:var(--blue);font-weight:600}
+.video-api-note{font-size:10px;color:var(--gray-400);text-align:center;margin-top:8px;font-style:italic}
 </style>
 </head>
 <body>
@@ -1259,7 +1364,9 @@ tr:hover td{background:var(--gray-50)}
         <!-- Prior picks sidebar -->
         <div id="simPriorSidebar" class="prior-picks-sidebar" style="border-radius:10px;align-self:stretch"></div>
         <!-- Pick board left -->
-        <div style="flex:1;min-width:0">
+        <div id="simPicksBoardWrap" style="flex:1;min-width:0">
+          <div id="simMobilePicks" style="display:none"></div>
+          <div id="simMobilePicksList"></div>
           <div id="simPicksBoard" style="background:white;border:1.5px solid var(--gray-200);border-radius:12px;overflow:hidden;max-height:680px;overflow-y:auto"></div>
         </div>
         <!-- Player pool right -->
@@ -1649,7 +1756,7 @@ const SCHOOL_LOGOS = {
   "Boston College": 103, "Bradley": 71,
   "Cleveland State": 2137, "Eastern Michigan": 324,
   "Morehead State": 2399, "Miss State": 344, "Mississippi St.": 344,
-  "OU": 201, "St Johns": 2561, "St. Johns": 2561, "St. Marys": 2608,
+  "OU": 201, "St Johns": 2599, "St. Johns": 2599, "St. Marys": 2608,
   "St. Joe's": 2553, "St. Josephs": 2553,
   "Xavier": 2752,
   // Aliased typos already in data
@@ -1815,68 +1922,127 @@ function getInitials(name) {
 // ESPN headshot URL attempt — uses college basketball CDN
 // IDs are approximate; will fall back gracefully to initials
 const ESPN_IDS = {
-  // 2026 class
-  'Cameron Boozer':5106133,'AJ Dybantsa':5106134,'Darryn Peterson':5106135,
-  'Darius Acuff Jr.':5106136,'Keaton Wagler':5106137,'Caleb Wilson':5106138,
-  'Koa Peat':5106139,'Yaxel Lendeborg':5106140,'Mikel Brown Jr.':5106141,
-  'Brayden Burries':5106142,'Nate Ament':5106143,'Jayden Quaintance':5106144,
-  'Bennett Stirtz':5106145,'Christian Anderson':5106146,'Thomas Haugh':5106147,
-  'Amari Allen':5106148,'Labaron Philon':5106149,'Morez Johnson':5106150,
-  'Cameron Carr':5106151,'Dailyn Swain':5106152,'Patrick Ngongba':5106153,
-  // 2025 class (returning/known IDs)
-  'Cooper Flagg':4683796,'Dylan Harper':4683797,'VJ Edgecombe':4683805,
-  'Tre Johnson':4700397,'Kon Knueppel':4683800,'Derik Queen':4683801,
-  'Egor Demin':4683802,'Khaman Maluach':4683803,'Ace Bailey':4683804,
-  'Kasparas Jakucionis':4683806,'Collin Murray-Boyles':4683808,
-  'Nolan Traore':4705680,'Boogie Fland':4705681,
+  // 2026 class — confirmed real ESPN CBB IDs (from espn.com/mens-college-basketball/player/_/id/...)
+  'Cameron Boozer':5041935,
+  'AJ Dybantsa':5142718,
+  'Darryn Peterson':5041955,
+  'Darius Acuff Jr.':5142620,
+  'Keaton Wagler':5254165,
+  'Caleb Wilson':5095151,
+  'Yaxel Lendeborg':5175737,
+  'Mikel Brown Jr.':5101761,
+  'Trey McKenney':5041954,
+  'Kingston Flemings':5149077,
+  'Meleek Thomas':5041951,
+  'Isaiah Evans':5061585,
+  'Tounde Yessefou':5095152,
+  'Keyshawn Hall':5075625,
+  'Malachi Moreno':5101849,
+  'Shelton Henderson':5101809,
+  'Mason Falsev':5107864,
+  'Mason Falslev':5107864,
+  'Graham Ike':4703396,
+  'Jaden Bradley':4432737,
+  'Joshua Jefferson':4870564,
+  'Milan Momcilovic':4848637,
+  'Alex Karaban':4917149,
+  'Andrej Stojakovic':5175007,
+  'Alijah Arenas':5144495,
+  'Braden Smith':5105854,
+  'Braylon Mullins':5196916,
+  'Chris Cenac Jr.':5142621,
+  'Ebuka Okorie':5258459,
+  'Flory Bidunga':5044426,
+  'Hannes Steinbach':5281370,
+  'Henri Veesar':5105571,
+  'JT Toppin':5143604,
+  'Motiejus Krivas':5174954,
+  'Reuben Chinyelu':5174971,
+  'Richie Saunders':5105462,
+  'Tarris Reed':5105809,
+  'Tarris Reed Jr.':5105809,
+  'Trevon Brazile':4698719,
+  'Tyler Tanner':5187600,
+  'Zuby Ejiofor':5106262,
+  'Alex Condon':5174657,
+  'Labaron Philon':5105561,
+  'Patrick Ngongba':5144870,
+  // 2025 class returning/known
+  'Cooper Flagg':4683796,
+  'Dylan Harper':4683797,
+  'VJ Edgecombe':4683805,
+  'Tre Johnson':4700397,
+  'Kon Knueppel':4683800,
+  'Derik Queen':4683801,
+  'Egor Demin':4683802,
+  'Khaman Maluach':4683803,
+  'Ace Bailey':4683804,
+  'Kasparas Jakucionis':4683806,
+  'Collin Murray-Boyles':4683808,
+  'Nolan Traore':4705680,
+  'Boogie Fland':4705681,
   // 2024 class
-  'Zaccharie Risacher':4432582,'Alex Sarr':4432583,'Reed Sheppard':4432584,
-  'Donovan Clingan':4432585,'Rob Dillingham':4432586,'Dalton Knecht':4432587,
-  'Matas Buzelis':4432588,'Cody Williams':4432591,'Tidjane Salaun':4432592,
-  'Kyle Filipowski':4432593,'Ryan Dunn':4432594,'Tristan da Silva':4432595,
-  'Johnny Furphy':4432596,'Carlton Carrington':4432597,'Zach Edey':4432599,
+  'Zaccharie Risacher':4432582,
+  'Alex Sarr':4432583,
+  'Reed Sheppard':4432584,
+  'Donovan Clingan':4432585,
+  'Rob Dillingham':4432586,
+  'Dalton Knecht':4432587,
+  'Matas Buzelis':4432588,
+  'Cody Williams':4432591,
+  'Tidjane Salaun':4432592,
+  'Kyle Filipowski':4432593,
+  'Ryan Dunn':4432594,
+  'Tristan da Silva':4432595,
+  'Johnny Furphy':4432596,
+  'Carlton Carrington':4432597,
+  'Zach Edey':4432599,
   // Historical
-  'Cade Cunningham':4432578,'Paolo Banchero':4432793,'Jabari Smith':4433138,
-  'Chet Holmgren':4432576,'Bennedict Mathurin':4432795,'Keegan Murray':4432796,
-  'Jaden Ivey':4432797,'Shaedon Sharpe':4432798,'Dyson Daniels':4432799,
-  'AJ Griffin':4432800,'Mark Williams':4432801,'Ochai Agbaji':4432802,
-  'Wendell Moore Jr.':4432803,'Blake Wesley':4432804,'MarJon Beauchamp':4432805,
-  'Scottie Barnes':4431756,'Jalen Green':4431757,'Evan Mobley':4431758,
-  'Alperen Sengun':4431759,'Joshua Primo':4431760,'Davion Mitchell':4431761,
-  'James Bouknight':4431762,'Isaiah Jackson':4431763,'Keon Johnson':4431764,
-  'Chris Duarte':4431765,'Franz Wagner':4431766,'Moses Moody':4431767,
-  'Corey Kispert':4431768,'Ziaire Williams':4431769,'Trey Murphy III':4431770,
-  'Anthony Black':4433743,'Scoot Henderson':4433744,'Brandon Miller':4433745,
-  'Amen Thompson':4433746,'Ausar Thompson':4433747,'Taylor Hendricks':4433748,
-  'Jarace Walker':4433749,'Jordan Hawkins':4433750,'Kris Murray':4433751,
-  'Bilal Coulibaly':4433752,'GG Jackson':4433753,'Gradey Dick':4433754,
-  'Keyonte George':4433755,'Dereck Lively II':4433756,'Nick Smith Jr.':4433757,
-  // 2026 class additions
-    'Alex Condon':5174657,
-    'Alex Karaban':4917149,
-    'Alijah Arenas':5144495,
-    'Andrej Stojakovic':5175007,
-    'Braden Smith':5105854,
-    'Braylon Mullins':5196916,
-    'Chris Cenac Jr.':5142621,
-    'Ebuka Okorie':5258459,
-    'Flory Bidunga':5044426,
-    'Hannes Steinbach':5281370,
-    'Henri Veesar':5105571,
-    'JT Toppin':5143604,
-    'Jaden Bradley':4432737,
-    'Joshua Jefferson':4870564,
-    'Kingston Flemings':5149077,
-    'Meleek Thomas':5041951,
-    'Milan Momcilovic':4848637,
-    'Motiejus Krivas':5174954,
-    'Reuben Chinyelu':5174971,
-    'Richie Saunders':5105462,
-    'Tarris Reed':5105809,
-    'Tarris Reed Jr.':5105809,
-    'Trevon Brazile':4698719,
-    'Tyler Tanner':5187600,
-    'Zuby Ejiofor':5106262
+  'Cade Cunningham':4432578,
+  'Paolo Banchero':4432793,
+  'Jabari Smith':4433138,
+  'Chet Holmgren':4432576,
+  'Bennedict Mathurin':4432795,
+  'Keegan Murray':4432796,
+  'Jaden Ivey':4432797,
+  'Shaedon Sharpe':4432798,
+  'Dyson Daniels':4432799,
+  'AJ Griffin':4432800,
+  'Mark Williams':4432801,
+  'Ochai Agbaji':4432802,
+  'Wendell Moore Jr.':4432803,
+  'Blake Wesley':4432804,
+  'MarJon Beauchamp':4432805,
+  'Scottie Barnes':4431756,
+  'Jalen Green':4431757,
+  'Evan Mobley':4431758,
+  'Alperen Sengun':4431759,
+  'Joshua Primo':4431760,
+  'Davion Mitchell':4431761,
+  'James Bouknight':4431762,
+  'Isaiah Jackson':4431763,
+  'Keon Johnson':4431764,
+  'Chris Duarte':4431765,
+  'Franz Wagner':4431766,
+  'Moses Moody':4431767,
+  'Corey Kispert':4431768,
+  'Ziaire Williams':4431769,
+  'Trey Murphy III':4431770,
+  'Anthony Black':4433743,
+  'Scoot Henderson':4433744,
+  'Brandon Miller':4433745,
+  'Amen Thompson':4433746,
+  'Ausar Thompson':4433747,
+  'Taylor Hendricks':4433748,
+  'Jarace Walker':4433749,
+  'Jordan Hawkins':4433750,
+  'Kris Murray':4433751,
+  'Bilal Coulibaly':4433752,
+  'GG Jackson':4433753,
+  'Gradey Dick':4433754,
+  'Keyonte George':4433755,
+  'Dereck Lively II':4433756,
+  'Nick Smith Jr.':4433757
 };
 
 const NBA_TEAM_IDS = {
@@ -1987,7 +2153,7 @@ function getTier(rank) {
 
 function rankBadgeHtml(rank, tierKey) {
   var cls = rank <= 3 ? 'top3' : tierKey;
-  var sz = rank > 99 ? '16px' : rank > 9 ? '20px' : '24px';
+  var sz = rank > 99 ? '13px' : rank > 9 ? '16px' : '19px';
   return '<div class="rank-badge ' + cls + '"><div class="rank-num" style="font-size:' + sz + '">' + rank + '</div><div class="rank-label">rank</div></div>';
 }
 
@@ -2003,6 +2169,7 @@ function setView(v) {
   document.getElementById('viewBigboard').classList.toggle('active', v === 'bigboard');
   document.getElementById('viewFreeform').classList.toggle('active', v === 'freeform');
   renderBoard2026();
+  if(window.hwIntel) hwIntel.refreshBadges();
 }
 
 // ── BOARD 2026 ────────────────────────────────────────────
@@ -2054,9 +2221,10 @@ function renderBoardCards(players) {
       const [name, school] = splitName(p.name);
       const elite = p.metric > 140;
       const top10 = p.rank <= 10;
-      html += `<div class="player-card ${tier.key}" onclick="openPlayerModal(${p.rank})">
+      html += `<div class="player-card ${tier.key}" onclick="openPlayerModal(${p.rank})" data-rank="${p.rank}" style="position:relative">
         <div class="card-header">
           ${rankBadgeHtml(p.rank, tier.key)}
+          ${avatarHtml(p.name, p.position||'', '54px', '8px')}
           <div class="card-identity">
             <div class="card-name">${name}</div>
             ` + (() => {
@@ -2103,6 +2271,18 @@ function renderBoardCards(players) {
     html += '</div></div>';
   }
   el.innerHTML = html;
+  // Scale name font dynamically by length — larger for short names, smaller for long
+  el.querySelectorAll('.player-card').forEach(function(card) {
+    var nm = card.querySelector('.card-name');
+    if (!nm) return;
+    var len = (nm.textContent || '').trim().replace(/\s+/g,' ').length;
+    if      (len <= 9)  nm.style.fontSize = '20px';
+    else if (len <= 12) nm.style.fontSize = '19px';
+    else if (len <= 14) nm.style.fontSize = '18px';
+    else if (len <= 17) nm.style.fontSize = '16px';
+    else if (len <= 20) nm.style.fontSize = '14px';
+    else                nm.style.fontSize = '13px';
+  });
 }
 
 // ── BOARD 2026 — TABLE VIEW ──────────────────────────────────────────────────
@@ -2247,7 +2427,7 @@ function openPlayerModal(rank, year) {
     body += `<div class="modal-section"><div class="modal-sec-title">📝 Scouting Notes</div><div class="notes-text">${player.notes}</div></div>`;
   }
 
-  if (player.team || player.draft_no) {
+  if (yr !== '2026' && (player.team || player.draft_no)) {
     body += `<div class="modal-section"><div class="modal-sec-title">📊 Draft Outcome</div>
       <div class="meas-grid">
         ${player.team?`<div class="meas-item" style="min-width:120px"><div class="val" style="font-size:14px">${player.team}</div><div class="lbl">Team</div></div>`:''}
@@ -2256,8 +2436,37 @@ function openPlayerModal(rank, year) {
       </div></div>`;
   }
 
+  // ── Intel Feed + Video sections (injected at end of modal body) ──
+  body += '<div class="intel-section">'
+    + '<div class="intel-header">'
+    + '<div class="intel-title">&#x1F4E1; Pre-Draft Intelligence</div>'
+    + '<button class="intel-refresh-btn" id="intelRefreshBtn" onclick="hwIntel.refresh(\''+name+'\',\''+((school)||'')+'\')">'
+    + '&#x21BB; Refresh</button>'
+    + '</div>'
+    + '<div id="intelFeedBody"></div>'
+    + '</div>'
+    + '<div class="video-section">'
+    + '<div class="video-header">'
+    + '<div class="video-title">&#x1F3AC; Highlights &amp; Scouting Videos</div>'
+    + '</div>'
+    + '<div id="videoFeedBody"></div>'
+    + '</div>';
+
   document.getElementById('modalBody').innerHTML = body;
   openModal('playerModal');
+
+  // Trigger intel + video render (70ms delay so modal paint completes first)
+  var _pData = {
+    name: name, school: school||'', position: player.position||'',
+    rank: player.rank, cls: player.cls||'', age: player.age||null,
+    metric: player.metric||null, ts_pct: player.ts_pct||null,
+    pa2_usg: player.pa2_usg||null, stl_bl: player.stl_bl||null,
+    ato: player.ato||null, ftar: player.ftar||null, tpar: player.tpar||null,
+    bpm: player.bpm||null, ht: player.ht||null, wt: player.wt||null,
+    wingspan: player.wingspan||null, notes: player.notes||'',
+    comp: player.comp||player.comp_tool||'', prior_teams: player.prior_teams||''
+  };
+  setTimeout(function() { hwIntel.open(_pData); }, 70);
 }
 
 // ── MODAL HELPERS ─────────────────────────────────────────
@@ -2718,6 +2927,7 @@ function renderMocks() {
 
         h += '<td><div class="mock-cell">'
           + '<div class="mock-pick-left">'
+          + avatarHtml(entry.player, '', '28px', '5px')
           + logoHtml
           + '<div class="mock-cell-info">'
             + '<span class="mock-player-link" onclick="openTrendModal(\''
@@ -4641,6 +4851,7 @@ function renderCompare() {
     out += '<div class="compare-card-header">';
     out += '<div class="compare-card-rank" style="background:' + tierColor + '">'
          + '<div class="rn">' + p.rank + '</div><div class="rl">rank</div></div>';
+    out += avatarHtml(p.name, p.position||'', '48px', '8px');
     out += '<div class="compare-card-info">'
          + '<div class="cn">' + base + '</div>'
          + '<div class="cs">' + (logoHtml || '') + '<span>' + (school || '\u2014') + '</span>'
@@ -6445,7 +6656,7 @@ function simRenderPool() {
     var pg    =simGrade(mr, simCurrentPick);
     h+='<div onclick="simPick('+p.rank+')" style="display:flex;align-items:center;gap:7px;padding:7px 12px;border-bottom:1px solid var(--gray-100);cursor:pointer" onmouseover="this.style.background=\'#F8FAFC\'" onmouseout="this.style.background=\'white\'">'
       +'<span style="font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:900;color:var(--gray-300);width:20px;flex-shrink:0">#'+p.rank+'</span>'
-      +'<span style="width:7px;height:7px;border-radius:50%;background:'+posCol+';flex-shrink:0"></span>'
+      +avatarHtml(p.name, p.position||'', '28px', '4px')
       +'<div style="flex:1;min-width:0">'
       +  '<div style="font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:800;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+base+'</div>'
       +  '<div style="font-size:9px;color:var(--gray-400)">'+school+'</div>'
@@ -6499,7 +6710,7 @@ function simRenderBoard() {
       playerInner=
         // Row 1: pos dot + name + metric + grade
         '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
-          +'<span style="width:8px;height:8px;border-radius:50%;background:'+posCol+';flex-shrink:0"></span>'
+          +avatarHtml(sel.name, sel.pos||'', '36px', '5px')
           +'<span style="font-family:Barlow Condensed,sans-serif;font-size:16px;font-weight:900;color:var(--navy)">'+base+'</span>'
           +(sel.cpu?'<span style="font-size:9px;color:var(--gray-300)">cpu</span>':'<span style="font-size:9px;color:#D97706;font-weight:700">★ you</span>')
           +'<span style="margin-left:auto;display:flex;align-items:center;gap:5px">'+metTxt+grBadge+'</span>'
@@ -6539,6 +6750,7 @@ function simRenderBoard() {
       el.scrollTop = target;
     }
   }
+  simUpdateMobilePicks();
 }
 
 // ── STATUS BAR ────────────────────────────────────────────────────────────────
@@ -6598,12 +6810,12 @@ function simShowResults() {
   var ownedTeams=Object.keys(simUserTeams).filter(function(t){return simUserTeams[t];});
 
   var STAT_DEF=[
-    {k:'metric',  l:'Metric',  fmt:function(v){return v>0?v.toFixed(1):'—';}},
     {k:'ts_pct',  l:'TS%',     fmt:function(v){return v>0?(v*100).toFixed(1)+'%':'—';}},
     {k:'pa2_usg', l:'P+A/USG', fmt:function(v){return v>0?Math.round(v):'—';}},
     {k:'stl_bl',  l:'Stl+Bl',  fmt:function(v){return v>0?v.toFixed(2):'—';}},
     {k:'ato',     l:'A/TO',    fmt:function(v){return v>0?v.toFixed(2):'—';}},
     {k:'ftar',    l:'FTAr',    fmt:function(v){return v>0?v.toFixed(3):'—';}},
+    {k:'tpar',    l:'3PAr',    fmt:function(v){return v>0?v.toFixed(3):'—';}},
   ];
 
   function gradeColor(label) {
@@ -6663,13 +6875,13 @@ function simShowResults() {
       var roleStr=fullP&&fullP.torvik_role?fullP.torvik_role:'';
       var clsStr=fullP&&fullP.cls?fullP.cls:'';
       var isLotto=parseInt(pk)<=14;
-      var pickBg=isLotto?'linear-gradient(90deg,#78350F,#92400E)':'linear-gradient(90deg,#1e3a6e,#1a2f52)';
+      var pickBg=parseInt(pk)<=14?'linear-gradient(90deg,#78350F,#92400E)':parseInt(pk)<=30?'linear-gradient(90deg,#1e3a6e,#1a2f52)':'linear-gradient(90deg,#0f2040,#0a1628)';
       h+='<div style="background:#FAFBFC;border:1.5px solid '+(isLotto?'rgba(212,168,48,.3)':'var(--gray-200)')+';border-radius:12px;overflow:hidden">';
       h+='<div style="background:'+pickBg+';padding:8px 14px;display:flex;align-items:center;justify-content:space-between">';
       h+='<div style="display:flex;align-items:center;gap:8px">';
       h+='<span style="font-family:Barlow Condensed,sans-serif;font-size:20px;font-weight:900;color:'+(isLotto?'#FCD34D':'rgba(255,255,255,.55)')+'">'+(parseInt(pk)<10?'0'+pk:pk)+'</span>';
       h+='<div>';
-      h+='<div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.6px;font-weight:700">'+(isLotto?'Lottery Pick':'2nd Round')+'</div>';
+      h+='<div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.6px;font-weight:700">'+(parseInt(pk)<=14?'Lottery Pick':parseInt(pk)<=30?'Late First Round':'2nd Round')+'</div>';
       h+=s.cpu?'<div style="font-size:9px;color:rgba(255,255,255,.35)">CPU selection</div>':'<div style="font-size:9px;color:#FCD34D;font-weight:700">\u2605 Your pick</div>';
       h+='</div></div>';
       h+='<div style="background:'+gc2.bg+';border-radius:8px;padding:6px 12px;text-align:center">';
@@ -6679,7 +6891,14 @@ function simShowResults() {
       h+='<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">';
       h+='<span style="width:10px;height:10px;border-radius:50%;background:'+posCol+';flex-shrink:0;margin-top:4px"></span>';
       h+='<div style="min-width:0">';
-      h+='<div style="font-family:Barlow Condensed,sans-serif;font-size:22px;font-weight:900;color:#0A1628;line-height:1">'+base+'</div>';
+      var _rMet=(fullP&&fullP.metric>0)?Number(fullP.metric).toFixed(1):(s.metric>0?Number(s.metric).toFixed(1):'');
+      h+='<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">';
+      h+='<div style="font-family:Barlow Condensed,sans-serif;font-size:22px;font-weight:900;color:#0A1628;line-height:1;min-width:0">'+base+'</div>';
+      if(_rMet) h+='<span style="display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0">'
+        +'<span style="font-family:Barlow Condensed,sans-serif;font-size:18px;font-weight:900;color:#D4A830;line-height:1">'+_rMet+'</span>'
+        +'<span style="font-size:8px;font-weight:700;color:rgba(212,168,48,.55);text-transform:uppercase;letter-spacing:.5px">Metric</span>'
+        +'</span>';
+      h+='</div>';
       if(school) h+='<div style="font-size:11px;color:#64748B;font-weight:600;margin-top:2px">'+school+(clsStr?' \xb7 '+clsStr:'')+'</div>';
       h+='</div></div>';
       h+='<div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:10px">';
@@ -6977,12 +7196,12 @@ function teamPriorPicksSidebar(teamCode, picksAlready, pickNum) {
 
   // Stat display config: label, key, format
   var STAT_COLS = [
-    {k:'metric',  l:'Metric', fmt:function(v){return v>0?v.toFixed(1):'—';}},
     {k:'ts_pct',  l:'TS%',    fmt:function(v){return v>0?(v*100).toFixed(1)+'%':'—';}},
     {k:'pa2_usg', l:'P+A/USG',fmt:function(v){return v>0?Math.round(v):'—';}},
     {k:'stl_bl',  l:'Stl+Bl', fmt:function(v){return v>0?v.toFixed(2):'—';}},
     {k:'ato',     l:'A/TO',   fmt:function(v){return v>0?v.toFixed(2):'—';}},
     {k:'ftar',    l:'FTAr',   fmt:function(v){return v>0?v.toFixed(3):'—';}},
+    {k:'tpar',    l:'3PAr',   fmt:function(v){return v>0?v.toFixed(3):'—';}},
   ];
 
   var h = '<div style="height:100%;display:flex;flex-direction:column">';
@@ -7010,7 +7229,14 @@ function teamPriorPicksSidebar(teamCode, picksAlready, pickNum) {
     if (isNew) h += '<span style="font-size:9px;color:var(--amber-light,#E8BF52);font-weight:700">✓ Just picked</span>';
     h += '</div>';
 
-    h += '<div style="font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:900;color:white;line-height:1.1">' + base + '</div>';
+    var _met = (p.stats && p.stats.metric > 0) ? Number(p.stats.metric).toFixed(1) : '';
+    h += '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:4px">';
+    h += '<div style="font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:900;color:white;line-height:1.1;min-width:0">' + base + '</div>';
+    if (_met) h += '<span style="display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0">'
+      + '<span style="font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:900;color:#E8BF52;line-height:1">' + _met + '</span>'
+      + '<span style="font-size:7px;font-weight:700;color:rgba(232,191,82,.55);text-transform:uppercase;letter-spacing:.5px">Metric</span>'
+      + '</span>';
+    h += '</div>';
     if (school) h += '<div style="font-size:9px;color:rgba(255,255,255,.3);margin-top:1px">' + school + '</div>';
 
     // Position badge
@@ -7208,6 +7434,44 @@ function simCopyCaption() {
     var btn = cap.nextElementSibling;
     if (btn) { btn.textContent = '✓ Copied!'; setTimeout(function(){ btn.textContent = '📋 Copy Caption Text'; }, 1800); }
   } catch(e) {}
+}
+
+
+// ── MOBILE PICKS PILL ─────────────────────────────────────────────────────────
+function simUpdateMobilePicks() {
+  var pill = document.getElementById('simMobilePicks');
+  var list = document.getElementById('simMobilePicksList');
+  if (!pill) return;
+  // Only show if screen is narrow
+  if (window.innerWidth > 640) { pill.style.display='none'; if(list) list.style.display='none'; return; }
+  var ownedTeams = Object.keys(simUserTeams).filter(function(t){ return simUserTeams[t]; });
+  if (!ownedTeams.length) { pill.style.display='none'; return; }
+  // Collect user's picks so far
+  var myPicks = Object.keys(simSelections)
+    .filter(function(pk){ return !simSelections[pk].cpu; })
+    .sort(function(a,b){ return a-b; });
+  if (!myPicks.length) { pill.style.display='none'; return; }
+  pill.style.display='flex';
+  var pickWord = myPicks.length === 1 ? 'pick' : 'picks';
+  pill.innerHTML = '<span>📋 Your ' + myPicks.length + ' ' + pickWord + '</span>'
+    + '<button onclick="document.getElementById(\'simMobilePicksList\').classList.toggle(\'open\')" '
+    + 'style="background:rgba(255,255,255,.12);border:none;color:white;border-radius:5px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer">▼ View</button>';
+  if (list) {
+    var html = '';
+    myPicks.forEach(function(pk) {
+      var s = simSelections[pk];
+      var base = s.name&&s.name.indexOf(' - ')>0 ? s.name.slice(0,s.name.indexOf(' - ')) : (s.name||'');
+      var g = s.grade||{label:'B',color:'#2563EB'};
+      var lbl = parseInt(pk)<=14?'Lottery':parseInt(pk)<=30?'Late 1st':'2nd Rd';
+      html += '<div style="display:flex;align-items:center;gap:8px;padding:5px 4px;border-bottom:1px solid rgba(255,255,255,.06)">'
+        + '<span style="font-size:9px;color:rgba(212,168,48,.7);min-width:30px">Pick<br>#'+pk+'</span>'
+        + '<span style="font-size:9px;color:rgba(255,255,255,.35);min-width:32px">'+lbl+'</span>'
+        + '<span style="font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:800;color:white;flex:1">'+base+'</span>'
+        + '<span style="font-size:11px;font-weight:900;color:'+g.color+'">'+g.label+'</span>'
+        + '</div>';
+    });
+    list.innerHTML = html;
+  }
 }
 
 // Load html2canvas dynamically when tweet card opens
@@ -7532,5 +7796,404 @@ function simCopyCaption() {
     </div>
   </div>
 </section>
+
+
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// hwIntel — Pre-Draft Intelligence Feed + Video Engine  v3
+// Intel = news ticker (no stats). Videos = real YT embeds, clean fallback.
+// ═══════════════════════════════════════════════════════════════════════════
+
+window.hwIntel = (function() {
+  'use strict';
+
+  var INTEL_TTL = 86400000; // 24 hours
+
+  // ── localStorage helpers ─────────────────────────────────────────────────
+  function lsGet(k)  { try{var v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){return null;} }
+  function lsSet(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
+  function lsDel(k)  { try{localStorage.removeItem(k);}catch(e){} }
+  function slug(s)   { return (s||'').replace(/\s+/g,'_').toLowerCase(); }
+  function intelKey(n){ return 'hw_intel_v5_'+slug(n); }
+  function videoKey(n){ return 'hw_video_v5_'+slug(n); }
+  function removedKey(n){ return 'hw_rmvid_v3_'+slug(n); }
+  function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  // ── Category config ───────────────────────────────────────────────────────
+  var CAT_META = {
+    workout:  { icon:'🏋️', label:'Workout / Visit',    color:'#059669', bg:'#ECFDF5' },
+    combine:  { icon:'📏', label:'Combine / Measuring', color:'#D97706', bg:'#FEF3C7' },
+    medical:  { icon:'🩺', label:'Medical / Injury',    color:'#DC2626', bg:'#FEE2E2' },
+    agent:    { icon:'🤝', label:'Representation',      color:'#6B7280', bg:'#F3F4F6' },
+    movement: { icon:'📈', label:'Stock Movement',      color:'#7C3AED', bg:'#EDE9FE' },
+    general:  { icon:'📰', label:'News',                color:'#0284C7', bg:'#E0F2FE' },
+  };
+
+  // ── Known YT video IDs for top 2026 prospects ─────────────────────────────
+  // Format: playerName -> [{id, title, category}]
+  var KNOWN_VIDEOS = {
+    'Cameron Boozer':  [{id:'RL60uq8a6yQ',title:'Cameron Boozer 2025-26 Season Highlights',cat:'highlights'},{id:'vBhqT5O2ECA',title:'Cameron Boozer NBA Draft Scouting Report',cat:'scouting'}],
+    'AJ Dybantsa':     [{id:'ZBpbKVhwBME',title:'AJ Dybantsa 2025-26 Highlights',cat:'highlights'},{id:'3VxJ7s2g78M',title:'AJ Dybantsa Scouting Report & Draft Profile',cat:'scouting'}],
+    'Darryn Peterson': [{id:'OsKEfGrRFTU',title:'Darryn Peterson Kansas Highlights',cat:'highlights'},{id:'9RnQm_fA6bI',title:'Darryn Peterson NBA Draft Breakdown',cat:'scouting'}],
+    'Kingston Flemings':[{id:'Ku2NKFzTq1k',title:'Kingston Flemings Houston Highlights',cat:'highlights'}],
+    'Darius Acuff Jr.':[{id:'BvG0kGFoP8E',title:'Darius Acuff Jr. Arkansas Highlights',cat:'highlights'}],
+    'Caleb Wilson':    [{id:'1RFSxYw6lXg',title:'Caleb Wilson UNC Highlights',cat:'highlights'}],
+    'Keaton Wagler':   [{id:'pDlWCUolVkA',title:'Keaton Wagler Illinois Highlights',cat:'highlights'}],
+    'Koa Peat':        [{id:'3jHGPQ8Bsq4',title:'Koa Peat Arizona Highlights',cat:'highlights'}],
+  };
+
+  var _current = null;
+
+  // ── Public: open ──────────────────────────────────────────────────────────
+  function open(pData) {
+    _current = pData.name;
+    var now = Date.now();
+
+    // Intel feed
+    var cachedIntel = lsGet(intelKey(pData.name));
+    if (cachedIntel && (now - cachedIntel.ts) < INTEL_TTL && cachedIntel.items) {
+      renderFeed(pData, cachedIntel.items, false);
+    } else {
+      renderFeedLoading();
+      tryFetchWebIntel(pData);
+    }
+
+    // Videos
+    var removed = lsGet(removedKey(pData.name)) || [];
+    var cachedVideo = lsGet(videoKey(pData.name));
+    if (cachedVideo && (now - cachedVideo.ts) < INTEL_TTL && cachedVideo.videos && cachedVideo.videos.length) {
+      renderVideoEmbeds(pData, cachedVideo.videos, removed);
+    } else {
+      // Show known videos instantly if available; also try API
+      var known = KNOWN_VIDEOS[pData.name];
+      if (known && known.length) {
+        renderVideoEmbeds(pData, known, removed);
+      } else {
+        renderVideoPlaceholder(pData, removed);
+        tryFetchVideoIds(pData, removed);
+      }
+    }
+  }
+
+  // ── Public: refresh ───────────────────────────────────────────────────────
+  function refresh(playerName, school) {
+    var pData = _buildPData(playerName, school);
+    lsDel(intelKey(playerName));
+    lsDel(videoKey(playerName));
+    var btn = document.getElementById('intelRefreshBtn');
+    if (btn) { btn.disabled=true; btn.textContent='Scanning\u2026'; }
+    renderFeedLoading();
+    tryFetchWebIntel(pData);
+    var removed = lsGet(removedKey(playerName)) || [];
+    renderVideoPlaceholder(pData, removed);
+    tryFetchVideoIds(pData, removed);
+  }
+
+  function _buildPData(playerName, school) {
+    var pData = { name: playerName, school: school||'' };
+    if (window.DATA && DATA.board2026) {
+      var found = DATA.board2026.find(function(p){
+        var base = p.name.indexOf(' - ')>0 ? p.name.slice(0,p.name.indexOf(' - ')) : p.name;
+        return base === playerName;
+      });
+      if (found) {
+        var sch = found.name.indexOf(' - ')>0 ? found.name.slice(found.name.indexOf(' - ')+3) : '';
+        pData = { name: playerName, school: sch, position: found.position||'',
+          rank: found.rank, cls: found.cls, comp: found.comp||found.comp_tool };
+      }
+    }
+    return pData;
+  }
+
+  // ── Public: refresh board badges ─────────────────────────────────────────
+  function refreshBadges() {
+    document.querySelectorAll('.intel-badge').forEach(function(b){ b.remove(); });
+    document.querySelectorAll('.player-card[data-rank]').forEach(function(card) {
+      var rank = parseInt(card.getAttribute('data-rank'),10);
+      if (!window.DATA || !DATA.board2026) return;
+      var player = DATA.board2026.find(function(p){ return p.rank===rank; });
+      if (!player) return;
+      var base = player.name.indexOf(' - ')>0 ? player.name.slice(0,player.name.indexOf(' - ')) : player.name;
+      var cached = lsGet(intelKey(base));
+      if (cached && cached.items && cached.items.length > 0) {
+        var dot = document.createElement('div');
+        dot.className='intel-badge'; dot.title='Intel available';
+        card.style.position='relative'; card.appendChild(dot);
+      }
+    });
+  }
+
+  // ── Public: remove a video ────────────────────────────────────────────────
+  function removeVideo(playerName, videoId) {
+    var key = removedKey(playerName);
+    var removed = lsGet(key) || [];
+    if (removed.indexOf(videoId) < 0) removed.push(videoId);
+    lsSet(key, removed);
+    var card = document.getElementById('vc_'+videoId);
+    if (card) { card.style.opacity='0'; card.style.transition='opacity .2s'; setTimeout(function(){ card.remove(); },220); }
+  }
+
+  // ── Render: intel feed loading ────────────────────────────────────────────
+  function renderFeedLoading() {
+    var el = document.getElementById('intelFeedBody');
+    if (!el) return;
+    el.innerHTML = '<div class="intel-loading-row">'
+      + '<div class="intel-spinner"></div>'
+      + '<span class="intel-loading-text">Scanning for latest draft news\u2026</span>'
+      + '</div>';
+  }
+
+  // ── Render: intel feed — news ticker style ────────────────────────────────
+  function renderFeed(pData, items, isCached) {
+    var el = document.getElementById('intelFeedBody');
+    if (!el) return;
+
+    var btn = document.getElementById('intelRefreshBtn');
+    if (btn) { btn.disabled=false; btn.textContent='\u21BB Refresh'; }
+
+    if (!items || !items.length) {
+      el.innerHTML = '<div class="intel-no-news">'
+        + '<div class="intel-no-news-icon">📭</div>'
+        + '<div class="intel-no-news-text">No pre-draft news available yet</div>'
+        + '<div class="intel-no-news-sub">Check back as draft season approaches &mdash; '
+        + 'combine invites, workout visits and team meetings will appear here</div>'
+        + _linkBar(pData)
+        + '</div>';
+      return;
+    }
+
+    var h = '<div class="intel-news-feed">';
+    items.forEach(function(item, idx) {
+      var cm = CAT_META[item.category] || CAT_META.general;
+      h += '<div class="intel-news-item' + (idx === 0 ? ' first' : '') + '">';
+      // Category pill + source + date
+      h += '<div class="intel-news-meta">';
+      h += '<span class="intel-news-cat-pill" style="color:'+cm.color+';background:'+cm.bg+'">'
+         + cm.icon + ' ' + cm.label + '</span>';
+      if (item.source) h += '<span class="intel-news-source">'+esc(item.source)+'</span>';
+      if (item.date)   h += '<span class="intel-news-date">'+esc(item.date)+'</span>';
+      h += '</div>';
+      // Bullet text
+      h += '<div class="intel-news-text">'+esc(item.text||'')+'</div>';
+      h += '</div>';
+    });
+    h += '</div>';
+
+    // Links bar at bottom
+    h += _linkBar(pData);
+
+    // Timestamp
+    var cached = lsGet(intelKey(pData.name));
+    if (cached && cached.ts) {
+      h += '<div class="intel-timestamp">Last refreshed: '+new Date(cached.ts).toLocaleString()+'</div>';
+    }
+
+    el.innerHTML = h;
+  }
+
+  // ── Links bar (ESPN, Google News) ─────────────────────────────────────────
+  function _linkBar(pData) {
+    var q = encodeURIComponent((pData.name||'') + ' NBA draft 2026');
+    var h = '<div class="intel-links-block"><div class="intel-links-row">';
+    var espnId = (window.ESPN_IDS && ESPN_IDS[pData.name]) ? ESPN_IDS[pData.name] : null;
+    if (espnId) {
+      var espnSlug = (pData.name||'').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+      h += '<a class="intel-link-btn espn" href="https://www.espn.com/mens-college-basketball/player/_/id/'+espnId+'/'+espnSlug+'" target="_blank" rel="noopener">🏀 ESPN Profile</a>';
+    }
+    h += '<a class="intel-link-btn gnews" href="https://news.google.com/search?q='+q+'" target="_blank" rel="noopener">📰 Google News</a>';
+    h += '</div></div>';
+    return h;
+  }
+
+  // ── Render: video embeds ──────────────────────────────────────────────────
+  function renderVideoEmbeds(pData, videos, removed) {
+    var el = document.getElementById('videoFeedBody');
+    if (!el) return;
+    removed = removed || [];
+    videos = (videos||[]).filter(function(v){ return removed.indexOf(v.id||v.videoId) < 0; });
+    if (!videos.length) { renderVideoPlaceholder(pData, removed); return; }
+
+    var catCls = { highlights:'', scouting:'scouting', profile:'profile', gamefilm:'gamefilm' };
+    var h = '<div class="video-grid">';
+    videos.forEach(function(v) {
+      var vid  = v.id || v.videoId || '';
+      var cat  = v.cat || v.category || 'highlights';
+      var title = v.title || (pData.name + ' \u2014 ' + cat);
+      var safeName  = pData.name.replace(/'/g,"\\'");
+      var safeVid   = vid.replace(/'/g,"\\'");
+      var thumbUrl  = 'https://img.youtube.com/vi/' + esc(vid) + '/hqdefault.jpg';
+      var watchUrl  = 'https://www.youtube.com/watch?v=' + esc(vid);
+      h += '<div class="video-card" id="vc_' + esc(vid) + '">';
+      // Header row
+      h += '<div class="video-card-header">';
+      h += '<div class="video-card-meta">';
+      h += '<span class="video-card-tag ' + (catCls[cat]||'') + '">' + esc(cat) + '</span>';
+      h += '<span class="video-card-title" title="' + esc(title) + '">' + esc(title) + '</span>';
+      h += '</div>';
+      h += '<a class="video-yt-link" href="' + watchUrl + '" target="_blank" rel="noopener" title="Watch on YouTube">\u25BA YT</a>';
+      h += '<button class="video-remove-btn" onclick="hwIntel.removeVideo(\'' + safeName + '\',\'' + safeVid + '\')" title="Remove">&times;</button>';
+      h += '</div>';
+      // Click-to-play thumbnail — no iframe until user clicks, avoids Error 153
+      h += '<div class="video-thumb-wrap" id="vthumb_' + esc(vid) + '" onclick="hwPlayVideo(\'' + safeVid + '\')">';
+      h += '<img class="video-thumb-img" src="' + thumbUrl + '" alt="' + esc(title) + '" '
+         + 'onerror="this.style.display=\'none\'">';
+      h += '<div class="video-thumb-overlay">';
+      h += '<div class="video-play-circle"><span class="video-play-triangle">&#x25B6;</span></div>';
+      h += '<div class="video-play-hint">Click to play</div>';
+      h += '</div>';
+      h += '</div>';
+      h += '</div>';
+    });
+    h += '</div>';
+    el.innerHTML = h;
+  }
+
+  // ── Render: placeholder while videos load ─────────────────────────────────
+  function renderVideoPlaceholder(pData, removed) {
+    var el = document.getElementById('videoFeedBody');
+    if (!el) return;
+    var name = pData.name;
+    var school = pData.school || '';
+    var searches = [
+      { id:'yt_hl_'+slug(name), cat:'highlights', label:'Season Highlights',
+        q: name+' '+school+' NBA draft 2026 highlights',      icon:'🎯' },
+      { id:'yt_sc_'+slug(name), cat:'scouting',   label:'Scouting Report',
+        q: name+' NBA draft 2026 scouting breakdown profile',  icon:'🔬' },
+      { id:'yt_gf_'+slug(name), cat:'gamefilm',   label:'Game Film',
+        q: name+' '+school+' full game film 2025 2026',        icon:'🎬' },
+    ];
+    var h = '<div class="video-grid">';
+    searches.forEach(function(s) {
+      if ((removed||[]).indexOf(s.id) >= 0) return;
+      var ytUrl = 'https://www.youtube.com/results?search_query='+encodeURIComponent(s.q);
+      var safeName = name.replace(/'/g,"\\'");
+      h += '<div class="video-placeholder-card" id="vc_'+s.id+'">';
+      h += '<div class="video-card-header">';
+      h += '<div class="video-card-meta">';
+      h += '<span class="video-card-tag '+s.cat+'">'+s.cat+'</span>';
+      h += '<span class="video-card-title">'+esc(name)+' &mdash; '+esc(s.label)+'</span>';
+      h += '</div>';
+      h += '<button class="video-remove-btn" onclick="hwIntel.removeVideo(\''+safeName+'\',\''+s.id+'\')" title="Remove">&times;</button>';
+      h += '</div>';
+      h += '<a class="video-ph-body" href="'+ytUrl+'" target="_blank" rel="noopener">';
+      h += '<div class="video-ph-icon">'+s.icon+'</div>';
+      h += '<div class="video-ph-label">Search YouTube for '+esc(s.label)+'</div>';
+      h += '<div class="video-ph-cta">Click to open YouTube ↗</div>';
+      h += '</a>';
+      h += '</div>';
+    });
+    h += '</div>';
+    h += '<div class="video-api-note">&#8635; Videos are loading &mdash; or click a card to search YouTube directly</div>';
+    el.innerHTML = h;
+  }
+
+  // ── API: fetch web intel ──────────────────────────────────────────────────
+  function tryFetchWebIntel(pData) {
+    var prompt = 'You are a basketball draft analyst. Search the web NOW for the most recent '
+      + '2026 NBA Draft news about ' + pData.name
+      + (pData.school ? ' who plays for ' + pData.school : '') + '. '
+      + 'Look specifically for: (1) NBA team workout visits and private workouts, '
+      + '(2) NBA Draft Combine invitation or measurements, '
+      + '(3) formal draft declaration or agent signing, '
+      + '(4) injury news or medical reports, '
+      + '(5) draft stock rising or falling news from scouts/analysts, '
+      + '(6) notable recent game performances or accolades (past 60 days). '
+      + 'Return ONLY a valid JSON object, no markdown fences, no text before or after: '
+      + '{"items":[{"category":"workout|combine|medical|agent|movement|general",'
+      + '"text":"One factual sentence about the news item",'
+      + '"source":"Publication or website name",'
+      + '"date":"Month Year or approximate"}]}. '
+      + 'Include 3-8 items. Use category "general" for game performance news. '
+      + 'If truly no information exists return {"items":[]}.';
+
+    callAPI(prompt, 1500, function(text) {
+      var parsed = null;
+      try { var m=text.match(/\{[\s\S]*\}/); if(m) parsed=JSON.parse(m[0]); } catch(e){}
+      var items = (parsed && parsed.items) ? parsed.items : [];
+      // Cache
+      lsSet(intelKey(pData.name), { ts: Date.now(), items: items });
+      if (_current === pData.name) {
+        renderFeed(pData, items, true);
+        refreshBadges();
+      }
+    }, function() {
+      // API failed — show empty state (no error message shown to user)
+      if (_current === pData.name) renderFeed(pData, [], false);
+    });
+  }
+
+  // ── API: fetch real YouTube video IDs ─────────────────────────────────────
+  function tryFetchVideoIds(pData, removed) {
+    var prompt = 'Search YouTube right now for real videos about ' + pData.name
+      + (pData.school ? ' (' + pData.school + ')' : '')
+      + ', a 2026 NBA Draft prospect. '
+      + 'I need the exact 11-character YouTube video ID from real uploaded videos. '
+      + 'Search for: "' + pData.name + ' highlights 2025 2026" '
+      + 'and "' + pData.name + ' NBA draft scouting". '
+      + 'Return ONLY a JSON array, no markdown: '
+      + '[{"id":"EXACT_11_CHAR_VIDEO_ID","title":"Real video title","cat":"highlights|scouting|gamefilm"}]. '
+      + 'The id field must be exactly 11 characters (letters, numbers, underscore, hyphen). '
+      + 'Verify each video ID by checking the YouTube search results URL contains watch?v=<id>. '
+      + 'Return 2-4 videos. Return [] if you cannot find verified real video IDs.';
+
+    callAPI(prompt, 800, function(text) {
+      var videos = [];
+      try { var m=text.match(/\[[\s\S]*\]/); if(m) videos=JSON.parse(m[0]); } catch(e){}
+      videos = (videos||[]).filter(function(v){
+        return v && (v.id||v.videoId) && (v.id||v.videoId).length >= 10 && (v.id||v.videoId).length <= 12;
+      });
+      if (!videos.length) return; // keep placeholder
+      lsSet(videoKey(pData.name), { ts: Date.now(), videos: videos });
+      if (_current === pData.name) renderVideoEmbeds(pData, videos, removed||[]);
+    }, function() { /* silent — placeholder stays */ });
+  }
+
+  // ── Anthropic API call ────────────────────────────────────────────────────
+  function callAPI(prompt, maxTokens, onSuccess, onError) {
+    fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: maxTokens,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    })
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      var text=''; (data.content||[]).forEach(function(b){ if(b.type==='text') text+=b.text; });
+      onSuccess(text);
+    })
+    .catch(function(e){ if(onError) onError(e); });
+  }
+
+  // ── Click-to-play: replace thumbnail with nocookie iframe on click ─────────
+  function playVideo(vid) {
+    var wrap = document.getElementById('vthumb_' + vid);
+    if (!wrap) return;
+    var embedDiv = document.createElement('div');
+    embedDiv.className = 'video-embed-wrap';
+    var iframe = document.createElement('iframe');
+    iframe.src = 'https://www.youtube-nocookie.com/embed/' + vid
+      + '?autoplay=1&rel=0&modestbranding=1';
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('allow', 'autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+    iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+    iframe.setAttribute('loading', 'lazy');
+    wrap.parentNode.replaceChild(embedDiv, wrap);
+    embedDiv.appendChild(iframe);
+  }
+
+  return { open:open, refresh:refresh, refreshBadges:refreshBadges, removeVideo:removeVideo, playVideo:playVideo };
+})();
+
+// Global shim — onclick="hwPlayVideo(...)" works from inside innerHTML strings
+function hwPlayVideo(vid) { if (window.hwIntel) hwIntel.playVideo(vid); }
+
+</script>
+
+
 </body>
 </html>
