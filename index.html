@@ -53,9 +53,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--gray-400);font-size:13px;pointer-events:none}
 .filter-select{padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit;background:white;color:var(--navy);outline:none;cursor:pointer;transition:border-color .15s}
 .filter-select:focus{border-color:var(--blue-light)}
-.view-toggle{display:flex;background:var(--gray-100);border-radius:8px;padding:2px;gap:2px}
-.view-btn{padding:5px 11px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:none;background:none;color:var(--gray-500)}
-.view-btn.active{background:white;color:var(--navy);box-shadow:var(--shadow-sm)}
+.view-toggle{display:flex;background:#0A1628;border-radius:10px;padding:3px;gap:2px;border:1px solid rgba(255,255,255,.1);box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.view-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);border:none;background:none;color:rgba(255,255,255,.45);font-family:'Barlow Condensed',sans-serif;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;position:relative}
+.view-btn:hover:not(.active){background:rgba(255,255,255,.07);color:rgba(255,255,255,.75)}
+.view-btn.active{background:linear-gradient(135deg,#1e3a5f 0%,#0d2340 100%);color:white;box-shadow:0 2px 8px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1)}
+.vb-icon{font-size:13px;line-height:1;opacity:.8}
+.view-btn.active .vb-icon{opacity:1}
+.vb-label{font-size:11px;font-weight:800;letter-spacing:.5px}
+.vb-badge{font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;background:linear-gradient(135deg,#F59E0B,#D97706);color:#0A1628;padding:1px 4px;border-radius:3px;margin-left:1px;line-height:1.4}
 .count-badge{font-size:12px;color:var(--gray-400);font-weight:500;margin-left:auto}
 
 /* TIER */
@@ -915,6 +920,16 @@ tr:hover td{background:var(--gray-50)}
 .ff2-unplaced-label{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.2);margin-right:4px}
 .ff2-unplaced-chip{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:5px;padding:2px 7px;color:rgba(255,255,255,.4);cursor:pointer;transition:all .12s}
 .ff2-unplaced-chip:hover{background:rgba(255,255,255,.1);color:rgba(255,255,255,.85)}
+/* ── View transition ── */
+#board2026Content{transition:opacity .18s ease,transform .18s ease}
+#board2026Content.view-exit{opacity:0;transform:translateY(6px);pointer-events:none}
+#board2026Content.view-enter{opacity:0;transform:translateY(-6px)}
+/* ── Freeform positional dim ── */
+.ff2-plot.ff2-dim-active .ff2-card{opacity:.12;transition:opacity .2s ease}
+.ff2-plot.ff2-dim-active .ff2-card.ff2-pos-highlight{opacity:1}
+.ff2-leg-item{cursor:pointer;transition:opacity .15s ease}
+.ff2-leg-item.ff2-leg-active{opacity:1}
+.ff2-leg-item:hover{opacity:.85}
 .comp-tbl-wrap{overflow-x:auto;border-radius:10px;border:1.5px solid var(--gray-200);
   box-shadow:0 2px 12px rgba(10,22,40,.06);background:white;-webkit-overflow-scrolling:touch}
 .comp-tbl{width:100%;border-collapse:collapse;min-width:900px}
@@ -1229,10 +1244,19 @@ tr:hover td{background:var(--gray-50)}
       <option value="International">International</option>
     </select>
     <div class="view-toggle">
-      <button class="view-btn active" id="viewCards" onclick="setView('cards')">⊞ Cards</button>
-      <button class="view-btn" id="viewTable" onclick="setView('table')">☰ Table</button>
-      <button class="view-btn" id="viewBigboard" onclick="setView('bigboard')">🏆 Big Board</button>
-      <button class="view-btn" id="viewFreeform" onclick="setView('freeform')">⬡ Freeform</button>
+      <button class="view-btn active" id="viewCards" onclick="setView('cards')">
+        <span class="vb-icon">⊞</span><span class="vb-label">Cards</span>
+      </button>
+      <button class="view-btn" id="viewFreeform" onclick="setView('freeform')">
+        <span class="vb-icon">⬡</span><span class="vb-label">Freeform</span>
+        <span class="vb-badge">NEW</span>
+      </button>
+      <button class="view-btn" id="viewTable" onclick="setView('table')">
+        <span class="vb-icon">☰</span><span class="vb-label">Table</span>
+      </button>
+      <button class="view-btn" id="viewBigboard" onclick="setView('bigboard')">
+        <span class="vb-icon">🏆</span><span class="vb-label">Big Board</span>
+      </button>
     </div>
     <span class="count-badge" id="boardCount"></span>
     <div style="position:relative">
@@ -2503,6 +2527,25 @@ function rankBadgeHtml(rank, tierKey) {
   return '<div class="rank-badge ' + cls + '"><div class="rank-num" style="font-size:' + sz + '">' + rank + '</div><div class="rank-label">rank</div></div>';
 }
 
+// ── RANK PIP — tier-colored glowing orb for Cards view ─────────────────────
+function rankPipHtml(rank) {
+  var color, glow;
+  if      (rank <= TIER_CUTS.franchise) { color = '#F59E0B'; glow = 'rgba(245,158,11,.6)';  }
+  else if (rank <= TIER_CUTS.lottery)   { color = '#8B5CF6'; glow = 'rgba(139,92,246,.55)'; }
+  else if (rank <= TIER_CUTS.lateFirst) { color = '#3B82F6'; glow = 'rgba(59,130,246,.5)';  }
+  else if (rank <= TIER_CUTS.second)    { color = '#10B981'; glow = 'rgba(16,185,129,.5)';  }
+  else                                  { color = '#94A3B8'; glow = 'rgba(148,163,184,.25)';}
+  var fs = rank > 99 ? '12px' : rank > 9 ? '15px' : '18px';
+  return '<div style="width:44px;height:44px;border-radius:50%;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;'
+    + 'background:radial-gradient(circle at 38% 34%,' + color + 'f0 0%,' + color + '90 100%);'
+    + 'box-shadow:0 0 0 1.5px ' + color + '50,0 0 12px ' + glow + ',0 2px 6px rgba(0,0,0,.22);'
+    + 'position:relative;overflow:hidden">'
+    + '<div style="position:absolute;top:4px;left:9px;width:12px;height:5px;border-radius:50%;background:rgba(255,255,255,.28);transform:rotate(-15deg)"></div>'
+    + '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:900;font-size:' + fs + ';color:white;line-height:1;text-shadow:0 1px 4px rgba(0,0,0,.35);position:relative;z-index:1">' + rank + '</div>'
+    + '<div style="font-size:7px;color:rgba(255,255,255,.6);font-weight:700;letter-spacing:.5px;text-transform:uppercase;line-height:1;margin-top:1px;position:relative;z-index:1">rank</div>'
+    + '</div>';
+}
+
 // ── BOARD STATE ───────────────────────────────────────────
 let currentView = 'cards';
 let sortCol = 'rank', sortDir = 1;
@@ -2514,8 +2557,15 @@ function setView(v) {
   document.getElementById('viewTable').classList.toggle('active',    v === 'table');
   document.getElementById('viewBigboard').classList.toggle('active', v === 'bigboard');
   document.getElementById('viewFreeform').classList.toggle('active', v === 'freeform');
-  renderBoard2026();
-  if (window.hwIntel) hwIntel.refreshBadges();
+  var el = document.getElementById('board2026Content');
+  el.classList.add('view-exit');
+  setTimeout(function() {
+    renderBoard2026();
+    el.classList.remove('view-exit');
+    el.classList.add('view-enter');
+    requestAnimationFrame(function() { requestAnimationFrame(function() { el.classList.remove('view-enter'); }); });
+    if (window.hwIntel) hwIntel.refreshBadges();
+  }, 160);
 }
 
 // ── BOARD 2026 ────────────────────────────────────────────
@@ -2536,7 +2586,7 @@ function renderBoard2026() {
   document.getElementById('boardCount').textContent = players.length + ' prospects';
   if (currentView === 'table')        renderBoardTable(players);
   else if (currentView === 'bigboard') renderBoardBigboard(players);
-  else if (currentView === 'freeform') renderBoardFreeform(players);
+  else if (currentView === 'freeform') FreeformBoard.render(players);
   else                                 renderBoardCards(players);
 }
 
@@ -2569,7 +2619,7 @@ function renderBoardCards(players) {
       const top10 = p.rank <= 10;
       html += `<div class="player-card ${tier.key}" onclick="openPlayerModal(${p.rank})" data-rank="${p.rank}" style="position:relative">
         <div class="card-header">
-          ${rankBadgeHtml(p.rank, tier.key)}
+          ${rankPipHtml(p.rank)}
           ${avatarHtml(p.name, p.position||'', '54px', '8px')}
           <div class="card-identity">
             <div class="card-name">${name}</div>
@@ -6854,376 +6904,594 @@ function _scRefreshLogos() {
 }
 
 
-// ── FREEFORM VIEW ─────────────────────────────────────────────────────────
-// Y-axis: rank (1=top). X-axis: composite of position + height.
-// Position anchors: Guard≈left, Forward≈center, Center≈right.
-// Height within position adds fine-grained horizontal spread.
 
-// ── Freeform card expand-on-hover ────────────────────────────────────────────
-function ff2HoverCard(el) {
-  var rank   = parseInt(el.getAttribute('data-rank'), 10);
-  var posCol = el.getAttribute('data-poscol') || '#8B5CF6';
-  var board  = (typeof DATA !== 'undefined' && DATA.board2026) ? DATA.board2026 : [];
-  var p = null;
-  for (var i = 0; i < board.length; i++) { if (board[i].rank === rank) { p = board[i]; break; } }
-  if (!p) return;
 
-  var school   = p.name && p.name.indexOf(' - ') > 0 ? p.name.slice(p.name.indexOf(' - ') + 3) : '';
-  var fullName = p.name && p.name.indexOf(' - ') > 0 ? p.name.slice(0, p.name.indexOf(' - ')) : (p.name || '');
-  var metric   = p.metric && p.metric > 0 ? p.metric.toFixed(1) : null;
-  var cls      = p.cls  || '';
-  var ht       = p.ht   ? (Math.floor(p.ht / 12) + "\'" + (p.ht % 12) + '\"') : null;
+// ── MODULE: Freeform Config ──────────────────────────────────────────────────
+// All magic numbers, colors, and structural constants live here.
+// Defined once at load time — never re-allocated inside render loops.
+var FREEFORM_CONFIG = {
+  TIERS: {
+    franchise: { color: '#F59E0B', bg: 'rgba(245,158,11,.065)',  label: 'Franchise' },
+    lottery:   { color: '#8B5CF6', bg: 'rgba(139,92,246,.055)', label: 'Lottery'   },
+    lateFirst: { color: '#3B82F6', bg: 'rgba(59,130,246,.045)', label: 'Late 1st'  },
+    second:    { color: '#10B981', bg: 'rgba(16,185,129,.038)', label: '2nd Rd'    },
+  },
+  CARD_BG: {
+    franchise: 'rgba(245,158,11,.08)',
+    lottery:   'rgba(139,92,246,.065)',
+    lateFirst: 'rgba(59,130,246,.052)',
+    second:    'rgba(255,255,255,.036)',
+  },
+  POS_COLORS: {
+    Guard:   '#3B82F6',
+    Forward: '#8B5CF6',
+    Center:  '#10B981',
+    '':      '#64748B',
+  },
+  PLOT_H: 1160,
+  LAYOUT: {
+    X_MIN_PCT:        8,
+    X_MAX_PCT:        92,
+    Y_TOP_PCT:        4.5,
+    Y_BOT_PCT:        95.5,
+    RANK_CURVE_EXP:   0.60,
+    COLLISION_PASSES: 20,
+    COLLISION_Y_PUSH: 0.35,
+  },
+  SIZE: {
+    HT_MIN: 70, HT_MAX: 90,
+    WT_MIN: 150, WT_MAX: 315,
+    HT_WEIGHT: 0.80,
+    WT_WEIGHT: 0.20,
+    WT_DEFAULT: 185,
+  },
+  ROLE_TO_POS: {
+    'Pure PG': 'Guard',  'Scoring PG': 'Guard',
+    'Combo G': 'Guard',  'Wing G':     'Guard',
+    'Wing F':  'Forward','Stretch 4':  'Forward',
+    'PF/C':    'Center', 'C':          'Center',
+  },
+  NAME_SUFFIXES: ['jr', 'jr.', 'sr', 'sr.', 'ii', 'iii', 'iv'],
+  COLUMNS: [
+    { name: 'Guards',   sub: 'Quicker / Smaller', posKey: 'Guard'   },
+    { name: 'Forwards', sub: 'Wing Players',       posKey: 'Forward' },
+    { name: 'Centers',  sub: 'Bigger / Stronger',  posKey: 'Center'  },
+  ],
+  DISPLAY_NAME_MAX: 11,
+  CARD_STAGGER_MS:  14,
+};
 
-  // Photo via app avatarHtml system
-  var av = (typeof avatarHtml === 'function')
-    ? avatarHtml(p.name, p.position || '', '48px', '7px')
-    : '<div style="width:48px;height:48px;background:' + posCol + '22;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:\'Barlow Condensed\',sans-serif;font-weight:900;font-size:18px;color:white">'
-        + (fullName.split(' ').map(function(w){ return w[0] || ''; }).join('').slice(0, 2).toUpperCase())
-      + '</div>';
+// ── MODULE: Freeform Layout Engine ──────────────────────────────────────────
+// Pure module. Inputs: players[], tierCuts object, config object.
+// Output: { placed: EnrichedItem[], unplaced: Player[], metricMax, maxRank }
+// Zero DOM reads. Zero style strings. Zero innerHTML. Fully unit-testable.
+var FreeformLayout = (function() {
+  'use strict';
 
-  var schoolLine = [school, cls].filter(Boolean).join(' · ');
-  var metricHtml = metric
-    ? '<div class="ff2-exp-metric-row"><span class="ff2-exp-metric-val" style="color:' + posCol + '">' + metric + '</span><span class="ff2-exp-metric-lbl">Metric</span></div>'
-    : '';
-
-  var expHtml = '<div class="ff2-exp-body">'
-    + '<div class="ff2-exp-photo">' + av + '</div>'
-    + '<div class="ff2-exp-info">'
-      + '<div class="ff2-exp-fullname">' + fullName + '</div>'
-      + (schoolLine ? '<div class="ff2-exp-school">' + schoolLine + '</div>' : '')
-      + (p.torvik_role ? '<div class="ff2-exp-role">' + p.torvik_role + (ht ? ' · ' + ht : '') + '</div>' : '')
-      + metricHtml
-    + '</div>'
-    + '</div>';
-
-  // Remove any stale expanded content before injecting
-  var old = el.querySelector('.ff2-exp-body');
-  if (old) old.remove();
-
-  el.insertAdjacentHTML('beforeend', expHtml);
-  el.classList.add('ff2-expanded');
-
-  // Smart origin: expand toward screen center so card stays visible
-  var xPct = parseFloat(el.style.left) || 50;
-  var ox = xPct < 18 ? '18%' : xPct > 82 ? '82%' : '50%';
-  el.style.transformOrigin = ox + ' 50%';
-  el.style.transform = 'translate(-' + ox + ', -50%)';
-  el.style.boxShadow = '0 24px 64px rgba(0,0,0,.82), 0 0 0 1.5px rgba(255,255,255,.18), 0 0 32px ' + posCol + '28';
-  el.style.background = 'rgba(4,13,30,.97)';
-}
-
-function ff2LeaveCard(el) {
-  var expBody = el.querySelector('.ff2-exp-body');
-  if (expBody) expBody.remove();
-  el.classList.remove('ff2-expanded');
-  el.style.transform      = '';
-  el.style.transformOrigin = '';
-  el.style.boxShadow      = '0 2px 12px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.05)';
-  el.style.background     = '';
-}
-
-// Canonical position category for a player (Guard / Forward / Center)
-function ffPosCategory(p) {
-  var ROLE_POS = {
-    'Pure PG':'Guard','Scoring PG':'Guard','Combo G':'Guard','Wing G':'Guard',
-    'Wing F':'Forward','Stretch 4':'Forward','PF/C':'Center','C':'Center'
-  };
-  var pos = p.position;
-  if (!pos && p.torvik_role) {
-    var keys = Object.keys(ROLE_POS);
-    for (var i = 0; i < keys.length; i++) {
-      if ((p.torvik_role || '').indexOf(keys[i]) >= 0) { pos = ROLE_POS[keys[i]]; break; }
-    }
-  }
-  return pos || null;
-}
-
-// Compute X position (0-100%) for a player — ZONE-CONSTRAINED
-// Each position category stays within its visual column; height/weight
-// only determines fine-grained spread *within* that zone.
-//   Guard zone:   5–31%  (center 18)
-//   Forward zone: 35–61% (center 48)
-//   Center zone:  65–91% (center 78)
-function ffXpos(p) {
-  var pos = ffPosCategory(p);
-  if (!pos) return null;
-
-  var ht = p.ht;
-  var wt = p.wt;
-
-  // Zone center and half-spread
-  var zC = pos === 'Guard' ? 18 : pos === 'Center' ? 78 : 48;
-  var zR = 13; // ±13% — max card never crosses zone boundary
-
-  if (!ht && !wt) return zC;
-
-  // Unified size score 0→small/quick  1→big/strong
-  // Calibrated across full draft range: 71"–88" height, 160–300 lbs
-  var htNorm  = ht ? Math.max(0, Math.min(1, (ht  - 71) / (88  - 71))) : 0.5;
-  var wtNorm  = wt ? Math.max(0, Math.min(1, (wt  - 160) / (300 - 160))) : htNorm;
-  var sizeScr = htNorm * 0.62 + wtNorm * 0.38;
-
-  return Math.max(zC - zR, Math.min(zC + zR, zC + (sizeScr - 0.5) * (zR * 2)));
-}
-
-// Zone bounds for collision clamping — each player stays inside their column
-function ffZoneBounds(p) {
-  var pos = ffPosCategory(p);
-  if (pos === 'Guard')   return { min: 5,  max: 33 };
-  if (pos === 'Center')  return { min: 63, max: 92 };
-  return                        { min: 33, max: 63 }; // Forward
-}
-
-// ── BOARD 2026 — FREEFORM VIEW ───────────────────────────────────────────────
-function renderBoardFreeform(players) {
-  var el = document.getElementById('board2026Content');
-  if (!el) return;
-
-  var TIER_COLORS = {
-    franchise: {color:'#F59E0B', bg:'rgba(245,158,11,.065)',  label:'Franchise'},
-    lottery:   {color:'#8B5CF6', bg:'rgba(139,92,246,.055)',  label:'Lottery'},
-    lateFirst: {color:'#3B82F6', bg:'rgba(59,130,246,.045)',  label:'Late 1st'},
-    second:    {color:'#10B981', bg:'rgba(16,185,129,.038)',  label:'2nd Rd'},
-  };
-  var POS_COLORS = {Guard:'#3B82F6', Forward:'#8B5CF6', Center:'#10B981', '':'#64748B'};
-  var PLOT_H = 1160;
-
-  var ranked    = players.filter(function(p){ return p.rank <= 75; });
-  var placeable = ranked.filter(function(p){ return ffXpos(p) !== null; });
-  var unplaced  = ranked.filter(function(p){ return ffXpos(p) === null; });
-  var maxRank   = Math.max.apply(null, placeable.map(function(p){ return p.rank; }));
-
-  // Metric normalizer for mini-bar (top metric in class ≈ 200; normalize 0–1)
-  var allMetrics = placeable.map(function(p){ return p.metric || 0; });
-  var metricMax  = Math.max.apply(null, allMetrics) || 1;
-
-  function yPct(rank) {
-    var exp   = 0.60;
-    var rNorm = Math.pow(rank, exp) / Math.pow(maxRank, exp);
-    return (4.5 + rNorm * 91).toFixed(2);
-  }
-
-  function getTierKey(rank) {
-    if (rank <= TIER_CUTS.franchise) return 'franchise';
-    if (rank <= TIER_CUTS.lottery)   return 'lottery';
-    if (rank <= TIER_CUTS.lateFirst) return 'lateFirst';
+  // Returns the tier key for a given rank using the live TIER_CUTS object.
+  function getTierKey(rank, cuts) {
+    if (rank <= cuts.franchise) return 'franchise';
+    if (rank <= cuts.lottery)   return 'lottery';
+    if (rank <= cuts.lateFirst) return 'lateFirst';
     return 'second';
   }
 
-  var cuts = [
-    {rank: TIER_CUTS.franchise, key:'franchise'},
-    {rank: TIER_CUTS.lottery,   key:'lottery'},
-    {rank: TIER_CUTS.lateFirst, key:'lateFirst'},
-    {rank: TIER_CUTS.second,    key:'second'},
-  ];
+  // Infer canonical position from explicit field or torvik_role.
+  function resolvePosition(player, roleMap) {
+    if (player.position) return player.position;
+    if (!player.torvik_role) return null;
+    var keys = Object.keys(roleMap);
+    for (var i = 0; i < keys.length; i++) {
+      if (player.torvik_role.indexOf(keys[i]) >= 0) return roleMap[keys[i]];
+    }
+    return null;
+  }
 
-  // ── Collision avoidance — zone-aware: cards can't cross position column bounds
-  var placed = placeable.map(function(p) {
-    var zb = ffZoneBounds(p);
-    return { p:p, x:ffXpos(p), y:parseFloat(yPct(p.rank)), zMin:zb.min, zMax:zb.max };
-  });
-  placed.sort(function(a,b){ return a.p.rank - b.p.rank; });
+  // Raw size score for X-axis placement. Returns null if height is unknown.
+  // Height is the dominant axis (80%); weight is a secondary tiebreaker (20%).
+  function computeSizeScore(player, sizeCfg) {
+    var ht = player.ht;
+    if (!ht) return null;
+    var wt     = player.wt || sizeCfg.WT_DEFAULT;
+    var htNorm = Math.max(0, Math.min(1, (ht - sizeCfg.HT_MIN) / (sizeCfg.HT_MAX - sizeCfg.HT_MIN)));
+    var wtNorm = Math.max(0, Math.min(1, (wt - sizeCfg.WT_MIN) / (sizeCfg.WT_MAX - sizeCfg.WT_MIN)));
+    return htNorm * sizeCfg.HT_WEIGHT + wtNorm * sizeCfg.WT_WEIGHT;
+  }
 
-  // Card 110px wide; reference canvas width ~920px for %-based spacing
-  var PW    = 920;
-  var MIN_X = (110 + 16) / PW * 100;  // ≈ 13.7% — includes breathing gap
-  var MIN_Y = (52  + 18) / PLOT_H * 100; // proportional to canvas height
+  // Y position (as a percentage) for a given rank using the power curve.
+  // Lower rank number (better prospect) = higher on the board (lower Y%).
+  function rankToYPct(rank, maxRank, layout) {
+    var rNorm = Math.pow(rank, layout.RANK_CURVE_EXP) / Math.pow(maxRank, layout.RANK_CURVE_EXP);
+    return layout.Y_TOP_PCT + rNorm * (layout.Y_BOT_PCT - layout.Y_TOP_PCT);
+  }
 
-  for (var pass = 0; pass < 28; pass++) {
-    for (var i = 1; i < placed.length; i++) {
-      for (var j = 0; j < i; j++) {
-        var dx = Math.abs(placed[i].x - placed[j].x);
-        var dy = Math.abs(placed[i].y - placed[j].y);
-        if (dx < MIN_X && dy < MIN_Y) {
-          var dir  = placed[i].x >= placed[j].x ? 1 : -1;
-          var push = (MIN_X - dx) * 0.52;
-          placed[i].x += dir * push;
-          // Clamp to player's zone — prevents cross-column drift
-          placed[i].x = Math.max(placed[i].zMin, Math.min(placed[i].zMax, placed[i].x));
+  // Assign evenly-spaced X values in strict ascending size order.
+  // Guarantee: a shorter player is always to the left of a taller player.
+  // X is frozen after this step — collision resolution only nudges Y.
+  function assignXPositions(items, layout) {
+    var sorted = items.slice().sort(function(a, b) {
+      var diff = a.sizeScore - b.sizeScore;
+      return Math.abs(diff) > 0.0001 ? diff : a.p.rank - b.p.rank;
+    });
+    var n     = sorted.length;
+    var range = layout.X_MAX_PCT - layout.X_MIN_PCT;
+    sorted.forEach(function(item, k) {
+      item.x = layout.X_MIN_PCT + (k / Math.max(n - 1, 1)) * range;
+    });
+    return sorted;
+  }
+
+  // Resolve vertical overlaps by nudging Y only (X is immutable after assignment).
+  function resolveYCollisions(placed, plotH, layout) {
+    var MIN_Y = (52 + 14) / plotH * 100;
+    var MIN_X = (110 + 10) / 920 * 100;
+    for (var pass = 0; pass < layout.COLLISION_PASSES; pass++) {
+      for (var i = 1; i < placed.length; i++) {
+        for (var j = 0; j < i; j++) {
+          var dx = Math.abs(placed[i].x - placed[j].x);
+          var dy = Math.abs(placed[i].y - placed[j].y);
+          if (dx < MIN_X && dy < MIN_Y) {
+            var push = (MIN_Y - dy) * layout.COLLISION_Y_PUSH;
+            var dir  = placed[i].y >= placed[j].y ? 1 : -1;
+            placed[i].y += dir * push;
+            placed[i].y  = Math.max(layout.Y_TOP_PCT, Math.min(layout.Y_BOT_PCT, placed[i].y));
+          }
         }
       }
     }
+    return placed;
   }
 
-  // ── Build HTML ────────────────────────────────────────────────────────
-  var out = '<div class="ff2-shell">';
+  // Attach visual properties to each positioned item.
+  // This is the only place that translates rank/position into colors.
+  // The result is a plain data object — no style strings, no HTML.
+  function enrichItems(placed, cuts, cfg) {
+    return placed.map(function(item) {
+      var tierKey = getTierKey(item.p.rank, cuts);
+      var pos     = resolvePosition(item.p, cfg.ROLE_TO_POS) || '';
+      return {
+        p:         item.p,
+        x:         item.x,
+        y:         item.y,
+        tierKey:   tierKey,
+        tierColor: cfg.TIERS[tierKey].color,
+        cardBg:    cfg.CARD_BG[tierKey],
+        posColor:  cfg.POS_COLORS[pos] || cfg.POS_COLORS[''],
+        pos:       pos,
+      };
+    });
+  }
 
-  // Header
-  out += '<div class="ff2-head">';
-  out += '<div><div class="ff2-title">Freeform Board</div>';
-  out += '<div class="ff2-meta">' + placeable.length + ' prospects · size &amp; positional placement';
-  if (unplaced.length) out += ' · <span style="color:rgba(255,255,255,.2)">' + unplaced.length + ' omitted</span>';
-  out += '</div></div>';
-  out += '<div class="ff2-legend">';
-  ['Guard','Forward','Center'].forEach(function(pos) {
-    out += '<div class="ff2-leg-item"><div class="ff2-leg-dot" style="background:' + POS_COLORS[pos] + '"></div>' + pos + '</div>';
-  });
-  out += '</div></div>';
+  // Public: run the full layout pipeline.
+  // Returns { placed, unplaced, metricMax, maxRank, rankToYPct (bound fn) }
+  function run(players, tierCuts, cfg) {
+    var ranked   = players.filter(function(p) { return p.rank <= 75; });
+    var sized    = [];
+    var unplaced = [];
 
-  // Column header bar (aligns with rail + canvas)
-  out += '<div class="ff2-col-bar">';
-  out += '<div class="ff2-col-bar-spacer"></div>';
-  out += '<div class="ff2-col-bar-inner">';
-  var colDefs = [
-    {name:'Guards',   sub:'Quicker / Smaller', color:POS_COLORS.Guard},
-    {name:'Forwards', sub:'Wing Players',       color:POS_COLORS.Forward},
-    {name:'Centers',  sub:'Bigger / Stronger',  color:POS_COLORS.Center},
-  ];
-  colDefs.forEach(function(cd) {
-    out += '<div class="ff2-col-hdr"><div class="ff2-col-hdr-name" style="color:' + cd.color + '">' + cd.name + '</div>';
-    out += '<div class="ff2-col-hdr-sub">' + cd.sub + '</div></div>';
-  });
-  out += '</div></div>';
+    ranked.forEach(function(p) {
+      var score = computeSizeScore(p, cfg.SIZE);
+      if (score !== null) {
+        sized.push({ p: p, sizeScore: score, x: 0, y: 0 });
+      } else {
+        unplaced.push(p);
+      }
+    });
 
-  // Body
-  out += '<div class="ff2-body">';
+    var maxRank = sized.reduce(function(m, it) { return Math.max(m, it.p.rank); }, 0) || 1;
 
-  // Left tier rail
-  out += '<div class="ff2-rail" style="height:' + PLOT_H + 'px">';
-  var prevCutRank = 0;
-  cuts.forEach(function(cut) {
-    if (cut.rank > maxRank) return;
-    var tc        = TIER_COLORS[cut.key];
-    var tierStart = prevCutRank === 0 ? 1 : prevCutRank;
-    var tierEnd   = cut.rank;
-    var topPx     = parseFloat(yPct(tierStart)) / 100 * PLOT_H;
-    var botPx     = parseFloat(yPct(Math.min(tierEnd, maxRank))) / 100 * PLOT_H;
-    var h         = Math.max(botPx - topPx, 28);
-    var cnt       = placeable.filter(function(p){ return p.rank > prevCutRank && p.rank <= tierEnd; }).length;
-    out += '<div class="ff2-rail-item" style="top:' + topPx.toFixed(1) + 'px;height:' + h.toFixed(1) + 'px">';
-    out += '<div class="ff2-rail-bar" style="background:' + tc.color + ';height:' + Math.min(Math.max(h*0.55,14),52) + 'px"></div>';
-    out += '<div class="ff2-rail-label" style="color:' + tc.color + '">' + tc.label + '</div>';
-    out += '<div class="ff2-rail-count" style="color:' + tc.color + '">' + cnt + '</div>';
-    out += '</div>';
-    prevCutRank = tierEnd;
-  });
-  out += '</div>'; // ff2-rail
+    sized.forEach(function(item) {
+      item.y = rankToYPct(item.p.rank, maxRank, cfg.LAYOUT);
+    });
 
-  // Canvas (plot)
-  out += '<div class="ff2-canvas">';
-  out += '<div class="ff2-plot" id="ff2Plot" style="height:' + PLOT_H + 'px">';
+    var xAssigned = assignXPositions(sized, cfg.LAYOUT);
+    var resolved  = resolveYCollisions(xAssigned, cfg.PLOT_H, cfg.LAYOUT);
+    var enriched  = enrichItems(resolved, tierCuts, cfg);
 
-  // Column zone tints + dividers
-  out += '<div class="ff2-col-zone" style="left:0;width:33.33%;background:rgba(59,130,246,.02)"></div>';
-  out += '<div class="ff2-col-zone" style="left:33.33%;width:33.34%;background:rgba(139,92,246,.017)"></div>';
-  out += '<div class="ff2-col-zone" style="left:66.67%;width:33.33%;background:rgba(16,185,129,.02)"></div>';
-  out += '<div class="ff2-col-div" style="left:33.33%"></div>';
-  out += '<div class="ff2-col-div" style="left:66.67%"></div>';
+    var metricMax = enriched.reduce(function(m, it) {
+      return Math.max(m, it.p.metric || 0);
+    }, 1);
 
-  // Tier fills, lines, labels
-  var prevFillRank = 0;
-  cuts.forEach(function(cut) {
-    if (cut.rank > maxRank) return;
-    var tc       = TIER_COLORS[cut.key];
-    var bandTopPct = parseFloat(yPct(prevFillRank === 0 ? 1 : prevFillRank));
-    var bandBotPct = parseFloat(yPct(cut.rank));
-    var bandH      = (bandBotPct - bandTopPct).toFixed(2);
-    out += '<div class="ff2-tier-fill" style="top:' + bandTopPct + '%;height:' + bandH + '%;background:' + tc.bg + '"></div>';
-    out += '<div class="ff2-tier-line" style="top:' + bandBotPct + '%;border-top-color:' + tc.color + ';opacity:.45"></div>';
-    out += '<div class="ff2-tier-lbl" style="top:' + bandBotPct + '%">';
-    out += '<div class="ff2-tier-lbl-dot" style="background:' + tc.color + '"></div>';
-    out += '<span class="ff2-tier-lbl-text" style="color:' + tc.color + '">' + tc.label + '</span>';
-    out += '</div>';
-    prevFillRank = cut.rank;
-  });
+    // Expose a bound rankToYPct for use by rail/marks rendering
+    var boundRankToY = function(rank) { return rankToYPct(rank, maxRank, cfg.LAYOUT); };
 
-  // Y rank marks
-  var yMarkRanks = [1];
-  cuts.forEach(function(c){ if (c.rank <= maxRank) yMarkRanks.push(c.rank); });
-  yMarkRanks.push(maxRank);
-  yMarkRanks.forEach(function(r) {
-    var col = TIER_COLORS[getTierKey(r)].color;
-    out += '<div class="ff2-ymark" style="top:' + yPct(r) + '%;color:' + col + '">#' + r + '</div>';
-  });
+    return {
+      placed:     enriched,
+      unplaced:   unplaced,
+      metricMax:  metricMax,
+      maxRank:    maxRank,
+      rankToYPct: boundRankToY,
+    };
+  }
 
-  // ── Player cards ──────────────────────────────────────────────────────
-  placed.forEach(function(item, idx) {
-    var p       = item.p;
-    var xPct    = item.x.toFixed(2);
-    var yPct2   = item.y.toFixed(2);
-    var pos     = p.position || '';
-    var posCol  = POS_COLORS[pos] || POS_COLORS[''];
-    var tierKey = getTierKey(p.rank);
-    var tierCol = TIER_COLORS[tierKey].color;
+  return { run: run, getTierKey: getTierKey };
 
-    // Card background: tier-tinted dark glass
-    var cardBg = p.rank <= TIER_CUTS.franchise  ? 'rgba(245,158,11,.08)'  :
-                 p.rank <= TIER_CUTS.lottery     ? 'rgba(139,92,246,.065)' :
-                 p.rank <= TIER_CUTS.lateFirst   ? 'rgba(59,130,246,.052)'  :
-                                                   'rgba(255,255,255,.036)';
+})();
 
-    // Name: last name, allow up to 11 chars before truncation
-    var school     = p.name && p.name.indexOf(' - ') > 0 ? p.name.slice(p.name.indexOf(' - ') + 3) : '';
-    var playerBase = p.name && p.name.indexOf(' - ') > 0 ? p.name.slice(0, p.name.indexOf(' - ')) : (p.name || '');
-    var nameParts  = playerBase.trim().split(' ');
-    var SUFFIXES   = {jr:1,'jr.':1,sr:1,'sr.':1,ii:1,iii:1,iv:1};
-    while (nameParts.length > 1 && SUFFIXES[nameParts[nameParts.length-1].toLowerCase()]) nameParts.pop();
-    var lastName    = nameParts.length > 1 ? nameParts[nameParts.length-1] : playerBase;
-    var displayName = lastName.length > 11 ? lastName.slice(0,10) + '.' : lastName;
+// ── MODULE: Freeform State ───────────────────────────────────────────────────
+// Owns all runtime state for the freeform board.
+// Replaces window._ff2LegendDim and ad-hoc linear scans in hover handlers.
+var FreeformState = (function() {
+  'use strict';
 
-    var roleLabel = p.torvik_role || p.position || '';
-    var delay     = (idx * 14).toFixed(0) + 'ms';
+  var _posFilter = null;   // string | null — active position highlight
+  var _playerMap = {};     // rank → player object, built once per render (O(1) lookup)
 
-    // Metric bar width (% of card, capped 8-92%)
-    var metricPct = p.metric && p.metric > 0
+  // Build rank→player map once per render cycle. Subsequent hover events
+  // are O(1) instead of the previous O(n) linear scan through DATA.board2026.
+  function buildPlayerMap(players) {
+    _playerMap = {};
+    players.forEach(function(p) { _playerMap[p.rank] = p; });
+  }
+
+  function getPlayer(rank)    { return _playerMap[rank] || null; }
+  function getFilter()        { return _posFilter; }
+  function hasFilter()        { return _posFilter !== null; }
+  function clearFilter()      { _posFilter = null; }
+
+  // Toggle: same pos → clear, different pos → set. Returns new active value.
+  function toggleFilter(pos) {
+    _posFilter = (_posFilter === pos) ? null : pos;
+    return _posFilter;
+  }
+
+  // Called at the start of each render to refresh the lookup map.
+  // Position filter intentionally persists across re-renders.
+  function reset(players) {
+    buildPlayerMap(players);
+  }
+
+  return { reset: reset, getPlayer: getPlayer, getFilter: getFilter, hasFilter: hasFilter, clearFilter: clearFilter, toggleFilter: toggleFilter };
+
+})();
+
+// ── MODULE: Freeform Components ─────────────────────────────────────────────
+// Pure factory functions: data → HTML string.
+// No DOM reads. No state mutations. No side effects.
+var FreeformComponents = (function() {
+  'use strict';
+
+  // Strip name suffix tokens and truncate to DISPLAY_NAME_MAX chars.
+  // Centralises logic that was previously duplicated across three render functions.
+  function parseDisplayName(fullNameWithSchool) {
+    var base = fullNameWithSchool && fullNameWithSchool.indexOf(' - ') > 0
+      ? fullNameWithSchool.slice(0, fullNameWithSchool.indexOf(' - '))
+      : (fullNameWithSchool || '');
+    var parts = base.trim().split(' ');
+    var suf   = FREEFORM_CONFIG.NAME_SUFFIXES;
+    while (parts.length > 1 && suf.indexOf(parts[parts.length - 1].toLowerCase()) >= 0) {
+      parts.pop();
+    }
+    var last = parts.length > 1 ? parts[parts.length - 1] : base;
+    return last.length > FREEFORM_CONFIG.DISPLAY_NAME_MAX
+      ? last.slice(0, FREEFORM_CONFIG.DISPLAY_NAME_MAX - 1) + '.'
+      : last;
+  }
+
+  // ── PlayerCard ──────────────────────────────────────────────────────────
+  // Renders one absolutely-positioned card at the coordinates from layout.
+  function PlayerCard(item, metricMax, idx) {
+    var p           = item.p;
+    var posColor    = item.posColor;
+    var tierColor   = item.tierColor;
+    var cardBg      = item.cardBg;
+    var displayName = parseDisplayName(p.name);
+    var roleLabel   = p.torvik_role || p.position || '';
+    var delay       = (idx * FREEFORM_CONFIG.CARD_STAGGER_MS) + 'ms';
+    var isFranchise = item.tierKey === 'franchise';
+    var metricPct   = (p.metric && p.metric > 0)
       ? Math.max(8, Math.min(92, (p.metric / metricMax) * 100)).toFixed(1)
       : '0';
 
-    // Franchise class for top picks
-    var franchiseCls = p.rank <= TIER_CUTS.franchise ? ' ff2-franchise' : '';
-
-    out += '<div class="ff2-card' + franchiseCls + '" '
-         + 'data-rank="' + p.rank + '" '
-         + 'data-poscol="' + posCol + '" '
-         + 'style="left:' + xPct + '%;top:' + yPct2 + '%;background:' + cardBg + ';'
-         + 'box-shadow:0 2px 12px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.05);'
-         + 'animation-delay:' + delay + '" '
-         + 'onclick="openPlayerModal(' + p.rank + ')" '
-         + 'onmouseenter="ff2HoverCard(this)" '
-         + 'onmouseleave="ff2LeaveCard(this)">';
-
-    out += '<div class="ff2-card-stripe" style="background:' + posCol + '"></div>';
-    out += '<div class="ff2-card-top">';
-    out += '<span class="ff2-card-rank" style="color:' + tierCol + ';opacity:.75">#' + p.rank + '</span>';
-    out += '<span class="ff2-card-tier-dot" style="background:' + posCol + '"></span>';
-    out += '</div>';
-    out += '<div class="ff2-card-name">' + displayName + '</div>';
-    if (roleLabel) out += '<div class="ff2-card-role">' + roleLabel + '</div>';
-    // Metric bar — only shown if metric exists
-    if (p.metric && p.metric > 0) {
-      out += '<div class="ff2-card-mbar-wrap">';
-      out += '<div class="ff2-card-mbar" style="width:' + metricPct + '%;background:' + posCol + '"></div>';
-      out += '</div>';
-    }
-    out += '</div>';
-  });
-
-  out += '</div>'; // ff2-plot
-  out += '</div>'; // ff2-canvas
-  out += '</div>'; // ff2-body
-
-  // Unplaced footer
-  if (unplaced.length) {
-    out += '<div class="ff2-unplaced">';
-    out += '<span class="ff2-unplaced-label">No placement data</span>';
-    unplaced.forEach(function(p) {
-      var base  = p.name ? (p.name.indexOf(' - ') > 0 ? p.name.slice(0, p.name.indexOf(' - ')) : p.name) : '?';
-      var parts = base.trim().split(' ');
-      var SUF   = {jr:1,'jr.':1,sr:1,'sr.':1,ii:1,iii:1,iv:1};
-      while (parts.length > 1 && SUF[parts[parts.length-1].toLowerCase()]) parts.pop();
-      var chip = '#' + p.rank + ' ' + (parts.length > 1 ? parts[parts.length-1] : base);
-      out += '<span class="ff2-unplaced-chip" onclick="openPlayerModal(' + p.rank + ')">' + chip + '</span>';
-    });
-    out += '</div>';
+    return '<div class="ff2-card' + (isFranchise ? ' ff2-franchise' : '') + '"'
+      + ' data-rank="' + p.rank + '"'
+      + ' data-poscol="' + posColor + '"'
+      + ' data-pos="' + (item.pos || '') + '"'
+      + ' style="left:' + item.x.toFixed(2) + '%;top:' + item.y.toFixed(2) + '%;'
+      + 'background:' + cardBg + ';'
+      + 'box-shadow:0 2px 12px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.05);'
+      + 'animation-delay:' + delay + '"'
+      + ' onclick="openPlayerModal(' + p.rank + ')"'
+      + ' onmouseenter="FreeformBoard.hoverCard(this)"'
+      + ' onmouseleave="FreeformBoard.leaveCard(this)">'
+      + '<div class="ff2-card-stripe" style="background:' + posColor + '"></div>'
+      + '<div class="ff2-card-top">'
+      + '<span class="ff2-card-rank" style="color:' + tierColor + ';opacity:.75">#' + p.rank + '</span>'
+      + '<span class="ff2-card-tier-dot" style="background:' + posColor + '"></span>'
+      + '</div>'
+      + '<div class="ff2-card-name">' + displayName + '</div>'
+      + (roleLabel ? '<div class="ff2-card-role">' + roleLabel + '</div>' : '')
+      + ((p.metric && p.metric > 0)
+          ? '<div class="ff2-card-mbar-wrap"><div class="ff2-card-mbar" style="width:' + metricPct + '%;background:' + posColor + '"></div></div>'
+          : '')
+      + '</div>';
   }
 
-  out += '</div>'; // ff2-shell
+  // ── HoverCardContent ────────────────────────────────────────────────────
+  // The expanded panel injected into a card on mouseenter.
+  function HoverCardContent(player, posColor) {
+    var p        = player;
+    var school   = p.name && p.name.indexOf(' - ') > 0 ? p.name.slice(p.name.indexOf(' - ') + 3) : '';
+    var fullName = p.name && p.name.indexOf(' - ') > 0 ? p.name.slice(0, p.name.indexOf(' - ')) : (p.name || '');
+    var metric   = p.metric && p.metric > 0 ? p.metric.toFixed(1) : null;
+    var cls      = p.cls || '';
+    var htStr    = p.ht ? (Math.floor(p.ht / 12) + '\'' + (p.ht % 12) + '"') : null;
+    var schoolLine = [school, cls].filter(Boolean).join(' · ');
+    var roleRow    = p.torvik_role ? (p.torvik_role + (htStr ? ' · ' + htStr : '')) : '';
 
-  el.innerHTML = out;
-}
+    var av = (typeof avatarHtml === 'function')
+      ? avatarHtml(p.name, p.position || '', '48px', '7px')
+      : '<div style="width:48px;height:48px;background:' + posColor + '22;border-radius:7px"></div>';
 
-// ── Card hover helpers ────────────────────────────────────────────────────────
+    return '<div class="ff2-exp-body">'
+      + '<div class="ff2-exp-photo">' + av + '</div>'
+      + '<div class="ff2-exp-info">'
+      + '<div class="ff2-exp-fullname">' + fullName + '</div>'
+      + (schoolLine ? '<div class="ff2-exp-school">' + schoolLine + '</div>' : '')
+      + (roleRow    ? '<div class="ff2-exp-role">'   + roleRow    + '</div>' : '')
+      + (metric
+          ? '<div class="ff2-exp-metric-row">'
+            + '<span class="ff2-exp-metric-val" style="color:' + posColor + '">' + metric + '</span>'
+            + '<span class="ff2-exp-metric-lbl">Metric</span>'
+            + '</div>'
+          : '')
+      + '</div>'
+      + '</div>';
+  }
 
+  // ── TierRail ────────────────────────────────────────────────────────────
+  // The left-side vertical rail showing tier bands and counts.
+  function TierRail(tierCuts, maxRank, placed, plotH, rankToYPctFn) {
+    var out      = '<div class="ff2-rail" style="height:' + plotH + 'px">';
+    var tierKeys = ['franchise', 'lottery', 'lateFirst', 'second'];
+    var prevRank = 0;
+
+    tierKeys.forEach(function(key) {
+      var cutRank = tierCuts[key];
+      var tc      = FREEFORM_CONFIG.TIERS[key];
+      if (!tc || cutRank > maxRank) return;
+
+      var topPx   = rankToYPctFn(prevRank === 0 ? 1 : prevRank) / 100 * plotH;
+      var botPx   = rankToYPctFn(Math.min(cutRank, maxRank)) / 100 * plotH;
+      var h       = Math.max(botPx - topPx, 28);
+      var barH    = Math.min(Math.max(h * 0.55, 14), 52);
+      var cnt     = placed.filter(function(it) {
+        return it.p.rank > prevRank && it.p.rank <= cutRank;
+      }).length;
+
+      out += '<div class="ff2-rail-item" style="top:' + topPx.toFixed(1) + 'px;height:' + h.toFixed(1) + 'px">'
+        + '<div class="ff2-rail-bar" style="background:' + tc.color + ';height:' + barH + 'px"></div>'
+        + '<div class="ff2-rail-label" style="color:' + tc.color + '">' + tc.label + '</div>'
+        + '<div class="ff2-rail-count" style="color:' + tc.color + '">' + cnt + '</div>'
+        + '</div>';
+      prevRank = cutRank;
+    });
+
+    return out + '</div>';
+  }
+
+  // ── ColumnHeader ────────────────────────────────────────────────────────
+  function ColumnHeader() {
+    var inner = FREEFORM_CONFIG.COLUMNS.map(function(col) {
+      var color = FREEFORM_CONFIG.POS_COLORS[col.posKey] || FREEFORM_CONFIG.POS_COLORS[''];
+      return '<div class="ff2-col-hdr">'
+        + '<div class="ff2-col-hdr-name" style="color:' + color + '">' + col.name + '</div>'
+        + '<div class="ff2-col-hdr-sub">' + col.sub + '</div>'
+        + '</div>';
+    }).join('');
+    return '<div class="ff2-col-bar"><div class="ff2-col-bar-spacer"></div>'
+      + '<div class="ff2-col-bar-inner">' + inner + '</div></div>';
+  }
+
+  // ── BoardLegend ─────────────────────────────────────────────────────────
+  // Position filter toggles — delegates to FreeformBoard for state management.
+  function BoardLegend() {
+    return ['Guard', 'Forward', 'Center'].map(function(pos) {
+      var color = FREEFORM_CONFIG.POS_COLORS[pos];
+      return '<div class="ff2-leg-item" data-pos="' + pos + '"'
+        + ' onclick="FreeformBoard.togglePosFilter(\'' + pos + '\')"'
+        + ' title="Click to highlight ' + pos + 's">'
+        + '<div class="ff2-leg-dot" style="background:' + color + '"></div>'
+        + pos + '</div>';
+    }).join('');
+  }
+
+  // ── UnplacedFooter ──────────────────────────────────────────────────────
+  function UnplacedFooter(unplaced) {
+    if (!unplaced.length) return '';
+    var chips = unplaced.map(function(p) {
+      return '<span class="ff2-unplaced-chip" onclick="openPlayerModal(' + p.rank + ')">'
+        + '#' + p.rank + ' ' + parseDisplayName(p.name)
+        + '</span>';
+    }).join('');
+    return '<div class="ff2-unplaced"><span class="ff2-unplaced-label">No placement data</span>' + chips + '</div>';
+  }
+
+  return {
+    PlayerCard:       PlayerCard,
+    HoverCardContent: HoverCardContent,
+    TierRail:         TierRail,
+    ColumnHeader:     ColumnHeader,
+    BoardLegend:      BoardLegend,
+    UnplacedFooter:   UnplacedFooter,
+    parseDisplayName: parseDisplayName,
+  };
+
+})();
+
+// ── MODULE: Freeform Board ───────────────────────────────────────────────────
+// Orchestrator: wires layout engine, state store, and components together.
+// Owns the render pipeline and exposes the public interaction API.
+var FreeformBoard = (function() {
+  'use strict';
+
+  var CFG  = FREEFORM_CONFIG;
+  var Comp = FreeformComponents;
+
+  // ── Render ───────────────────────────────────────────────────────────────
+  function render(players) {
+    var el = document.getElementById('board2026Content');
+    if (!el) return;
+
+    // 1. Run the pure layout engine — no DOM involved
+    var layout   = FreeformLayout.run(players, TIER_CUTS, CFG);
+    var plotH    = CFG.PLOT_H;
+    var maxRank  = layout.maxRank;
+    var toYPct   = layout.rankToYPct;  // bound fn: rank → Y%
+    var tierKeys = ['franchise', 'lottery', 'lateFirst', 'second'];
+
+    // 2. Seed state store with fresh player lookup map
+    FreeformState.reset(layout.placed.map(function(it) { return it.p; }));
+
+    // 3. Assemble HTML via component functions
+    var placedCount = layout.placed.length;
+    var out = '<div class="ff2-shell">';
+
+    // Header + legend
+    out += '<div class="ff2-head">'
+      + '<div><div class="ff2-title">Freeform Board</div>'
+      + '<div class="ff2-meta">' + placedCount + ' prospects · size &amp; positional placement'
+      + (layout.unplaced.length
+          ? ' · <span style="color:rgba(255,255,255,.2)">' + layout.unplaced.length + ' omitted</span>'
+          : '')
+      + '</div></div>'
+      + '<div class="ff2-legend">' + Comp.BoardLegend() + '</div>'
+      + '</div>';
+
+    // Column header bar
+    out += Comp.ColumnHeader();
+
+    // Body: rail + canvas
+    out += '<div class="ff2-body">';
+    out += Comp.TierRail(TIER_CUTS, maxRank, layout.placed, plotH, toYPct);
+    out += '<div class="ff2-canvas"><div class="ff2-plot" id="ff2Plot" style="height:' + plotH + 'px">';
+
+    // Background zone tints and column dividers
+    out += '<div class="ff2-col-zone" style="left:0;width:33.33%;background:rgba(59,130,246,.02)"></div>'
+      + '<div class="ff2-col-zone" style="left:33.33%;width:33.34%;background:rgba(139,92,246,.017)"></div>'
+      + '<div class="ff2-col-zone" style="left:66.67%;width:33.33%;background:rgba(16,185,129,.02)"></div>'
+      + '<div class="ff2-col-div" style="left:33.33%"></div>'
+      + '<div class="ff2-col-div" style="left:66.67%"></div>';
+
+    // Tier fills, lines, and labels
+    var prevFillRank = 0;
+    tierKeys.forEach(function(key) {
+      var cutRank = TIER_CUTS[key];
+      var tc      = CFG.TIERS[key];
+      if (!tc || cutRank > maxRank) return;
+      var bandTop = toYPct(prevFillRank === 0 ? 1 : prevFillRank);
+      var bandBot = toYPct(cutRank);
+      var bandH   = (bandBot - bandTop).toFixed(2);
+      out += '<div class="ff2-tier-fill" style="top:' + bandTop.toFixed(2) + '%;height:' + bandH + '%;background:' + tc.bg + '"></div>'
+        + '<div class="ff2-tier-line" style="top:' + bandBot.toFixed(2) + '%;border-top-color:' + tc.color + ';opacity:.45"></div>'
+        + '<div class="ff2-tier-lbl" style="top:' + bandBot.toFixed(2) + '%">'
+        + '<div class="ff2-tier-lbl-dot" style="background:' + tc.color + '"></div>'
+        + '<span class="ff2-tier-lbl-text" style="color:' + tc.color + '">' + tc.label + '</span>'
+        + '</div>';
+      prevFillRank = cutRank;
+    });
+
+    // Y-axis rank marks
+    var yMarkRanks = [1];
+    tierKeys.forEach(function(key) { if (TIER_CUTS[key] <= maxRank) yMarkRanks.push(TIER_CUTS[key]); });
+    yMarkRanks.push(maxRank);
+    yMarkRanks.forEach(function(r) {
+      var col = CFG.TIERS[FreeformLayout.getTierKey(r, TIER_CUTS)].color;
+      out += '<div style="position:absolute;left:2px;top:' + toYPct(r).toFixed(2) + '%;'
+        + 'font-family:\'Barlow Condensed\',sans-serif;font-size:8px;font-weight:700;'
+        + 'color:' + col + ';opacity:.3;transform:translateY(-50%);pointer-events:none;line-height:1">#' + r + '</div>';
+    });
+
+    // Player cards
+    layout.placed.forEach(function(item, idx) {
+      out += Comp.PlayerCard(item, layout.metricMax, idx);
+    });
+
+    out += '</div></div></div>'; // ff2-plot, ff2-canvas, ff2-body
+    out += Comp.UnplacedFooter(layout.unplaced);
+    out += '</div>'; // ff2-shell
+
+    el.innerHTML = out;
+  }
+
+  // ── Hover: expand card on mouseenter ────────────────────────────────────
+  // O(1) player lookup via FreeformState instead of linear scan.
+  function hoverCard(el) {
+    var rank   = parseInt(el.getAttribute('data-rank'), 10);
+    var posCol = el.getAttribute('data-poscol') || '#8B5CF6';
+    var p      = FreeformState.getPlayer(rank);
+    if (!p) return;
+
+    var old = el.querySelector('.ff2-exp-body');
+    if (old) old.remove();
+    el.insertAdjacentHTML('beforeend', Comp.HoverCardContent(p, posCol));
+    el.classList.add('ff2-expanded');
+
+    // Smart expand origin — keep card visible regardless of edge proximity
+    var xPct = parseFloat(el.style.left) || 50;
+    var ox   = xPct < 18 ? '18%' : xPct > 82 ? '82%' : '50%';
+    el.style.transformOrigin = ox + ' 50%';
+    el.style.transform       = 'translate(-' + ox + ', -50%)';
+    el.style.boxShadow       = '0 24px 64px rgba(0,0,0,.82),0 0 0 1.5px rgba(255,255,255,.18),0 0 32px ' + posCol + '28';
+    el.style.background      = 'rgba(4,13,30,.97)';
+
+    // Dim peers of different positions — only when no persistent filter is active
+    var pos = el.getAttribute('data-pos') || '';
+    if (pos && !FreeformState.hasFilter()) _applyDim(pos);
+  }
+
+  // ── Hover: restore card on mouseleave ───────────────────────────────────
+  function leaveCard(el) {
+    var expBody = el.querySelector('.ff2-exp-body');
+    if (expBody) expBody.remove();
+    el.classList.remove('ff2-expanded');
+    el.style.transform       = '';
+    el.style.transformOrigin = '';
+    el.style.boxShadow       = '0 2px 12px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.05)';
+    el.style.background      = '';
+    if (!FreeformState.hasFilter()) _clearDim();
+  }
+
+  // ── Legend: toggle position filter ──────────────────────────────────────
+  function togglePosFilter(pos) {
+    var active = FreeformState.toggleFilter(pos);
+    if (active) {
+      _applyDim(active);
+    } else {
+      _clearDim();
+    }
+    document.querySelectorAll('.ff2-leg-item').forEach(function(leg) {
+      leg.classList.toggle('ff2-leg-active', leg.getAttribute('data-pos') === active);
+    });
+  }
+
+  // ── Private: DOM dim helpers ─────────────────────────────────────────────
+  function _applyDim(pos) {
+    var plot = document.getElementById('ff2Plot');
+    if (!plot) return;
+    plot.classList.add('ff2-dim-active');
+    plot.querySelectorAll('.ff2-card').forEach(function(card) {
+      card.classList.toggle('ff2-pos-highlight', card.getAttribute('data-pos') === pos);
+    });
+  }
+
+  function _clearDim() {
+    var plot = document.getElementById('ff2Plot');
+    if (!plot) return;
+    plot.classList.remove('ff2-dim-active');
+    plot.querySelectorAll('.ff2-card').forEach(function(card) {
+      card.classList.remove('ff2-pos-highlight');
+    });
+  }
+
+  return {
+    render:          render,
+    hoverCard:       hoverCard,
+    leaveCard:       leaveCard,
+    togglePosFilter: togglePosFilter,
+  };
+
+})();
 
 
 // ── MOCK MODE SWITCHER ────────────────────────────────────────────────────────
