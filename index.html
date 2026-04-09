@@ -562,6 +562,13 @@ tr:hover td{background:var(--gray-50)}
 .bb-wrap{display:flex;justify-content:center;padding:0 0 24px}
 .bb-board{width:100%;background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 24px rgba(10,22,40,.10)}
 .bb-screenshot-bar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.bb-range-group{display:flex;align-items:center;gap:6px;background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:7px;padding:4px 10px}
+.bb-range-lbl{font-size:10px;font-weight:700;color:var(--gray-400);letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
+.bb-range-input{width:38px;padding:2px 4px;border:1px solid var(--gray-200);border-radius:4px;font-size:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;color:var(--navy);text-align:center;background:white;outline:none}
+.bb-range-input:focus{border-color:var(--amber)}
+.bb-range-sep{font-size:11px;color:var(--gray-400);font-weight:600}
+.bb-preset-btn{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;font-family:'Barlow Condensed',sans-serif;color:var(--gray-500);cursor:pointer;transition:all .12s;white-space:nowrap}
+.bb-preset-btn:hover{background:rgba(212,168,48,.1);border-color:var(--amber);color:var(--amber)}
 .bb-sub-btn{background:var(--gray-50);border:1.5px solid var(--gray-200);color:var(--gray-500);border-radius:7px;padding:5px 13px;font-size:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;cursor:pointer;transition:all .15s;white-space:nowrap}
 .bb-sub-btn.active,.bb-sub-btn:hover{background:rgba(212,168,48,.1);border-color:var(--amber);color:var(--amber)}
 .bb-header{background:linear-gradient(145deg,#0A1628 0%,#0f2040 60%,#0A1628 100%);padding:22px 26px 16px;position:relative;overflow:hidden}
@@ -575,78 +582,78 @@ tr:hover td{background:var(--gray-50)}
 .bb-pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:2px 9px;font-size:10px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.3px}
 .bb-pill.gold{background:rgba(212,168,48,.15);border-color:rgba(212,168,48,.3);color:var(--amber)}
 .bb-col-hdr{background:var(--navy);display:flex;align-items:center;padding-right:10px;width:100%}
-.bb-ch{font-size:10px;font-weight:700;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.8px;padding:9px 0;text-align:center}
+.bb-ch{font-size:12px;font-weight:700;color:rgba(255,255,255,.82);text-transform:uppercase;letter-spacing:.8px;padding:9px 0;text-align:center}
 .bb-ch.left{text-align:left;padding-left:6px}
-/* Column widths — shared between header and rows */
-.bb-cr{width:44px;flex-shrink:0;text-align:center}
-.bb-cav{width:38px;flex-shrink:0}
-.bb-cid{flex:2.2;min-width:130px}
-.bb-cht{flex:0.72;min-width:54px;text-align:center;flex-shrink:0}
-.bb-ctag{flex:1.5;min-width:100px}
-.bb-cmet{flex:1.05;min-width:70px;text-align:center}
-.bb-cts{flex:0.78;min-width:50px;text-align:center}
-.bb-cpa{flex:0.88;min-width:56px;text-align:center}
-.bb-csb{flex:0.78;min-width:50px;text-align:center}
-.bb-cato{flex:0.72;min-width:48px;text-align:center}
-.bb-cftar{flex:0.72;min-width:48px;text-align:center}
-.bb-ctpar{flex:0.72;min-width:48px;text-align:center}
+/* Column widths: content-aware sizing */
+.bb-cr{width:36px;flex-shrink:0;text-align:center}
+.bb-cav{width:32px;flex-shrink:0}
+.bb-cid{flex:1.55;min-width:100px}
+.bb-cht{flex:0.62;min-width:48px;text-align:center;flex-shrink:0}
+.bb-ctag{flex:1.25;min-width:88px}
+.bb-cmet{flex:0.95;min-width:64px;text-align:center}
+.bb-cts{flex:0.70;min-width:46px;text-align:center}
+.bb-cpa{flex:0.76;min-width:50px;text-align:center}
+.bb-csb{flex:0.70;min-width:46px;text-align:center}
+.bb-cato{flex:0.66;min-width:44px;text-align:center}
+.bb-cftar{flex:0.66;min-width:44px;text-align:center}
+.bb-ctpar{flex:0.66;min-width:44px;text-align:center}
 /* Tier band */
-.bb-tier-band{display:flex;align-items:center;height:32px;padding:0 14px;gap:10px;overflow:hidden}
-.bb-tier-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:900;color:white;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap}
+.bb-tier-band{display:flex;align-items:center;height:28px;padding:0 12px;gap:10px;overflow:hidden}
+.bb-tier-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:900;color:white;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap}
 .bb-tier-sub{font-size:10px;color:rgba(255,255,255,.45);font-weight:600;letter-spacing:.3px;white-space:nowrap}
 .bb-tier-picks{margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:rgba(255,255,255,.38);letter-spacing:.4px;flex-shrink:0}
-/* Player row — FIXED HEIGHT, no flex-grow on children */
-.bb-row{display:flex;align-items:center;height:54px;padding-right:8px;border-bottom:1px solid var(--gray-100);transition:background .1s;overflow:hidden}
+/* Player row — tighter height, cleaner separator */
+.bb-row{display:flex;align-items:center;height:48px;padding-right:6px;border-bottom:1px solid rgba(203,213,225,.5);transition:background .1s;overflow:hidden}
 .bb-row:hover{background:#F0F4FF}
 .bb-row:last-child{border-bottom:none}
-.bb-row.alt{background:var(--gray-50)}
+.bb-row.alt{background:rgba(248,250,252,.7)}
 .bb-row.alt:hover{background:#E8EEFA}
 .bb-row.bbt1{border-left:3px solid #D97706}.bb-row.bbt1 .bb-rk{opacity:.5;color:#92400E}
 .bb-row.bbt2{border-left:3px solid #7C3AED}.bb-row.bbt2 .bb-rk{opacity:.4;color:#4C1D95}
-.bb-rk{font-family:'Barlow Condensed',sans-serif;font-size:22px;color:var(--navy);opacity:.18;line-height:1;user-select:none;flex-shrink:0}
+.bb-rk{font-family:'Barlow Condensed',sans-serif;font-size:19px;color:var(--navy);opacity:.18;line-height:1;user-select:none;flex-shrink:0}
 .bb-av{flex-shrink:0;display:flex;align-items:center;justify-content:center}
-.bb-id{min-width:0;padding:0 7px 0 5px;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
-.bb-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--navy);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bb-school-line{display:flex;align-items:center;gap:3px;margin-top:1px;overflow:hidden}
+.bb-id{min-width:0;padding:0 3px 0 4px;display:flex;flex-direction:row;align-items:center;gap:7px;overflow:hidden}
+.bb-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--navy);line-height:1.1;white-space:nowrap;flex-shrink:0}
+.bb-school-line{display:flex;align-items:center;gap:3px;overflow:hidden;flex:1;min-width:0}
 .bb-school{font-size:10px;color:var(--gray-400);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bb-cls-dot{font-size:9px;color:var(--gray-300);font-weight:500;flex-shrink:0}
 .bb-tags{flex-shrink:0;display:flex;flex-direction:column;gap:2px;justify-content:center;overflow:hidden}
-.bb-tag{display:inline-block;border-radius:3px;padding:1px 5px;font-size:9.5px;font-weight:700;letter-spacing:.15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;line-height:1.4}
+.bb-tag{display:inline-block;border-radius:3px;padding:1px 4px;font-size:9px;font-weight:700;letter-spacing:.15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px;line-height:1.4}
 .bb-tag-g{background:#EFF6FF;color:#1D4ED8}
 .bb-tag-w{background:#F5F3FF;color:#6D28D9}
 .bb-tag-b{background:#F0FDFA;color:#0D9488}
 .bb-tag-r{background:var(--gray-50);color:var(--gray-500);border:1px solid var(--gray-200);font-weight:600}
 
 .bb-met-cell{flex-shrink:0;display:flex;align-items:center;justify-content:center}
-.bb-met-val{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:900;line-height:1;border-radius:6px;padding:4px 8px;min-width:58px;text-align:center;white-space:nowrap}
+.bb-met-val{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:900;line-height:1;border-radius:5px;padding:3px 6px;min-width:52px;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums}
 
-.bb-stat-cell{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border-radius:6px;margin:3px 2px}
-.bb-sv{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--navy);line-height:1;white-space:nowrap}
-.bb-sl{font-size:8px;color:var(--gray-300);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;font-weight:700;white-space:nowrap}
+.bb-stat-cell{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border-radius:5px;margin:2px 1px}
+.bb-sv{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--navy);line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bb-sl{font-size:7.5px;color:var(--gray-300);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;font-weight:700;white-space:nowrap}
 .bb-sv.empty{color:var(--gray-200)}
 
 .bb-ht-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%}
-.bb-ht-val{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--navy);line-height:1}
-.bb-wt-val{font-size:10px;color:var(--gray-400);font-weight:500;margin-top:1px}
+.bb-ht-val{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--navy);line-height:1;font-variant-numeric:tabular-nums}
+.bb-wt-val{font-size:9.5px;color:var(--gray-400);font-weight:500;margin-top:1px}
 
 .bb-footer{background:var(--navy);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
 .bb-footer-brand{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--amber);letter-spacing:.5px}
 .bb-footer-note{font-size:10px;color:rgba(255,255,255,.22);font-weight:500}
 /* Twitter sub-mode: narrower board */
-#board2026Content .bb-board.bb-tw .bb-cid{flex:1.8}
-#board2026Content .bb-board.bb-tw .bb-cht{flex:0.6;min-width:44px}
-#board2026Content .bb-board.bb-tw .bb-ctag{flex:1.2;min-width:80px}
-#board2026Content .bb-board.bb-tw .bb-cmet{flex:0.9;min-width:56px}
-#board2026Content .bb-board.bb-tw .bb-met-val{font-size:17px;min-width:42px;padding:3px 5px}
+#board2026Content .bb-board.bb-tw .bb-cid{flex:1.6}
+#board2026Content .bb-board.bb-tw .bb-cht{flex:0.55;min-width:42px}
+#board2026Content .bb-board.bb-tw .bb-ctag{flex:1.1;min-width:76px}
+#board2026Content .bb-board.bb-tw .bb-cmet{flex:0.82;min-width:52px}
+#board2026Content .bb-board.bb-tw .bb-met-val{font-size:16px;min-width:40px;padding:3px 5px}
 #board2026Content .bb-board.bb-tw .bb-cts,
 #board2026Content .bb-board.bb-tw .bb-cpa,
 #board2026Content .bb-board.bb-tw .bb-csb,
 #board2026Content .bb-board.bb-tw .bb-cato,
 #board2026Content .bb-board.bb-tw .bb-cftar,
-#board2026Content .bb-board.bb-tw .bb-ctpar{flex:0.6;min-width:40px}
+#board2026Content .bb-board.bb-tw .bb-ctpar{flex:0.58;min-width:38px}
 #board2026Content .bb-board.bb-tw .bb-sv{font-size:11px}
 #board2026Content .bb-board.bb-tw .bb-sl{font-size:7px}
-#board2026Content .bb-board.bb-tw .bb-row{height:46px}
+#board2026Content .bb-board.bb-tw .bb-row{height:44px}
 
 /* ── MOCK DRAFT REDESIGN ─────────────────────────────────────── */
 .mock-controls{display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
@@ -835,11 +842,11 @@ tr:hover td{background:var(--gray-50)}
 .sc-toggle-group{display:flex;gap:6px;flex-wrap:wrap}
 .sc-tog{background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:.4px;cursor:pointer;transition:all .15s;white-space:nowrap;color:var(--gray-500)}
 .sc-tog.active{background:rgba(212,168,48,.12);border-color:var(--amber);color:var(--amber)}
-.sc-plot-wrap{background:white;border:1.5px solid var(--gray-200);border-radius:12px;padding:20px;box-shadow:0 2px 16px rgba(10,22,40,.07);position:relative}
+/* sc-plot-wrap: see sc-body flex rules above */
 .sc-plot-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
 .sc-plot-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:var(--navy);letter-spacing:.3px}
 .sc-plot-meta{font-size:11px;color:var(--gray-400);font-weight:500}
-.sc-canvas-wrap{position:relative;height:520px}
+.sc-canvas-wrap{position:relative;height:540px}
 .sc-legend{display:flex;gap:14px;flex-wrap:wrap;padding:12px 0 0;border-top:1px solid var(--gray-100);margin-top:14px}
 .sc-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--gray-500)}
 .sc-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
@@ -847,8 +854,28 @@ tr:hover td{background:var(--gray-50)}
 .sc-stat-chip{background:var(--gray-50);border:1px solid var(--gray-100);border-radius:5px;padding:3px 10px;font-size:10px;font-weight:600;color:var(--gray-500)}
 .sc-stat-chip b{color:var(--navy)}
 .sc-empty{text-align:center;padding:80px 20px;color:var(--gray-300)}
-.sc-trend-toggle{background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);color:var(--blue);border-radius:5px;padding:4px 12px;font-size:11px;font-weight:700;font-family:'Barlow Condensed',sans-serif;cursor:pointer;transition:all .15s}
-.sc-trend-toggle.on{background:var(--blue);color:white;border-color:var(--blue)}
+.sc-trend-btn{background:rgba(37,99,235,.08);border:1.5px solid rgba(37,99,235,.2);color:var(--blue);border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;font-family:'Barlow Condensed',sans-serif;cursor:pointer;transition:all .15s;white-space:nowrap}
+.sc-trend-btn:hover{background:rgba(37,99,235,.14);border-color:var(--blue)}
+.sc-trend-btn.on{background:var(--blue);color:white;border-color:var(--blue)}
+/* ── Scatter body layout (chart + top-5 panel side-by-side) */
+.sc-body{display:flex;gap:14px;align-items:flex-start}
+.sc-plot-wrap{flex:1;min-width:0;background:white;border:1.5px solid var(--gray-200);border-radius:12px;padding:20px;box-shadow:0 2px 16px rgba(10,22,40,.07);position:relative}
+/* ── Top 5 panel */
+.sc-top5-wrap{width:192px;flex-shrink:0;background:white;border:1.5px solid var(--gray-200);border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(10,22,40,.07);align-self:stretch}
+.sc-top5-hdr{padding:11px 14px 9px;border-bottom:1px solid var(--gray-100)}
+.sc-top5-hdr-label{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--gray-400);margin-bottom:2px}
+.sc-top5-hdr-axis{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-top5-row{display:flex;align-items:center;gap:7px;padding:7px 12px 7px 10px;cursor:pointer;transition:background .1s;border-bottom:1px solid transparent}
+.sc-top5-row:last-child{border-bottom:none}
+.sc-top5-row:hover,.sc-top5-row-active{background:var(--gray-50)}
+.sc-top5-row-selected{background:rgba(212,168,48,.07)!important;border-left:2px solid var(--amber)}
+.sc-top5-idx{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;color:var(--gray-300);width:11px;text-align:center;flex-shrink:0;line-height:1}
+.sc-top5-logo{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.sc-top5-info{flex:1;min-width:0}
+.sc-top5-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--navy);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-top5-school{font-size:9px;color:var(--gray-400);font-weight:500;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-top5-val{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;flex-shrink:0;line-height:1}
+.sc-top5-empty{font-size:11px;color:var(--gray-400);padding:18px 12px;text-align:center}
 
 /* ── NEW FEATURE CSS (added post-v9) ─────────────────────────────────── */
 
@@ -888,7 +915,7 @@ tr:hover td{background:var(--gray-50)}
 .ff2-tier-lbl-text{font-family:'Barlow Condensed',sans-serif;font-size:9.5px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;opacity:.72}
 .ff2-ymark{position:absolute;right:8px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;opacity:.65;transform:translateY(-50%);z-index:2;pointer-events:none}
 /* ── Player card — smaller, cleaner, more spacious ── */
-.ff2-card{position:absolute;transform:translate(-50%,-50%);width:110px;cursor:pointer;z-index:5;border-radius:8px;padding:6px 8px 6px 12px;border:1px solid rgba(255,255,255,.09);transition:width .2s cubic-bezier(.4,0,.2,1),box-shadow .2s ease,border-color .2s ease,background .2s ease;animation:ff2-pop .38s cubic-bezier(.34,1.56,.64,1) both}
+.ff2-card{position:absolute;transform:translate(-50%,-50%);width:var(--ff-card-w,110px);cursor:pointer;z-index:5;border-radius:8px;padding:var(--ff-card-pad,6px 8px 6px 12px);border:1px solid rgba(255,255,255,.09);transition:width .2s cubic-bezier(.4,0,.2,1),box-shadow .2s ease,border-color .2s ease,background .2s ease;animation:ff2-pop .38s cubic-bezier(.34,1.56,.64,1) both}
 .ff2-card:not(.ff2-expanded):hover{transform:translate(-50%,-50%) scale(1.1) translateY(-2px);z-index:25;border-color:rgba(255,255,255,.22)}
 .ff2-card.ff2-expanded{width:224px;z-index:30;border-color:rgba(255,255,255,.22) !important}
 .ff2-card.ff2-franchise{border-color:rgba(245,158,11,.22)}
@@ -896,7 +923,7 @@ tr:hover td{background:var(--gray-50)}
 .ff2-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
 .ff2-card-rank{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:900;line-height:1;letter-spacing:.2px}
 .ff2-card-tier-dot{width:4px;height:4px;border-radius:50%;opacity:.6;flex-shrink:0}
-.ff2-card-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;line-height:1.2;color:rgba(255,255,255,.94);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.ff2-card-name{font-family:'Barlow Condensed',sans-serif;font-size:var(--ff-card-name-fs,13px);font-weight:800;line-height:1.2;color:rgba(255,255,255,.94);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .ff2-card-role{font-size:7.5px;font-weight:600;letter-spacing:.25px;color:rgba(255,255,255,.5);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'DM Sans',sans-serif}
 /* Metric bar */
 .ff2-card-mbar-wrap{margin-top:5px;height:2px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
@@ -905,6 +932,35 @@ tr:hover td{background:var(--gray-50)}
 /* Franchise glow */
 .ff2-card.ff2-franchise::before{content:'';position:absolute;inset:-1px;border-radius:9px;background:transparent;box-shadow:0 0 12px 2px rgba(245,158,11,.18);pointer-events:none;z-index:-1}
 @keyframes ff2-pop{from{opacity:0;transform:translate(-50%,-50%) scale(.76)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+/* ── Freeform density system ── */
+/* Default (standard) values defined as custom properties on the shell.
+   Density classes override these — no JS re-render needed. */
+.ff2-shell{--ff-card-w:110px;--ff-card-pad:6px 8px 6px 12px;--ff-card-name-fs:13px}
+.ff2-density-compact{--ff-card-w:76px;--ff-card-pad:4px 6px 4px 9px;--ff-card-name-fs:11px}
+.ff2-density-comfortable{--ff-card-w:136px;--ff-card-pad:8px 11px 8px 15px;--ff-card-name-fs:14px}
+/* Compact mode: hide secondary info to keep tiles readable at small size */
+.ff2-density-compact .ff2-card-role{display:none}
+.ff2-density-compact .ff2-card-mbar-wrap{display:none}
+/* ── Viewport + zoom layer ── */
+/* ff2-viewport: the visible window, clips overflow.
+   ff2-zoom-layer: receives CSS transform for pinch-zoom and pan. */
+.ff2-viewport{position:relative;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
+.ff2-viewport.ff2-panning{cursor:grabbing}
+.ff2-zoom-layer{transform-origin:0 0;will-change:transform}
+/* ── Density control bar ── */
+.ff2-density-bar{display:flex;align-items:center;gap:2px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:3px}
+.ff2-density-btn{background:transparent;border:none;color:rgba(255,255,255,.32);border-radius:4px;padding:3px 9px;font-size:9px;font-weight:800;font-family:'Barlow Condensed',sans-serif;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:all .15s;white-space:nowrap}
+.ff2-density-btn:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.06)}
+.ff2-density-btn.active{background:rgba(255,255,255,.13);color:rgba(255,255,255,.9)}
+/* ── Mobile auto-compact + touch hints ── */
+@media(max-width:767px){
+  .ff2-shell{--ff-card-w:76px;--ff-card-pad:4px 6px 4px 9px;--ff-card-name-fs:11px}
+  .ff2-card-role{display:none}
+  .ff2-card-mbar-wrap{display:none}
+  .ff2-card:not(.ff2-expanded):hover{transform:translate(-50%,-50%)}
+  .ff2-head{flex-wrap:wrap;gap:8px;padding:12px 14px 10px}
+  .ff2-legend{flex-wrap:wrap;gap:8px}
+}
 /* ── Expanded hover panel ── */
 .ff2-exp-body{display:flex;align-items:flex-start;gap:9px;margin-top:7px;padding-top:7px;border-top:1px solid rgba(255,255,255,.08)}
 .ff2-exp-photo{width:48px;height:48px;border-radius:7px;overflow:hidden;flex-shrink:0;background:rgba(255,255,255,.05);position:relative}
@@ -1733,15 +1789,28 @@ tr:hover td{background:var(--gray-50)}
         <button class="sc-trend-btn" id="scTrendBtn" onclick="scToggleTrend()">Off</button>
       </div>
     </div>
-    <div class="sc-plot-wrap">
-      <div class="sc-plot-header">
-        <span class="sc-plot-title" id="scPlotTitle">Age vs TS%</span>
-        <span class="sc-plot-meta" id="scPlotMeta"></span>
+    <div class="sc-body">
+      <!-- ── Top 5 by Y-axis panel ── -->
+      <div class="sc-top5-wrap">
+        <div class="sc-top5-hdr">
+          <div class="sc-top5-hdr-label">Top 5</div>
+          <div class="sc-top5-hdr-axis" id="scTop5AxisLabel">TS%</div>
+        </div>
+        <div id="scTop5">
+          <div class="sc-top5-empty">Select axes to rank players</div>
+        </div>
       </div>
-      <div class="sc-canvas-wrap">
-        <canvas id="scCanvas"></canvas>
+      <!-- ── Main chart ── -->
+      <div class="sc-plot-wrap">
+        <div class="sc-plot-header">
+          <span class="sc-plot-title" id="scPlotTitle">Age vs TS%</span>
+          <span class="sc-plot-meta" id="scPlotMeta"></span>
+        </div>
+        <div class="sc-canvas-wrap">
+          <canvas id="scCanvas"></canvas>
+        </div>
+        <div class="sc-stat-bar" id="scStatBar"></div>
       </div>
-      <div class="sc-stat-bar" id="scStatBar"></div>
     </div>
   </div>
 </section>
@@ -1790,17 +1859,146 @@ tr:hover td{background:var(--gray-50)}
 // STAT_RANGES is built once at startup — do not rebuild inside render loops.
 const DASHBOARD_VERSION = "10";
 
+// ══ ARCHITECTURE LAYER 1: StorageService ════════════════════════════════════
+// Single point of contact for ALL localStorage. No other module uses
+// localStorage directly. Three raw methods (_read/_write/_delete) exposed
+// for modules (like rollForward) that manage their own key strings.
+var StorageService = (function() {
+  'use strict';
+
+  var KEYS = Object.freeze({
+    TIER_CUTS:      'hw_tier_cuts',
+    ROLL_YEAR:      'hw_draft_year_v1',
+    INTEL_PFX:      'hw_intel_v5_',
+    VIDEO_PFX:      'hw_video_v5_',
+    REMOVED_PFX:    'hw_rmvid_v3_',
+  });
+
+  function _slug(s) { return (s||'').replace(/\s+/g,'_').toLowerCase(); }
+
+  function _read(key) {
+    try { var v = localStorage.getItem(key); return v !== null ? JSON.parse(v) : null; }
+    catch(e) { return null; }
+  }
+  function _write(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+    catch(e) { return false; }
+  }
+  function _delete(key) {
+    try { localStorage.removeItem(key); return true; }
+    catch(e) { return false; }
+  }
+
+  // ── Tier cuts ─────────────────────────────────────────────────────────────
+  function getTierCuts()      { return _read(KEYS.TIER_CUTS); }
+  function saveTierCuts(c)    { return _write(KEYS.TIER_CUTS, c); }
+  function clearTierCuts()    { return _delete(KEYS.TIER_CUTS); }
+
+  // ── Roll-forward year ─────────────────────────────────────────────────────
+  function getRollYear()      { return _read(KEYS.ROLL_YEAR); }
+  function saveRollYear(v)    { return _write(KEYS.ROLL_YEAR, v); }
+  function clearRollYear()    { return _delete(KEYS.ROLL_YEAR); }
+
+  return {
+    KEYS: KEYS,
+    _read: _read, _write: _write, _delete: _delete,
+    getTierCuts: getTierCuts, saveTierCuts: saveTierCuts, clearTierCuts: clearTierCuts,
+    getRollYear: getRollYear, saveRollYear: saveRollYear, clearRollYear: clearRollYear,
+  };
+})();
+
+// ══ ARCHITECTURE LAYER 2: AppState ══════════════════════════════════════════
+// Single source of truth for all runtime state.
+// Replaces bare globals: currentView, sortCol, sortDir, compareList.
+// Components read via AppState.get(); changes flow through dispatch().
+var AppState = (function() {
+  'use strict';
+
+  var _state = {
+    ui: {
+      boardView: 'cards',          // 'cards'|'table'|'bigboard'|'freeform'
+      activeTab: 'board2026',
+    },
+    board: {
+      search:    '',
+      posFilter: '',
+      clsFilter: '',
+      sortCol:   'rank',
+      sortDir:   1,
+    },
+    scatter: {
+      xAxis: 'age', yAxis: 'ts_pct', year: '2026',
+      colorBy: 'position', posFilter: 'all', trend: false,
+    },
+    compare:  { playerNames: [] },
+    layout:   { tierCuts: { franchise:5, lottery:14, lateFirst:30, second:60 } },
+    upload:   { status: null, message: '' },
+    _ts:      0,  // bumped on DATA_REFRESHED
+  };
+
+  var _listeners = [];
+
+  function _merge(a, b) { return Object.assign({}, a, b); }
+
+  function _reduce(state, action) {
+    switch (action.type) {
+      case 'SET_BOARD_VIEW':
+        return _merge(state, { ui: _merge(state.ui, { boardView: action.payload }) });
+      case 'SET_ACTIVE_TAB':
+        return _merge(state, { ui: _merge(state.ui, { activeTab: action.payload }) });
+      case 'SET_BOARD_FILTER':
+        return _merge(state, { board: _merge(state.board, action.payload) });
+      case 'SET_BOARD_SORT':
+        var nc = action.payload;
+        var nd = nc === state.board.sortCol ? state.board.sortDir * -1 : 1;
+        return _merge(state, { board: _merge(state.board, { sortCol: nc, sortDir: nd }) });
+      case 'SET_TIER_CUTS':
+        return _merge(state, { layout: _merge(state.layout, { tierCuts: action.payload }) });
+      case 'SET_SCATTER':
+        return _merge(state, { scatter: _merge(state.scatter, action.payload) });
+      case 'COMPARE_ADD':
+        if (state.compare.playerNames.indexOf(action.payload) >= 0) return state;
+        if (state.compare.playerNames.length >= 4) return state;
+        return _merge(state, { compare: { playerNames: state.compare.playerNames.concat([action.payload]) } });
+      case 'COMPARE_REMOVE':
+        return _merge(state, { compare: { playerNames: state.compare.playerNames.filter(function(n){ return n !== action.payload; }) } });
+      case 'COMPARE_CLEAR':
+        return _merge(state, { compare: { playerNames: [] } });
+      case 'SET_UPLOAD_STATUS':
+        return _merge(state, { upload: action.payload });
+      case 'DATA_REFRESHED':
+        return _merge(state, { _ts: Date.now() });
+      default:
+        return state;
+    }
+  }
+
+  function get()  { return _state; }
+
+  function dispatch(action) {
+    var next = _reduce(_state, action);
+    if (next === _state) return;
+    var prev = _state;
+    _state = next;
+    _listeners.forEach(function(fn) { fn(_state, prev, action); });
+  }
+
+  function subscribe(fn) {
+    _listeners.push(fn);
+    return function() { _listeners = _listeners.filter(function(l){ return l !== fn; }); };
+  }
+
+  return { get: get, dispatch: dispatch, subscribe: subscribe };
+})();
+
+
+
 // ── TIER CUTS — declared early so all render functions can read them ──
 // rebuildBBTiers() is called below after full definition.
 var TIER_CUTS = (function() {
-  try {
-    var stored = localStorage.getItem('hw_tier_cuts');
-    if (stored) {
-      var p = JSON.parse(stored);
-      if (['franchise','lottery','lateFirst','second'].every(function(k){ return typeof p[k]==='number'; }))
-        return p;
-    }
-  } catch(e) {}
+  var saved = StorageService.getTierCuts();
+  if (saved && ['franchise','lottery','lateFirst','second'].every(function(k){ return typeof saved[k]==='number'; }))
+    return saved;
   return { franchise:5, lottery:14, lateFirst:30, second:60 };
 })();
 
@@ -1826,9 +2024,9 @@ function gradStyle(value, statKey) {
   if(!range || range.mn === range.mx) return '';
   var ratio = Math.max(0, Math.min(1, (value - range.mn) / (range.mx - range.mn)));
   var hue = Math.round(ratio * 120);
-  var bgL = Math.round(94 - ratio * 10);
+  var bgL = Math.round(94 - ratio * 8);
   var fgL = Math.round(34 - ratio * 12);
-  return 'background:hsl(' + hue + ',60%,' + bgL + '%);color:hsl(' + hue + ',55%,' + fgL + '%);';
+  return 'background:hsl(' + hue + ',72%,' + bgL + '%);color:hsl(' + hue + ',65%,' + fgL + '%);';
 }
 
 
@@ -1943,7 +2141,7 @@ function crossGradStyle(value, key, year) {
   if (mn === mx) return '';
   var ratio = Math.max(0, Math.min(1, (value - mn) / (mx - mn)));
   var hue   = Math.round(ratio * 120);
-  return 'background:hsl(' + hue + ',60%,' + Math.round(94 - ratio*10) + '%);color:hsl(' + hue + ',55%,' + Math.round(34 - ratio*12) + '%);';
+  return 'background:hsl(' + hue + ',72%,' + Math.round(94 - ratio*8) + '%);color:hsl(' + hue + ',65%,' + Math.round(34 - ratio*12) + '%);';
 }
 
 function schoolLogoUrl(school) {
@@ -2552,6 +2750,7 @@ let sortCol = 'rank', sortDir = 1;
 
 function setView(v) {
   currentView = v;
+  AppState.dispatch({ type: 'SET_BOARD_VIEW', payload: v });
   urlSetState({view: v});
   document.getElementById('viewCards').classList.toggle('active',    v === 'cards');
   document.getElementById('viewTable').classList.toggle('active',    v === 'table');
@@ -2568,20 +2767,275 @@ function setView(v) {
   }, 160);
 }
 
+
+// ══ ARCHITECTURE LAYER 3: DataService ═══════════════════════════════════════
+// All access to the embedded DATA object goes through here.
+// Returns normalized copies — never raw references to DATA internals.
+// Name parsing (' - ' separator) lives here exclusively.
+var DataService = (function() {
+  'use strict';
+
+  // ── Normalization: canonical player object schema ─────────────────────────
+  function normalize(raw) {
+    if (!raw) return null;
+    return {
+      rank:        _int(raw.rank),
+      name:        _name(raw.name),
+      school:      _school(raw.name),
+      position:    _str(raw.position),
+      cls:         _str(raw.cls),
+      torvik_role: _str(raw.torvik_role),
+      age:         _float(raw.age),
+      ht:          _int(raw.ht),
+      wt:          _int(raw.wt),
+      wingspan:    _float(raw.wingspan),
+      standing_reach: _float(raw.standing_reach),
+      metric:      _float(raw.metric),
+      ts_pct:      _float(raw.ts_pct),
+      pa2_usg:     _float(raw.pa2_usg),
+      stl_bl:      _float(raw.stl_bl),
+      ato:         _float(raw.ato),
+      ftar:        _float(raw.ftar),
+      tpar:        _float(raw.tpar),
+      bpm:         _float(raw.bpm),
+      obpm:        _float(raw.obpm),
+      dbpm:        _float(raw.dbpm),
+      comp:        _str(raw.comp || raw.comp_tool),
+      notes:       _str(raw.notes),
+      prior_teams: _str(raw.prior_teams),
+      team:        _str(raw.team),
+      draft_no:    _int(raw.draft_no),
+      draft_diff:  _int(raw.draft_diff),
+    };
+  }
+
+  // ── Normalized board cache ────────────────────────────────────────────────
+  // normalize() runs once per player per data version, not on every render.
+  // _cache is keyed by year string. Wiped entirely by applyUpdate() so any
+  // Excel upload produces fresh normalized objects from the new raw data.
+  var _cache = {};
+
+  // ── Accessors ─────────────────────────────────────────────────────────────
+  function getBoard(year) {
+    var y = String(year);
+    if (_cache[y]) return _cache[y];
+    var raw = y === '2026' ? (DATA.board2026 || [])
+            : y === '2027' ? (DATA.board2027 || [])
+            : (DATA.historical && DATA.historical[y]) ? DATA.historical[y]
+            : [];
+    _cache[y] = raw.map(normalize);
+    return _cache[y];
+  }
+
+  function getHistorical(year) {
+    return getBoard(year); // getBoard handles historical year keys
+  }
+
+  function getAllPlayers(years) {
+    var out = [];
+    (years || ['2026']).forEach(function(y) {
+      getBoard(y).forEach(function(p) { out.push(Object.assign({}, p, { _year: String(y) })); });
+    });
+    return out;
+  }
+
+  function getYoY()       { return (DATA.yoy       || []).map(normalize); }
+  function getMocks()     { return DATA.mocks       || {}; }
+  function getResources() { return DATA.resources   || []; }
+
+  // O(1) after first call — cached board, then Array.find
+  function findByName(name, year) {
+    return getBoard(year || '2026').find(function(p) { return p.name === name; }) || null;
+  }
+
+  function findByRank(rank, year) {
+    return getBoard(year || '2026').find(function(p) { return p.rank === rank; }) || null;
+  }
+
+  // ── Data update (called by ExcelService after Excel parse) ────────────────
+  function applyUpdate(parsed) {
+    _cache = {};  // invalidate all cached boards — new data, fresh normalization
+    if (parsed.board2026)  DATA.board2026  = parsed.board2026;
+    if (parsed.board2027)  DATA.board2027  = parsed.board2027;
+    if (parsed.historical) DATA.historical = parsed.historical;
+    if (parsed.yoy)        DATA.yoy        = parsed.yoy;
+    if (parsed.mocks)      DATA.mocks      = parsed.mocks;
+    if (parsed.resources)  DATA.resources  = parsed.resources;
+    if (typeof rebuildStatRanges === 'function') rebuildStatRanges();
+  }
+
+  // ── Private coercions ─────────────────────────────────────────────────────
+  function _int(v)    { var n = parseInt(v, 10);   return isNaN(n) ? null : n; }
+  function _float(v)  { var n = parseFloat(v);     return isNaN(n) ? null : n; }
+  function _str(v) {
+    if (v === null || v === undefined || v === 0 || v === '0') return '';
+    return String(v).trim();
+  }
+  function _name(raw) {
+    if (!raw) return '';
+    var i = raw.indexOf(' - ');
+    return i > 0 ? raw.slice(0, i).trim() : raw.trim();
+  }
+  function _school(raw) {
+    if (!raw) return '';
+    var i = raw.indexOf(' - ');
+    return i > 0 ? raw.slice(i + 3).trim() : '';
+  }
+
+  return {
+    normalize: normalize, getBoard: getBoard, getHistorical: getHistorical,
+    getAllPlayers: getAllPlayers, getYoY: getYoY, getMocks: getMocks,
+    getResources: getResources, findByName: findByName, findByRank: findByRank,
+    applyUpdate: applyUpdate,
+  };
+})();
+
+// ══ ARCHITECTURE LAYER 5: LayoutEngine ══════════════════════════════════════
+// Pure computation functions for all view modes.
+// No DOM. No globals. No side effects. Inputs and outputs are plain objects.
+// Builds on FreeformLayout (already extracted) for the freeform view.
+var LayoutEngine = (function() {
+  'use strict';
+
+  // ── Filter ────────────────────────────────────────────────────────────────
+  // Replaces the inline DATA.filter() + DOM.value reads in renderBoard2026.
+  // Receives a plain filters object from AppState — no DOM coupling.
+  function applyFilters(players, filters) {
+    var search = (filters.search    || '').toLowerCase().trim();
+    var pos    =  filters.posFilter || '';
+    var cls    =  filters.clsFilter || '';
+
+    return players.filter(function(p) {
+      if (search) {
+        var n = (p.name        || '').toLowerCase();
+        var s = (p.school      || '').toLowerCase();
+        var r = (p.torvik_role || '').toLowerCase();
+        if (!n.includes(search) && !s.includes(search) && !r.includes(search)) return false;
+      }
+      if (pos && p.position !== pos) return false;
+      if (cls && p.cls      !== cls) return false;
+      return true;
+    });
+  }
+
+  // ── Tier assignment ───────────────────────────────────────────────────────
+  // Was re-implemented as an if/else chain in every render function.
+  function assignTier(rank, cuts) {
+    if (rank <= cuts.franchise) return { key: 'franchise', label: 'Franchise',        order: 0 };
+    if (rank <= cuts.lottery)   return { key: 'lottery',   label: 'Lottery',          order: 1 };
+    if (rank <= cuts.lateFirst) return { key: 'late1',     label: 'Late First Round', order: 2 };
+    if (rank <= cuts.second)    return { key: 'second',    label: 'Second Round',     order: 3 };
+    return                             { key: 'udfa',      label: 'UDFA',             order: 4 };
+  }
+
+  function computeTiers(players, cuts) {
+    return players.map(function(p) {
+      return Object.assign({}, p, { _tier: assignTier(p.rank, cuts) });
+    });
+  }
+
+  function groupByTier(tieredPlayers) {
+    var ORDER = ['franchise','lottery','late1','second','udfa'];
+    var groups = {};
+    tieredPlayers.forEach(function(p) {
+      var k = p._tier.key;
+      if (!groups[k]) groups[k] = { tier: p._tier, players: [] };
+      groups[k].players.push(p);
+    });
+    return ORDER.map(function(k){ return groups[k]; }).filter(Boolean);
+  }
+
+  // ── Table sort ────────────────────────────────────────────────────────────
+  // Was embedded in renderBoardTable reading global sortCol/sortDir.
+  function computeTableSort(players, sortCol, sortDir) {
+    return players.slice().sort(function(a, b) {
+      var va = a[sortCol] != null ? a[sortCol] : (sortDir === 1 ? 9999 : -9999);
+      var vb = b[sortCol] != null ? b[sortCol] : (sortDir === 1 ? 9999 : -9999);
+      if (typeof va === 'string') va = va.toLowerCase();
+      if (typeof vb === 'string') vb = vb.toLowerCase();
+      return va < vb ? -sortDir : va > vb ? sortDir : 0;
+    });
+  }
+
+  // ── Scatter points ────────────────────────────────────────────────────────
+  // Was embedded in scRender() mixed with Chart.js and DOM setup.
+  function computeScatterPoints(players, xKey, yKey) {
+    return players.reduce(function(pts, p) {
+      var x = _scalar(p, xKey);
+      var y = _scalar(p, yKey);
+      if (x === null || y === null) return pts;
+      pts.push({ x: x, y: y, _p: p });
+      return pts;
+    }, []);
+  }
+
+  // ── Stat ranges ───────────────────────────────────────────────────────────
+  // Build once per dataset — reuse inside render loops.
+  function computeStatRanges(players, keys) {
+    var out = {};
+    (keys || ['metric','ts_pct','pa2_usg','stl_bl','ato','ftar','tpar']).forEach(function(k) {
+      var vals = players.map(function(p){ return p[k]; }).filter(function(v){
+        return v !== null && v !== undefined && !isNaN(v) && v !== 0;
+      });
+      out[k] = vals.length ? { mn: Math.min.apply(null,vals), mx: Math.max.apply(null,vals) }
+                           : { mn: 0, mx: 1 };
+    });
+    return out;
+  }
+
+  // ── Comp similarity ───────────────────────────────────────────────────────
+  var COMP_KEYS = ['ts_pct','pa2_usg','stl_bl','ato','ftar','tpar'];
+
+  function computeCompSimilarity(target, candidates, statRanges) {
+    return candidates.filter(function(p){ return p.rank !== target.rank; })
+      .map(function(p) {
+        var dist = COMP_KEYS.reduce(function(sum, k) {
+          var tv = target[k], cv = p[k];
+          if (tv === null || cv === null) return sum + 0.5;
+          var r = statRanges[k];
+          if (!r || r.mx === r.mn) return sum;
+          return sum + Math.pow((tv - cv) / (r.mx - r.mn), 2);
+        }, 0);
+        return Object.assign({}, p, { _simScore: Math.sqrt(dist / COMP_KEYS.length) });
+      })
+      .sort(function(a, b){ return a._simScore - b._simScore; });
+  }
+
+  // ── Freeform ──────────────────────────────────────────────────────────────
+  function computeFreeform(players, tierCuts) {
+    return FreeformLayout.run(players, tierCuts, FREEFORM_CONFIG);
+  }
+
+  // ── Private ───────────────────────────────────────────────────────────────
+  function _scalar(p, key) {
+    if (key === 'ts_pct') {
+      var t = parseFloat(p.ts_pct);
+      return (t && t > 0) ? t * 100 : null;
+    }
+    var v = p[key];
+    if (v === null || v === undefined || v === '' || v === 0) return null;
+    var n = parseFloat(v);
+    return (isNaN(n) || !isFinite(n)) ? null : n;
+  }
+
+  return {
+    applyFilters:          applyFilters,
+    assignTier:            assignTier,
+    computeTiers:          computeTiers,
+    groupByTier:           groupByTier,
+    computeTableSort:      computeTableSort,
+    computeScatterPoints:  computeScatterPoints,
+    computeStatRanges:     computeStatRanges,
+    computeCompSimilarity: computeCompSimilarity,
+    computeFreeform:       computeFreeform,
+  };
+})();
+
 // ── BOARD 2026 ────────────────────────────────────────────
 function renderBoard2026() {
-  const search = document.getElementById('search2026').value.toLowerCase();
-  const posF = document.getElementById('posFilter').value;
-  const clsF = document.getElementById('clsFilter').value;
-
-  let players = DATA.board2026.filter(p => {
-    const [name, school] = splitName(p.name);
-    const role = (p.torvik_role || '').toLowerCase();
-    if (search && !name.toLowerCase().includes(search) && !(school||'').toLowerCase().includes(search) && !role.includes(search)) return false;
-    if (posF && p.position !== posF) return false;
-    if (clsF && p.cls !== clsF) return false;
-    return true;
-  });
+  // Data flows through DataService; filter state from AppState (not DOM)
+  var state   = AppState.get();
+  var players = LayoutEngine.applyFilters(DataService.getBoard('2026'), state.board);
 
   document.getElementById('boardCount').textContent = players.length + ' prospects';
   if (currentView === 'table')        renderBoardTable(players);
@@ -2614,7 +3068,8 @@ function renderBoardCards(players) {
     </div><div class="cards-grid">`;
 
     for (const p of tp) {
-      const [name, school] = splitName(p.name);
+      const name   = p.name;
+      const school = p.school || '';
       const elite = p.metric > 140;
       const top10 = p.rank <= 10;
       html += `<div class="player-card ${tier.key}" onclick="openPlayerModal(${p.rank})" data-rank="${p.rank}" style="position:relative">
@@ -2706,7 +3161,8 @@ function renderBoardTable(players) {
   html += '</tr></thead><tbody>';
 
   for (const p of sorted) {
-    const [name, school] = splitName(p.name);
+    const name   = p.name;
+    const school = p.school || '';
     const elite = p.metric > 140, top10 = p.rank <= 10;
     html += (() => {
       const gMet  = gradStyle(p.metric,  'metric');
@@ -3835,7 +4291,7 @@ function renderHistory() {
     if (!r || r.mn === r.mx) return '';
     const ratio = Math.max(0, Math.min(1, (value - r.mn) / (r.mx - r.mn)));
     const hue = Math.round(ratio * 120);
-    return 'background:hsl(' + hue + ',60%,' + Math.round(94 - ratio*10) + '%);color:hsl(' + hue + ',55%,' + Math.round(34 - ratio*12) + '%);';
+    return 'background:hsl(' + hue + ',72%,' + Math.round(94 - ratio*8) + '%);color:hsl(' + hue + ',65%,' + Math.round(34 - ratio*12) + '%);';
   }
 
   for (const p of players) {
@@ -4199,29 +4655,58 @@ function showUploadPanel() {
   document.getElementById('uploadPanel').classList.toggle('upload-open');
 }
 
-function handleExcelUpload(evt) {
-  const file = evt.target.files[0];
-  if (!file) return;
-  const statusEl = document.getElementById('uploadStatus');
-  statusEl.textContent = 'Reading file…';
-  statusEl.style.color = 'var(--gray-500)';
 
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      statusEl.textContent = 'Parsing workbook…';
-      const data = new Uint8Array(e.target.result);
-      const wb = XLSX.read(data, { type: 'array', cellDates: true, cellNF: false, raw: false });
-      parseAndRefresh(wb, statusEl, file.name);
-    } catch(err) {
-      statusEl.textContent = 'Error: ' + err.message;
-      statusEl.style.color = 'var(--red)';
-    }
-  };
-  reader.readAsArrayBuffer(file);
+// ══ ARCHITECTURE LAYER 4: ExcelService ══════════════════════════════════════
+// Wraps the workbook parsing pipeline in a Promise-based interface.
+// parseAndRefresh() is now a pure function (returns data, no side effects).
+// This module owns the async file-reading concern.
+var ExcelService = (function() {
+  'use strict';
+
+  // Returns Promise<ParsedData>
+  // ParsedData = { board2026, board2027, historical, yoy, mocks, resources }
+  function parseWorkbook(file) {
+    return new Promise(function(resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          var bytes = new Uint8Array(e.target.result);
+          var wb = XLSX.read(bytes, { type: 'array', cellDates: true, cellNF: false, raw: false });
+          // parseAndRefresh is now pure — returns data, mutates nothing
+          resolve(parseAndRefresh(wb));
+        } catch(err) { reject(err); }
+      };
+      reader.onerror = function() { reject(new Error('File read failed')); };
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  return { parseWorkbook: parseWorkbook };
+})();
+
+function handleExcelUpload(evt) {
+  var file = evt.target.files[0];
+  if (!file) return;
+
+  AppState.dispatch({ type: 'SET_UPLOAD_STATUS', payload: { status: 'reading', message: 'Reading file…' }});
+
+  ExcelService.parseWorkbook(file)
+    .then(function(parsed) {
+      AppState.dispatch({ type: 'SET_UPLOAD_STATUS', payload: { status: 'parsing', message: 'Applying data…' }});
+      DataService.applyUpdate(parsed);
+      AppState.dispatch({ type: 'DATA_REFRESHED' });
+      var ct = (parsed.board2026||[]).length + ' prospects';
+      AppState.dispatch({ type: 'SET_UPLOAD_STATUS', payload: { status: 'done',
+        message: '✓ Refreshed from ' + file.name + ' (' + ct + ')' }});
+      setTimeout(function(){ document.getElementById('uploadPanel').classList.remove('upload-open'); }, 3000);
+    })
+    .catch(function(err) {
+      AppState.dispatch({ type: 'SET_UPLOAD_STATUS', payload: { status: 'error',
+        message: 'Parse error: ' + err.message }});
+    });
 }
 
-function parseAndRefresh(wb, statusEl, fileName) {
+function parseAndRefresh(wb) {  // pure: returns newData, no side effects
   try {
     const newData = {};
 
@@ -4548,68 +5033,31 @@ function parseAndRefresh(wb, statusEl, fileName) {
     }
 
     // ── Run all extractions ───────────────────────────────
-    statusEl.textContent = 'Extracting 2026 board…';
-    newData.board2026 = extractBoard('2026 Board NEW', '2026');
-
-    statusEl.textContent = 'Extracting 2027 board…';
-    newData.board2027 = extractBoard('2027 Board', '2027');
-
-    statusEl.textContent = 'Extracting historical boards…';
+    newData.board2026  = extractBoard('2026 Board NEW', '2026');
+    newData.board2027  = extractBoard('2027 Board', '2027');
     newData.historical = {};
-    const histYears = ['2019','2020','2021','2022','2023','2024','2025'];
-    histYears.forEach(function(yr) {
+    ['2019','2020','2021','2022','2023','2024','2025'].forEach(function(yr) {
       newData.historical[yr] = extractBoard(yr + ' Board', yr);
     });
-
-    statusEl.textContent = 'Extracting YoY metrics…';
-    newData.yoy = extractYoY();
-
-    statusEl.textContent = 'Extracting mock drafts…';
-    newData.mocks = extractMocks();
-
-    statusEl.textContent = 'Extracting resources…';
+    newData.yoy       = extractYoY();
+    newData.mocks     = extractMocks();
     newData.resources = extractResources();
 
-    // ── Merge into global DATA ────────────────────────────
-    Object.assign(DATA, newData);
-
-    // Recompute 2026 stat ranges for gradient engine (includes bpm, obpm, dbpm)
-    STAT_KEYS.forEach(function(k) {
-      const vals = DATA.board2026.map(function(p){ return p[k]; })
-        .filter(function(v){ return v !== null && v !== undefined && v !== 0 && v !== ''; });
-      if (vals.length) {
-        STAT_RANGES[k] = { mn: Math.min.apply(null,vals), mx: Math.max.apply(null,vals) };
-      }
-    });
-
-    // Re-render active tab — populateCompSelect() is included in the comps branch above
-    const activeTab = document.querySelector('.nav-tab.active');
-    if (activeTab) {
-      const tab = activeTab.dataset.tab;
-      if (tab === 'board2026')  renderBoard2026();
-      else if (tab === 'analytics') renderAnalytics();
-      else if (tab === 'comps')  { populateCompSelect(); showCompExplorer(); }
-      else if (tab === 'mocks')  renderMocks();
-      else if (tab === 'history') renderHistory();
-      else if (tab === 'future') renderFuture();
-      else if (tab === 'resources') renderResources();
-      else populateCompSelect(); // keep dropdown fresh on any other tab
-    } else {
-      populateCompSelect();
-    }
-
-    const counts = newData.board2026.length + ' prospects · ' + newData.yoy.length + ' YoY entries · ' + Object.values(newData.mocks).reduce(function(s,m){ return s + Object.keys(m).length; }, 0) + ' mock snapshots';
-    statusEl.textContent = '\u2713 Refreshed from ' + fileName + ' (' + counts + ')';
-    statusEl.style.color = 'var(--green)';
-
-    // Close panel after 3s
-    setTimeout(function(){ document.getElementById('uploadPanel').classList.remove('upload-open'); }, 3000);
+    return newData;
 
   } catch(err) {
-    statusEl.textContent = 'Parse error: ' + err.message;
-    statusEl.style.color = 'var(--red)';
-    console.error('Excel parse error:', err);
+    throw err; // caller (ExcelService / handleExcelUpload) owns error reporting
   }
+}
+
+// rebuildStatRanges — called by DataService.applyUpdate() after any data refresh
+function rebuildStatRanges() {
+  if (typeof STAT_KEYS === 'undefined' || typeof STAT_RANGES === 'undefined') return;
+  STAT_KEYS.forEach(function(k) {
+    var vals = (DATA.board2026 || []).map(function(p){ return p[k]; })
+      .filter(function(v){ return v !== null && v !== undefined && v !== 0 && v !== ''; });
+    if (vals.length) STAT_RANGES[k] = { mn: Math.min.apply(null, vals), mx: Math.max.apply(null, vals) };
+  });
 }
 
 
@@ -4872,6 +5320,22 @@ document.addEventListener('keydown', function(e) {
 
 // ── BIG BOARD INLINE VIEW ───────────────────────────────────────
 
+// ── bbFmt: unified stat formatter ────────────────────────────────────────────
+// Exactly 2 decimal places for all numeric stats. Returns '—' for nulls.
+// ts_pct stored 0-1 is displayed as percentage with 2dp (e.g. "61.24%").
+// Memoized by value+key — safe to call inside tight render loops.
+var _bbFmtCache = Object.create(null);
+function bbFmt(val, key) {
+  if (val === null || val === undefined || val === '' || val === 0) return '—';
+  var n = parseFloat(val);
+  if (isNaN(n) || !isFinite(n)) return '—';
+  var cacheKey = key + ':' + n;
+  if (_bbFmtCache[cacheKey] !== undefined) return _bbFmtCache[cacheKey];
+  var result = (key === 'ts_pct') ? (n * 100).toFixed(2) + '%' : n.toFixed(2);
+  _bbFmtCache[cacheKey] = result;
+  return result;
+}
+
 var bbSubMode = 'full'; // 'full' | 'twitter'
 
 var BB_TIERS = []; // built by rebuildBBTiers() — called after TIER_CUTS is declared
@@ -4880,7 +5344,7 @@ function bbMetStyle(val) {
   if (!val || val <= 0) return 'background:#F1F5F9;color:#94A3B8';
   var mn = 47, mx = 155;
   var t  = Math.max(0, Math.min(1, (val - mn) / (mx - mn)));
-  return 'background:hsl('+Math.round(t*120)+',60%,'+Math.round(94-t*10)+'%);color:hsl('+Math.round(t*120)+',55%,'+Math.round(34-t*12)+'%)';
+  return 'background:hsl('+Math.round(t*120)+',72%,'+Math.round(94-t*8)+'%);color:hsl('+Math.round(t*120)+',65%,'+Math.round(34-t*12)+'%)';
 }
 
 function bbTagCls(pos) {
@@ -4891,9 +5355,8 @@ function bbTagCls(pos) {
 }
 
 function bbBuildRow(p, idx) {
-  var _pname = p.name || '';
-  var base   = _pname.indexOf(' - ')>0 ? _pname.slice(0,_pname.indexOf(' - ')) : _pname;
-  var school = _pname.indexOf(' - ')>0 ? _pname.slice(_pname.indexOf(' - ')+3) : '';
+  var base   = p.name   || '';
+  var school = p.school || '';
   var ht = p.ht ? (Math.floor(p.ht/12)+"'"+(p.ht%12)+'"') : '—';
   var wt = p.wt ? p.wt+'lb' : '—';
 
@@ -4905,10 +5368,11 @@ function bbBuildRow(p, idx) {
   else if (cls==='Senior') cls='Sr';
 
   var metSty = bbMetStyle(p.metric);
-  var metVal = (p.metric && p.metric>0) ? Number(p.metric).toFixed(1) : '—';
-  var tsVal  = (p.ts_pct  && p.ts_pct>0)  ? (p.ts_pct*100).toFixed(1)+'%' : '—';
-  var paVal  = (p.pa2_usg && p.pa2_usg>0) ? Math.round(p.pa2_usg)          : '—';
-  var sbVal  = (p.stl_bl  && p.stl_bl>0)  ? parseFloat(p.stl_bl).toFixed(2): '—';
+  // All stats formatted via bbFmt() — exactly 2dp, memoized, null-safe
+  var metVal  = bbFmt(p.metric,  'metric');
+  var tsVal   = bbFmt(p.ts_pct,  'ts_pct');
+  var paVal   = bbFmt(p.pa2_usg, 'pa2_usg');
+  var sbVal   = bbFmt(p.stl_bl,  'stl_bl');
 
   var rankStr = p.rank<10 ? '0'+p.rank : ''+p.rank;
   var tierCls = p.rank<=TIER_CUTS.franchise ? 'bbt1' : p.rank<=TIER_CUTS.lottery ? 'bbt2' : '';
@@ -4928,9 +5392,9 @@ function bbBuildRow(p, idx) {
   var atoSty  = gradStyle(p.ato,    'ato');
   var ftarSty = gradStyle(p.ftar,   'ftar');
   var tparSty = gradStyle(p.tpar,   'tpar');
-  var atoVal  = (p.ato   && p.ato>0)   ? parseFloat(p.ato).toFixed(2)  : '—';
-  var ftarVal = (p.ftar  && p.ftar>0)  ? parseFloat(p.ftar).toFixed(3) : '—';
-  var tparVal = (p.tpar  && p.tpar>0)  ? parseFloat(p.tpar).toFixed(3) : '—';
+  var atoVal  = bbFmt(p.ato,  'ato');
+  var ftarVal = bbFmt(p.ftar, 'ftar');
+  var tparVal = bbFmt(p.tpar, 'tpar');
 
   return '<div class="bb-row '+tierCls+' '+altCls+'">'
     // 1. Rank
@@ -4982,7 +5446,16 @@ function renderBoardBigboard(players) {
   var out = '<div class="bb-screenshot-bar">'
     +'<button class="bb-sub-btn'+(bbSubMode==='full'?' active':'')+'" onclick="setBBSubMode(\'full\')">📋 Full Board (60)</button>'
     +'<button class="bb-sub-btn'+(bbSubMode==='twitter'?' active':'')+'" onclick="setBBSubMode(\'twitter\')">🐦 Twitter Card (30)</button>'
-    +'<button class="bb-sub-btn" style="margin-left:auto;background:var(--amber);color:white;border-color:var(--amber)" onclick="bbScreenshot()">📷 Screenshot PNG</button>'
+    +'<div class="bb-range-group" style="margin-left:auto">'
+      +'<span class="bb-range-lbl">Export ranks</span>'
+      +'<input class="bb-range-input" id="bbRangeFrom" type="number" min="1" max="60" value="1" title="Start rank">'
+      +'<span class="bb-range-sep">&mdash;</span>'
+      +'<input class="bb-range-input" id="bbRangeTo" type="number" min="1" max="60" value="'+(bbSubMode==='twitter'?'30':'60')+'" title="End rank">'
+      +'<button class="bb-preset-btn" onclick="bbSetRange(1,30)">1&ndash;30</button>'
+      +'<button class="bb-preset-btn" onclick="bbSetRange(31,60)">31&ndash;60</button>'
+      +'<button class="bb-preset-btn" onclick="bbSetRange(1,60)">All</button>'
+      +'<button class="bb-sub-btn" style="background:var(--amber);color:white;border-color:var(--amber);padding:4px 12px;font-size:11px" onclick="bbScreenshot()">&#128247; PNG</button>'
+    +'</div>'
   +'</div>';
 
   // Board wrapper
@@ -5049,26 +5522,66 @@ function setBBSubMode(mode) {
   renderBoard2026();
 }
 
+function bbSetRange(from, to) {
+  var f = document.getElementById('bbRangeFrom');
+  var t = document.getElementById('bbRangeTo');
+  if (f) f.value = from;
+  if (t) t.value = to;
+}
+
 function bbScreenshot() {
   var board = document.getElementById('bbBoard');
   if (!board) return;
+
+  var fromEl   = document.getElementById('bbRangeFrom');
+  var toEl     = document.getElementById('bbRangeTo');
+  var rankFrom = fromEl ? Math.max(1,  parseInt(fromEl.value, 10) || 1)  : 1;
+  var rankTo   = toEl   ? Math.min(60, parseInt(toEl.value,   10) || 60) : 60;
+  if (rankFrom > rankTo) { var tmp = rankFrom; rankFrom = rankTo; rankTo = tmp; }
+
+  // Clone visible board so the live DOM is never mutated
+  var clone = board.cloneNode(true);
+  clone.style.cssText = 'position:absolute;left:-9999px;top:0;width:' + board.offsetWidth + 'px';
+  document.body.appendChild(clone);
+
+  // Remove rows outside the selected range
+  clone.querySelectorAll('.bb-row').forEach(function(row) {
+    var rkEl = row.querySelector('.bb-rk');
+    var rank = rkEl ? parseInt(rkEl.textContent, 10) : 0;
+    if (rank < rankFrom || rank > rankTo) row.remove();
+  });
+  // Remove tier bands that became empty after row removal
+  clone.querySelectorAll('.bb-tier-band').forEach(function(band) {
+    var next = band.nextElementSibling;
+    if (!next || next.classList.contains('bb-tier-band') || next.classList.contains('bb-footer')) {
+      band.remove();
+    }
+  });
+  // Update subtitle pill to show actual range
+  var pill = clone.querySelector('.bb-pill');
+  if (pill) pill.textContent = 'Ranks ' + rankFrom + '–' + rankTo;
+
+  var filename = 'HoopsWill_BigBoard_' + rankFrom + '-' + rankTo + '.png';
+
   function doShot() {
-    html2canvas(board,{scale:2,useCORS:true,allowTaint:false,backgroundColor:'#ffffff',logging:false})
-      .then(function(canvas){
-        canvas.toBlob(function(blob){
-          var url=URL.createObjectURL(blob);
-          var a=document.createElement('a');
-          a.href=url;
-          a.download='HoopsWill_BigBoard_'+(bbSubMode==='twitter'?'Top30':'Top60')+'.png';
-          a.click();
-          URL.revokeObjectURL(url);
-        });
+    html2canvas(clone, {
+      scale: 2, useCORS: true, allowTaint: false,
+      backgroundColor: '#ffffff', logging: false,
+    }).then(function(canvas) {
+      document.body.removeChild(clone);
+      canvas.toBlob(function(blob) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url; a.download = filename; a.click();
+        URL.revokeObjectURL(url);
       });
+    }).catch(function() { document.body.removeChild(clone); });
   }
-  if (typeof html2canvas==='undefined') {
-    var s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload=doShot; document.head.appendChild(s);
+
+  if (typeof html2canvas === 'undefined') {
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    s.onload = doShot; document.head.appendChild(s);
   } else { doShot(); }
 }
 
@@ -5456,7 +5969,7 @@ function mcGrad(val,mn,mx){
   if(!val||val<=0||mn===mx)return '';
   var t=Math.max(0,Math.min(1,(val-mn)/(mx-mn)));
   var h=Math.round(t*120);
-  return 'background:hsl('+h+',60%,'+Math.round(94-t*10)+'%);color:hsl('+h+',55%,'+Math.round(34-t*12)+'%)';
+  return 'background:hsl('+h+',72%,'+Math.round(94-t*8)+'%);color:hsl('+h+',65%,'+Math.round(34-t*12)+'%)';
 }
 
 function mcBuildTable(){
@@ -5933,10 +6446,10 @@ function renderTweetCardModal(p) {
     if (range && p[s.k] && range.mn !== range.mx) {
       var ratio = Math.max(0, Math.min(1, (p[s.k] - range.mn) / (range.mx - range.mn)));
       var hue = Math.round(ratio * 120);
-      var light = Math.round(94 - ratio * 10);
+      var light = Math.round(94 - ratio * 8);
       var dLight = Math.round(34 - ratio * 12);
-      cellBg    = 'hsl(' + hue + ',60%,' + light + '%)';
-      cellColor = 'hsl(' + hue + ',55%,' + dLight + '%)';
+      cellBg    = 'hsl(' + hue + ',72%,' + light + '%)';
+      cellColor = 'hsl(' + hue + ',65%,' + dLight + '%)';
     }
     return '<div style="text-align:center;flex:1;min-width:58px;padding:8px 4px;border-radius:6px;background:' + cellBg + '">'
       + '<div style="font-family:Barlow Condensed,sans-serif;font-size:20px;font-weight:900;color:' + cellColor + ';line-height:1">' + s.v + '</div>'
@@ -6047,94 +6560,480 @@ function downloadTweetCard() {
 
 // ── SCATTER PLOT ───────────────────────────────────────────────────────────
 
-var _scChart    = null;
-var _scTrend    = false;
-var _scTipEl    = null;
-var _scAllPts   = [];
+// ══ ScatterEngine ═══════════════════════════════════════════════════════════
+// Pure functions for the scatter data pipeline.
+// No DOM, no Chart.js, no globals. All inputs explicit, all outputs plain data.
+var ScatterEngine = (function() {
+  'use strict';
 
-// Axis definitions
-var SC_AXES = {
-  age:       {label:'Age (yrs)',     fmt:function(v){return v.toFixed(1)+'y'; }, inv:false},
-  ht:        {label:'Height (in)',   fmt:function(v){return Math.floor(v/12)+"'"+Math.round(v%12)+'"';}, inv:false},
-  wt:        {label:'Weight (lbs)', fmt:function(v){return Math.round(v)+'lb';}, inv:false},
-  rank:      {label:'HW Rank',      fmt:function(v){return '#'+Math.round(v);},  inv:false},
-  metric:    {label:'HW Metric',    fmt:function(v){return v.toFixed(1);},       inv:false},
-  draft_no:  {label:'Draft Pick',   fmt:function(v){return '#'+Math.round(v);},  inv:false},
-  draft_diff:{label:'Rank vs Pick', fmt:function(v){return (v>0?'+':'')+Math.round(v);}, inv:false},
-  ts_pct:    {label:'TS%',          fmt:function(v){return v.toFixed(1)+'%';},   inv:false},
-  pa2_usg:   {label:'P+A/USG',     fmt:function(v){return Math.round(v)+'';},    inv:false},
-  stl_bl:    {label:'Stl+Bl',      fmt:function(v){return v.toFixed(2);},        inv:false},
-  ato:       {label:'A/TO',         fmt:function(v){return v.toFixed(2);},       inv:false},
-  ftar:      {label:'FTAr',         fmt:function(v){return v.toFixed(3);},       inv:false},
-  tpar:      {label:'3PAr',         fmt:function(v){return v.toFixed(3);},       inv:false}
-};
+  // ── Player data cache ─────────────────────────────────────────────────────
+  // Built once per year selection; invalidated when year changes or DATA updates.
+  var _cache    = null;
+  var _cacheKey = '';
 
-var SC_POS_HEX  = {Guard:'#2563EB', Forward:'#7C3AED', Center:'#0D9488', Other:'#94A3B8'};
-var SC_YEAR_HEX = {'2026':'#D97706','2025':'#2563EB','2024':'#7C3AED','2023':'#0D9488',
-                   '2022':'#DC2626','2021':'#0891B2','2020':'#65A30D','2019':'#9333EA',Other:'#94A3B8'};
-var SC_TIER_HEX = {Lottery:'#7C3AED','Late First':'#2563EB','Second Round':'#0D9488',Other:'#94A3B8'};
-
-function scAxisVal(p, key) {
-  // ts_pct is stored 0-1, display as 0-100
-  if (key === 'ts_pct') {
-    var t = parseFloat(p.ts_pct);
-    return (t && t > 0) ? t * 100 : null;
-  }
-  // rank is always present
-  if (key === 'rank') return p.rank || null;
-  var v = p[key];
-  if (v === null || v === undefined || v === '' || v === 0) return null;
-  var n = parseFloat(v);
-  return (isNaN(n) || !isFinite(n)) ? null : n;
-}
-
-function scBuildPlayers() {
-  var yearEl = document.getElementById('scYear');
-  var yr = yearEl ? yearEl.value : '2026';
-  var out = [];
-  function addRows(board, year) {
-    if (!board) return;
-    board.forEach(function(p) {
-      var dash = (p.name || '').indexOf(' - ');
-      out.push({
-        _n:  dash > 0 ? p.name.slice(0, dash) : (p.name || ''),
-        _s:  dash > 0 ? p.name.slice(dash + 3) : '',
-        _y:  year,
-        _t:  p.rank <= 14 ? 'Lottery' : p.rank <= 30 ? 'Late First' : 'Second Round',
-        rank: p.rank, metric: p.metric, ts_pct: p.ts_pct,
-        pa2_usg: p.pa2_usg, stl_bl: p.stl_bl, ato: p.ato,
-        ftar: p.ftar, tpar: p.tpar, age: p.age, ht: p.ht, wt: p.wt,
-        position: p.position, draft_no: p.draft_no, draft_diff: p.draft_diff
+  function getPlayers(year) {
+    if (_cache && _cacheKey === year) return _cache;
+    var out = [];
+    function addRows(board, yr) {
+      if (!board) return;
+      board.forEach(function(p) {
+        var dash = (p.name || '').indexOf(' - ');
+        out.push({
+          _n:  dash > 0 ? p.name.slice(0, dash) : (p.name || ''),
+          _s:  dash > 0 ? p.name.slice(dash + 3) : '',
+          _y:  yr,
+          rank: p.rank, metric: p.metric, ts_pct: p.ts_pct,
+          pa2_usg: p.pa2_usg, stl_bl: p.stl_bl, ato: p.ato,
+          ftar: p.ftar, tpar: p.tpar, age: p.age, ht: p.ht, wt: p.wt,
+          position: p.position, draft_no: p.draft_no, draft_diff: p.draft_diff
+        });
       });
+    }
+    if (year === 'all') {
+      addRows(DATA.board2026, '2026');
+      if (DATA.historical) Object.keys(DATA.historical).forEach(function(y) { addRows(DATA.historical[y], y); });
+    } else if (year === '2026') {
+      addRows(DATA.board2026, '2026');
+    } else {
+      addRows(DATA.historical && DATA.historical[year], year);
+    }
+    _cache    = out;
+    _cacheKey = year;
+    return out;
+  }
+
+  function invalidate() { _cache = null; _cacheKey = ''; }
+
+  // ── Axis value extraction ─────────────────────────────────────────────────
+  // ts_pct is stored 0-1; display as 0-100.
+  function axisVal(p, key) {
+    if (key === 'ts_pct') {
+      var t = parseFloat(p.ts_pct);
+      return (t && t > 0) ? t * 100 : null;
+    }
+    if (key === 'rank') return p.rank || null;
+    var v = p[key];
+    if (v === null || v === undefined || v === '' || v === 0) return null;
+    var n = parseFloat(v);
+    return (isNaN(n) || !isFinite(n)) ? null : n;
+  }
+
+  // ── Point computation ─────────────────────────────────────────────────────
+  function computePoints(players, xKey, yKey, posFilter) {
+    var src = (posFilter && posFilter !== 'all')
+      ? players.filter(function(p) { return p.position === posFilter; })
+      : players;
+    var pts = [];
+    src.forEach(function(p) {
+      var xv = axisVal(p, xKey);
+      var yv = axisVal(p, yKey);
+      if (xv === null || yv === null) return;
+      // x/y: display coordinates (may be jittered later).
+      // _xr/_yr: true values, always used for tooltip.
+      pts.push({ x: xv, y: yv, _xr: xv, _yr: yv, _p: p });
+    });
+    return pts;
+  }
+
+  // ── Deterministic collision jitter ────────────────────────────────────────
+  // Applies a small radial offset to points that overlap so logos remain
+  // individually visible. Offset is based on player rank (stable across
+  // renders). Tooltip still shows true values (_xr/_yr), not jittered coords.
+  var PHI = 2.39996323; // golden angle — distributes points in tight spiral
+
+  function applyJitter(pts, xRange, yRange) {
+    if (pts.length < 2 || !xRange || !yRange) return pts;
+    var TX = xRange * 0.018; // overlap threshold: 1.8% of axis range
+    var TY = yRange * 0.018;
+    var JX = xRange * 0.011; // max jitter: 1.1% of range
+    var JY = yRange * 0.011;
+
+    // Clone points so originals are untouched
+    var result = pts.map(function(pt) { return Object.assign({}, pt); });
+    for (var i = 0; i < result.length; i++) {
+      for (var j = i + 1; j < result.length; j++) {
+        if (Math.abs(result[i]._xr - result[j]._xr) < TX &&
+            Math.abs(result[i]._yr - result[j]._yr) < TY) {
+          var ai = (result[i]._p.rank || i) * PHI;
+          var aj = (result[j]._p.rank || j) * PHI;
+          result[i].x = result[i]._xr + Math.cos(ai) * JX;
+          result[i].y = result[i]._yr + Math.sin(ai) * JY;
+          result[j].x = result[j]._xr + Math.cos(aj) * JX;
+          result[j].y = result[j]._yr + Math.sin(aj) * JY;
+        }
+      }
+    }
+    return result;
+  }
+
+  // ── Tier-based logo inner size (px) ─────────────────────────────────────
+  // This is the logo content inside the bubble — not the total rendered size.
+  // Total rendered = tierSize + BUBBLE_PAD*2 (added by ScatterLogoCache).
+  // franchise → 22+12 = 34px bubble | lottery → 18+12 = 30px | etc.
+  function tierSize(rank) {
+    if (!rank)      return 15;
+    if (rank <= 5)  return 22;
+    if (rank <= 14) return 18;
+    if (rank <= 30) return 15;
+    return 13;
+  }
+
+  // ── Top N players by Y-axis value ────────────────────────────────────────
+  // Pure function: filters + sorts in one pass, returns up to n entries.
+  // Used by ScatterTopPanel to populate the leader-board panel.
+  function topByAxis(players, yKey, posFilter, n) {
+    var src = (posFilter && posFilter !== 'all')
+      ? players.filter(function(p) { return p.position === posFilter; })
+      : players;
+    var result = [];
+    src.forEach(function(p) {
+      var v = axisVal(p, yKey);
+      if (v !== null) result.push({ _p: p, _val: v });
+    });
+    result.sort(function(a, b) { return b._val - a._val; });
+    return result.slice(0, n || 5);
+  }
+
+  // ── Point color ───────────────────────────────────────────────────────────
+  // Used for fallback circles (when logo not yet loaded) and tooltip accent.
+  var POS_HEX  = { Guard:'#3B82F6', Forward:'#8B5CF6', Center:'#0D9488' };
+  var YEAR_HEX = { '2026':'#D97706','2025':'#3B82F6','2024':'#8B5CF6','2023':'#0D9488',
+                   '2022':'#DC2626','2021':'#0891B2','2020':'#65A30D','2019':'#9333EA' };
+  var TIER_HEX = { franchise:'#D97706', lottery:'#8B5CF6', late1:'#3B82F6', second:'#0D9488' };
+
+  function pointColor(pt, colorBy) {
+    switch (colorBy) {
+      case 'year': return YEAR_HEX[pt._p._y] || '#94A3B8';
+      case 'tier': {
+        var r = pt._p.rank || 99;
+        return r <= 5 ? TIER_HEX.franchise : r <= 14 ? TIER_HEX.lottery : r <= 30 ? TIER_HEX.late1 : TIER_HEX.second;
+      }
+      default: return POS_HEX[pt._p.position] || '#94A3B8';
+    }
+  }
+
+  // ── Linear regression ─────────────────────────────────────────────────────
+  function linReg(pts) {
+    var n = pts.length;
+    if (n < 3) return null;
+    var sx = 0, sy = 0, sxy = 0, sxx = 0;
+    for (var i = 0; i < n; i++) { sx += pts[i]._xr; sy += pts[i]._yr; sxy += pts[i]._xr*pts[i]._yr; sxx += pts[i]._xr*pts[i]._xr; }
+    var denom = n * sxx - sx * sx;
+    if (Math.abs(denom) < 1e-10) return null;
+    var m = (n*sxy - sx*sy) / denom;
+    var b = (sy - m*sx) / n;
+    var xs = pts.map(function(p){ return p._xr; });
+    var yMean = sy/n, ssTot = 0, ssRes = 0;
+    for (var j = 0; j < n; j++) { ssTot += Math.pow(pts[j]._yr - yMean, 2); ssRes += Math.pow(pts[j]._yr - (m*pts[j]._xr+b), 2); }
+    return { m:m, b:b, x0:Math.min.apply(null,xs), x1:Math.max.apply(null,xs), r2: ssTot>0 ? 1-ssRes/ssTot : 0 };
+  }
+
+  // ── Axis stat range ───────────────────────────────────────────────────────
+  function axisRange(pts, which) {
+    var vals = pts.map(function(pt) { return which === 'x' ? pt._xr : pt._yr; });
+    if (!vals.length) return 1;
+    return Math.max.apply(null, vals) - Math.min.apply(null, vals) || 1;
+  }
+
+  return {
+    getPlayers:  getPlayers,  invalidate:  invalidate,
+    axisVal:     axisVal,     computePoints: computePoints,
+    applyJitter: applyJitter, tierSize:    tierSize,
+    topByAxis:   topByAxis,   pointColor:  pointColor,
+    linReg:      linReg,      axisRange:   axisRange,
+    POS_HEX:     POS_HEX,
+  };
+})();
+
+// ══ ScatterLogoCache ══════════════════════════════════════════════════════════
+// Encapsulates all logo loading and offscreen canvas creation.
+// Each school's Image is loaded once; canvases are created per-size on demand.
+// BUBBLE_PAD: padding around logo for the white bubble container.
+var ScatterLogoCache = (function() {
+  'use strict';
+
+  var BUBBLE_PAD = 6; // px each side — accommodates shadow + border ring
+
+  var _raw      = {};  // school → HTMLImageElement | 'err' | 'loading'
+  var _canvases = {};  // 'school@logoSize' → HTMLCanvasElement (total=logoSize+PAD*2)
+  var _onLoad   = null;
+  var _debTimer = null;
+
+  function setOnLoad(fn) { _onLoad = fn; }
+
+  function _fireOnLoad() {
+    if (!_onLoad) return;
+    clearTimeout(_debTimer);
+    _debTimer = setTimeout(_onLoad, 60);
+  }
+
+  // Draws the school logo inside a styled bubble (white circle + subtle shadow + border).
+  // The returned canvas is (logoSize + BUBBLE_PAD*2) × (logoSize + BUBBLE_PAD*2).
+  // Chart.js renders this canvas centered on the data point — the total size drives
+  // pointRadius (= total/2) for hit detection and hover scaling.
+  function _makeCanvas(img, logoSize) {
+    var total = logoSize + BUBBLE_PAD * 2;
+    var cx    = total / 2;
+    var c     = document.createElement('canvas');
+    c.width   = total; c.height = total;
+    var ctx   = c.getContext('2d');
+
+    // 1. Drop shadow baked into the canvas pixels
+    ctx.shadowColor   = 'rgba(15,23,42,0.16)';
+    ctx.shadowBlur    = 5;
+    ctx.shadowOffsetY = 1.5;
+
+    // 2. White bubble fill
+    ctx.beginPath();
+    ctx.arc(cx, cx, logoSize / 2 + 1.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+
+    // 3. Remove shadow for logo draw
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur  = 0;
+    ctx.shadowOffsetY = 0;
+
+    // 4. Clip to inner circle and draw logo
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cx, logoSize / 2 - 0.5, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(img, cx - logoSize / 2, cx - logoSize / 2, logoSize, logoSize);
+    ctx.restore();
+
+    // 5. Hairline border ring over everything
+    ctx.beginPath();
+    ctx.arc(cx, cx, logoSize / 2 + 1, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(203,213,225,0.85)';
+    ctx.lineWidth   = 1;
+    ctx.stroke();
+
+    return c;
+  }
+
+  // Returns the cached canvas for a given school at the given logo inner size,
+  // loading the image if needed.  Returns 'circle' while loading / on error.
+  function getCanvas(school, logoSize) {
+    if (!school) return 'circle';
+    var key = school + '@' + logoSize;
+    if (_canvases[key] !== undefined) {
+      return (_canvases[key] && _canvases[key] !== 'err') ? _canvases[key] : 'circle';
+    }
+    if (_raw[school] && _raw[school] !== 'err' && _raw[school] !== 'loading') {
+      _canvases[key] = _makeCanvas(_raw[school], logoSize);
+      return _canvases[key];
+    }
+    if (_raw[school] === undefined) {
+      _raw[school] = 'loading';
+      var url = (typeof schoolLogoUrl === 'function') ? schoolLogoUrl(school) : null;
+      if (url) {
+        var img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function() {
+          _raw[school] = img;
+          _canvases[key] = _makeCanvas(img, logoSize);
+          _fireOnLoad();
+        };
+        img.onerror = function() {
+          _raw[school] = 'err';
+          _canvases[key] = 'err';
+        };
+        img.src = url;
+      } else {
+        _raw[school] = 'err';
+        _canvases[key] = 'err';
+      }
+    }
+    return 'circle';
+  }
+
+  // Returns a dimmed (low-opacity) copy of the bubble canvas — used when another
+  // point is highlighted.  Created once and cached with a '_dim' suffix key.
+  function getCanvasDimmed(school, logoSize) {
+    if (!school) return 'circle';
+    var key = school + '@' + logoSize + '_dim';
+    if (_canvases[key] !== undefined) {
+      return (_canvases[key] && _canvases[key] !== 'err') ? _canvases[key] : 'circle';
+    }
+    var orig = getCanvas(school, logoSize);
+    // Do NOT cache 'err' here — 'circle' means the image is still loading.
+    // If we cached 'err' now, the _dim entry would be permanently broken even
+    // after the base logo loads. Let each call retry until the canvas is ready.
+    if (orig === 'circle') { return 'circle'; }
+    var c = document.createElement('canvas');
+    c.width = orig.width; c.height = orig.height;
+    var ctx = c.getContext('2d');
+    ctx.globalAlpha = 0.22;
+    ctx.drawImage(orig, 0, 0);
+    _canvases[key] = c;
+    return c;
+  }
+
+  // Returns { styles, radii, hoverRadii } arrays for a set of scatter points.
+  // tierSizeFn(rank) → logo inner size in px.
+  // pointRadius = (logoSize + BUBBLE_PAD*2) / 2  so Chart.js renders canvas at 1:1.
+  function getPointStyles(pts, tierSizeFn) {
+    var styles = [], radii = [], hRadii = [];
+    pts.forEach(function(pt) {
+      var logoSz = tierSizeFn(pt._p.rank);
+      var total  = logoSz + BUBBLE_PAD * 2;
+      var c = getCanvas(pt._p._s, logoSz);
+      styles.push(c);
+      radii.push(total / 2);
+      hRadii.push(total / 2 + 3);
+    });
+    return { styles: styles, radii: radii, hoverRadii: hRadii };
+  }
+
+  function invalidate() { _raw = {}; _canvases = {}; }
+
+  return {
+    BUBBLE_PAD:       BUBBLE_PAD,
+    setOnLoad:        setOnLoad,
+    getCanvas:        getCanvas,
+    getCanvasDimmed:  getCanvasDimmed,
+    getPointStyles:   getPointStyles,
+    invalidate:       invalidate,
+  };
+})();
+
+// ══ ScatterTopPanel ══════════════════════════════════════════════════════════
+// Renders the "Top 5 by Y-axis" leader-board panel and owns the two-way
+// highlight interaction between panel rows and scatter-plot logos.
+var ScatterTopPanel = (function() {
+  'use strict';
+
+  var _topItems  = [];   // current list: [{ _p, _val }]
+  var _highlighted = null;
+
+  // ── Render ────────────────────────────────────────────────────────────────
+  function render(items, yM) {
+    _topItems = items || [];
+    var el      = document.getElementById('scTop5');
+    var lblEl   = document.getElementById('scTop5AxisLabel');
+    if (lblEl) lblEl.textContent = yM ? yM.label : '';
+    if (!el) return;
+
+    if (!_topItems.length) {
+      el.innerHTML = '<div class="sc-top5-empty">No data for this axis</div>';
+      return;
+    }
+
+    var h = '';
+    _topItems.forEach(function(item, i) {
+      var p      = item._p;
+      var color  = ScatterEngine.POS_HEX[p.position] || '#94A3B8';
+      var school = p._s || '';
+      var logoH  = (typeof schoolLogoHtml === 'function' && school)
+        ? schoolLogoHtml(school, '18px', '2px')
+        : '<div style="width:16px;height:16px;border-radius:3px;background:' + color + '20;flex-shrink:0"></div>';
+
+      h += '<div class="sc-top5-row" data-name="' + escHtml(p._n || '') + '"'
+        + ' data-rank="' + (p.rank || '') + '" data-year="' + (p._y || '2026') + '"'
+        + ' onmouseenter="ScatterTopPanel.highlight(this.dataset.name)"'
+        + ' onmouseleave="ScatterTopPanel.clearHighlight()"'
+        + ' onclick="ScatterTopPanel.select(this)">'
+        + '<div class="sc-top5-idx">' + (i + 1) + '</div>'
+        + '<div class="sc-top5-logo">' + logoH + '</div>'
+        + '<div class="sc-top5-info">'
+        + '<div class="sc-top5-name">' + escHtml(p._n || '') + '</div>'
+        + '<div class="sc-top5-school">' + escHtml(school) + (p.rank ? ' · #' + p.rank : '') + '</div>'
+        + '</div>'
+        + '<div class="sc-top5-val" style="color:' + color + '">' + (yM ? yM.fmt(item._val) : item._val) + '</div>'
+        + '</div>';
+    });
+
+    el.innerHTML = h;
+    // Re-apply active state if a highlight is already set
+    if (_highlighted) _applyRowActive(_highlighted);
+  }
+
+  // ── Interaction ───────────────────────────────────────────────────────────
+  function highlight(name) {
+    _highlighted = name;
+    _applyRowActive(name);
+    scHighlightPlayer(name);
+  }
+
+  function clearHighlight() {
+    _highlighted = null;
+    _applyRowActive(null);
+    scHighlightPlayer(null);
+  }
+
+  function select(el) {
+    var rank = parseInt(el.getAttribute('data-rank'), 10);
+    var year = el.getAttribute('data-year') || '2026';
+    if (rank && typeof openPlayerModal === 'function') openPlayerModal(rank, year);
+  }
+
+  function _applyRowActive(name) {
+    document.querySelectorAll('.sc-top5-row').forEach(function(row) {
+      row.classList.toggle('sc-top5-row-active', !!name && row.getAttribute('data-name') === name);
     });
   }
-  if (yr === 'all') {
-    addRows(DATA.board2026, '2026');
-    if (DATA.historical) {
-      Object.keys(DATA.historical).forEach(function(y) { addRows(DATA.historical[y], y); });
-    }
-  } else if (yr === '2026') {
-    addRows(DATA.board2026, '2026');
+
+  return { render: render, highlight: highlight, clearHighlight: clearHighlight, select: select };
+})();
+
+// ── Chart highlight: dim all points except the named player ──────────────────
+// Called by ScatterTopPanel on hover.  Uses pre-computed dimmed canvases from
+// ScatterLogoCache so no image reloads occur during interaction.
+var _scCurrentColorBy = 'position';
+var _scLastLogoData   = null;
+var _scHighlightName  = null;
+
+function scHighlightPlayer(name) {
+  _scHighlightName = name;
+  if (!_scChart || !_scAllPts.length || !_scLastLogoData) return;
+  var ds = _scChart.data.datasets[0];
+  if (!ds) return;
+
+  if (!name) {
+    // Restore original logo data
+    ds.pointStyle     = _scLastLogoData.styles;
+    ds.pointRadius    = _scLastLogoData.radii;
+    ds.pointHoverRadius = _scLastLogoData.hoverRadii;
   } else {
-    addRows(DATA.historical && DATA.historical[yr], yr);
+    var newStyles = _scAllPts.map(function(pt, i) {
+      if (pt._p._n === name) return _scLastLogoData.styles[i];
+      return ScatterLogoCache.getCanvasDimmed(pt._p._s, ScatterEngine.tierSize(pt._p.rank));
+    });
+    var newRadii = _scAllPts.map(function(pt, i) {
+      return pt._p._n === name
+        ? _scLastLogoData.radii[i] + 3
+        : Math.max(4, _scLastLogoData.radii[i] * 0.72);
+    });
+    ds.pointStyle  = newStyles;
+    ds.pointRadius = newRadii;
   }
-  return out;
+  _scChart.update('none');
 }
 
-function scLinReg(pts) {
-  var n = pts.length;
-  if (n < 3) return null;
-  var sx = 0, sy = 0, sxy = 0, sxx = 0;
-  for (var i = 0; i < n; i++) { sx += pts[i].x; sy += pts[i].y; sxy += pts[i].x*pts[i].y; sxx += pts[i].x*pts[i].x; }
-  var denom = n * sxx - sx * sx;
-  if (Math.abs(denom) < 1e-10) return null;
-  var m = (n * sxy - sx * sy) / denom;
-  var b = (sy - m * sx) / n;
-  var xs = pts.map(function(p) { return p.x; });
-  var yMean = sy / n, ssTot = 0, ssRes = 0;
-  for (var j = 0; j < n; j++) { ssTot += Math.pow(pts[j].y - yMean, 2); ssRes += Math.pow(pts[j].y - (m*pts[j].x+b), 2); }
-  return { m: m, b: b, x0: Math.min.apply(null, xs), x1: Math.max.apply(null, xs), r2: ssTot > 0 ? 1 - ssRes/ssTot : 0 };
-}
+// ── Axis definitions (kept top-level; used by tooltip formatting) ─────────────
+var SC_AXES = {
+  age:       { label:'Age (yrs)',      fmt:function(v){ return v.toFixed(1)+'y'; },                     inv:false },
+  ht:        { label:'Height (in)',    fmt:function(v){ return Math.floor(v/12)+"'"+Math.round(v%12)+'"'; }, inv:false },
+  wt:        { label:'Weight (lbs)',   fmt:function(v){ return Math.round(v)+'lb'; },                   inv:false },
+  rank:      { label:'HW Rank',        fmt:function(v){ return '#'+Math.round(v); },                    inv:false },
+  metric:    { label:'HW Metric',      fmt:function(v){ return v.toFixed(1); },                         inv:false },
+  draft_no:  { label:'Draft Pick',     fmt:function(v){ return '#'+Math.round(v); },                    inv:false },
+  draft_diff:{ label:'Rank vs Pick',   fmt:function(v){ return (v>0?'+':'')+Math.round(v); },           inv:false },
+  ts_pct:    { label:'TS%',            fmt:function(v){ return v.toFixed(1)+'%'; },                     inv:false },
+  pa2_usg:   { label:'P+A/USG',        fmt:function(v){ return Math.round(v)+''; },                     inv:false },
+  stl_bl:    { label:'Stl+Bl',         fmt:function(v){ return v.toFixed(2); },                         inv:false },
+  ato:       { label:'A/TO',           fmt:function(v){ return v.toFixed(2); },                         inv:false },
+  ftar:      { label:'FTAr',           fmt:function(v){ return v.toFixed(3); },                         inv:false },
+  tpar:      { label:'3PAr',           fmt:function(v){ return v.toFixed(3); },                         inv:false }
+};
+
+// ── Scatter state ─────────────────────────────────────────────────────────────
+var _scChart   = null;
+var _scTrend   = false;
+var _scTipEl   = null;
+var _scAllPts  = [];     // current rendered points — used by logo-refresh + highlight
 
 function scToggleTrend() {
   _scTrend = !_scTrend;
@@ -6143,15 +7042,16 @@ function scToggleTrend() {
   scRender();
 }
 
+// ── Tooltip ───────────────────────────────────────────────────────────────────
 function scGetTip() {
   if (!_scTipEl) {
     _scTipEl = document.createElement('div');
     _scTipEl.style.cssText = [
-      'position:fixed', 'z-index:9999', 'pointer-events:none', 'opacity:0',
-      'background:#0A1628', 'color:white', 'border-radius:8px', 'padding:10px 14px',
-      "font-family:'DM Sans',sans-serif", 'font-size:12px', 'line-height:1.5',
-      'box-shadow:0 8px 24px rgba(0,0,0,.4)', 'max-width:240px',
-      'transition:opacity .1s', 'border:1px solid rgba(255,255,255,.1)'
+      'position:fixed','z-index:9999','pointer-events:none','opacity:0',
+      'background:#0A1628','color:white','border-radius:8px','padding:10px 14px',
+      "font-family:'DM Sans',sans-serif",'font-size:12px','line-height:1.5',
+      'box-shadow:0 8px 24px rgba(0,0,0,.4)','max-width:240px',
+      'transition:opacity .12s','border:1px solid rgba(255,255,255,.1)'
     ].join(';');
     document.body.appendChild(_scTipEl);
   }
@@ -6162,50 +7062,46 @@ function scShowTip(e, nearby, xM, yM) {
   var tt = scGetTip();
   if (!nearby.length) { tt.style.opacity = '0'; return; }
   var h = '';
-  if (nearby.length > 1) {
-    h += '<div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:5px">' + nearby.length + ' players here</div>';
-  }
+  if (nearby.length > 1) h += '<div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:5px">' + nearby.length + ' players here</div>';
   nearby.forEach(function(pt, i) {
     if (i > 0) h += '<hr style="border:none;border-top:1px solid rgba(255,255,255,.1);margin:5px 0">';
-    h += '<div style="font-family:Barlow Condensed,sans-serif;font-size:15px;font-weight:900">' + pt._p._n + '</div>';
+    var dotColor = ScatterEngine.POS_HEX[pt._p.position] || '#94A3B8';
+    h += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">'
+       + '<div style="width:7px;height:7px;border-radius:50%;background:' + dotColor + ';flex-shrink:0"></div>'
+       + '<div style="font-family:Barlow Condensed,sans-serif;font-size:15px;font-weight:900">' + pt._p._n + '</div>'
+       + '</div>';
     if (pt._p._s) {
       h += '<div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:4px">' + pt._p._s;
       if (pt._p._y && pt._p._y !== '2026') h += ' \u00b7 \'' + String(pt._p._y).slice(2);
       h += '</div>';
     }
-    h += '<table><tr>'
-      + '<td style="font-size:10px;color:rgba(255,255,255,.45);padding-right:8px">' + xM.label + '</td>'
-      + '<td style="font-weight:700;color:#F0C94A">' + xM.fmt(pt._xr) + '</td>'
-      + '</tr><tr>'
-      + '<td style="font-size:10px;color:rgba(255,255,255,.45);padding-right:8px">' + yM.label + '</td>'
-      + '<td style="font-weight:700;color:#F0C94A">' + yM.fmt(pt._yr) + '</td>'
-      + '</tr></table>';
+    h += '<table style="width:100%"><tr>'
+       + '<td style="font-size:10px;color:rgba(255,255,255,.45);padding-right:8px">' + xM.label + '</td>'
+       + '<td style="font-weight:700;color:#F0C94A;text-align:right">' + xM.fmt(pt._xr) + '</td>'
+       + '</tr><tr>'
+       + '<td style="font-size:10px;color:rgba(255,255,255,.45);padding-right:8px">' + yM.label + '</td>'
+       + '<td style="font-weight:700;color:#F0C94A;text-align:right">' + yM.fmt(pt._yr) + '</td>'
+       + '</tr></table>';
   });
   tt.innerHTML = h;
   tt.style.opacity = '1';
   var cx = e.clientX + 16, cy = e.clientY - 10;
-  if (cx + 250 > window.innerWidth) cx = e.clientX - 258;
+  if (cx + 260 > window.innerWidth)  cx = e.clientX - 268;
   if (cy + 200 > window.innerHeight) cy = e.clientY - 210;
   tt.style.left = cx + 'px';
   tt.style.top  = cy + 'px';
 }
 function scHideTip() { var tt = scGetTip(); tt.style.opacity = '0'; }
 
-// ── SCATTER PLOT ──────────────────────────────────────────────────────────────
+// ── Debounced render ──────────────────────────────────────────────────────────
 var _scRenderTimer = null;
 function scRenderDebounced() {
   clearTimeout(_scRenderTimer);
   _scRenderTimer = setTimeout(scRender, 150);
 }
 
+// ── Main render ───────────────────────────────────────────────────────────────
 function scRender() {
-  try {
-    var _xe=document.getElementById('scXAxis'),_ye=document.getElementById('scYAxis');
-    if(_xe&&_ye) urlSetState({x:_xe.value,y:_ye.value,
-      syear:(document.getElementById('scYear')||{value:''}).value,
-      scolor:(document.getElementById('scColorBy')||{value:''}).value});
-  } catch(e) {}
-  // Chart.js is loaded via CDN in the head — available as global Chart
   if (typeof Chart === 'undefined') return;
 
   var xEl = document.getElementById('scXAxis');
@@ -6214,29 +7110,25 @@ function scRender() {
 
   var xKey    = xEl.value;
   var yKey    = yEl.value;
-  var colorBy = (document.getElementById('scColorBy') || {value:'position'}).value;
-  var posFil  = (document.getElementById('scPosFilter') || {value:'all'}).value;
-  var xM      = SC_AXES[xKey] || {label:xKey, fmt:function(v){return String(v);}, inv:false};
-  var yM      = SC_AXES[yKey] || {label:yKey, fmt:function(v){return String(v);}, inv:false};
+  var colorBy = (document.getElementById('scColorBy')  || { value:'position' }).value;
+  var posFil  = (document.getElementById('scPosFilter') || { value:'all' }).value;
+  var yearEl  = document.getElementById('scYear');
+  var year    = yearEl ? yearEl.value : '2026';
+  var xM      = SC_AXES[xKey] || { label:xKey, fmt:function(v){ return String(v); }, inv:false };
+  var yM      = SC_AXES[yKey] || { label:yKey, fmt:function(v){ return String(v); }, inv:false };
 
-  // Update title
+  // Persist state to URL
+  try {
+    if (xEl && yEl) urlSetState({ x:xKey, y:yKey, syear:year, scolor:colorBy });
+  } catch(e) {}
+
+  // Update plot title
   var titleEl = document.getElementById('scPlotTitle');
   if (titleEl) titleEl.textContent = xM.label + ' vs ' + yM.label;
 
-  // Build points
-  var players = scBuildPlayers();
-  if (posFil !== 'all') {
-    players = players.filter(function(p) { return p.position === posFil; });
-  }
-
-  var pts = [];
-  players.forEach(function(p) {
-    var xv = scAxisVal(p, xKey);
-    var yv = scAxisVal(p, yKey);
-    if (xv === null || yv === null) return;
-    pts.push({ x: xv, y: yv, _xr: xv, _yr: yv, _p: p });
-  });
-  _scAllPts = pts;
+  // ── Data pipeline (ScatterEngine) ─────────────────────────────────────────
+  var players = ScatterEngine.getPlayers(year);
+  var pts     = ScatterEngine.computePoints(players, xKey, yKey, posFil);
 
   var metaEl = document.getElementById('scPlotMeta');
   if (!pts.length) {
@@ -6246,169 +7138,183 @@ function scRender() {
   }
   if (metaEl) metaEl.textContent = pts.length + ' prospects plotted';
 
-  // Build single dataset — school logos scaled to dot size via offscreen canvas
-  var SC_DOT_SIZE = 12; // diameter in pixels — same as original dot pointRadius*2
-  if (!window._scLogoCache) window._scLogoCache = {};
+  // Update Top 5 panel (pure data read — no DOM cost beyond innerHTML)
+  var topItems = ScatterEngine.topByAxis(players, yKey, posFil, 5);
+  ScatterTopPanel.render(topItems, yM);
 
-  function scMakeLogoCanvas(img, size) {
-    // Draw the logo onto a square offscreen canvas at exactly 'size' pixels
-    var c = document.createElement('canvas');
-    c.width = size; c.height = size;
-    var ctx = c.getContext('2d');
-    ctx.drawImage(img, 0, 0, size, size);
-    return c;
+  // Apply jitter only when point count is manageable (< 200)
+  if (pts.length < 200) {
+    pts = ScatterEngine.applyJitter(pts, ScatterEngine.axisRange(pts, 'x'), ScatterEngine.axisRange(pts, 'y'));
   }
 
-  var pointStyles = pts.map(function(pt) {
-    var school = pt._p._s;
-    if (!school) return 'circle';
-    var cacheKey = school + '@' + SC_DOT_SIZE;
-    if (window._scLogoCache[cacheKey] === undefined) {
-      // Not yet in cache — check if raw image exists
-      var rawKey = school + '_raw';
-      if (window._scLogoCache[rawKey] && window._scLogoCache[rawKey] !== 'err') {
-        // Image already loaded — just scale it
-        window._scLogoCache[cacheKey] = scMakeLogoCanvas(window._scLogoCache[rawKey], SC_DOT_SIZE);
-        return window._scLogoCache[cacheKey];
-      }
-      // Start loading
-      var url = (typeof schoolLogoUrl === 'function') ? schoolLogoUrl(school) : null;
-      if (url) {
-        window._scLogoCache[cacheKey] = null; // loading
-        var img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = function() {
-          window._scLogoCache[rawKey] = img;
-          window._scLogoCache[cacheKey] = scMakeLogoCanvas(img, SC_DOT_SIZE);
-          if (_scChart) _scRefreshLogos();
-        };
-        img.onerror = function() {
-          window._scLogoCache[rawKey] = 'err';
-          window._scLogoCache[cacheKey] = 'err';
-        };
-        img.src = url;
-      } else {
-        window._scLogoCache[cacheKey] = 'err';
-      }
-      return 'circle';
+  _scAllPts = pts;
+
+  // ── Logo rendering (ScatterLogoCache) ─────────────────────────────────────
+  // Set onLoad callback — fires (debounced) when any logo arrives after initial render
+  ScatterLogoCache.setOnLoad(function() {
+    if (!_scChart || !_scAllPts.length) return;
+    var ds = _scChart.data.datasets[0];
+    if (!ds) return;
+    var logoData = ScatterLogoCache.getPointStyles(_scAllPts, ScatterEngine.tierSize);
+    // Always keep _scLastLogoData current — it is the authoritative restore target.
+    // Without this update it stays stale (contains 'circle' for logos that loaded
+    // after the initial render) and clearHighlight() would restore the old circles.
+    _scLastLogoData = logoData;
+    if (_scHighlightName) {
+      // A Top-5 highlight is active — re-apply it with the freshly-loaded canvases
+      // rather than overwriting with full-brightness logos and losing the dim state.
+      scHighlightPlayer(_scHighlightName);
+    } else {
+      ds.pointStyle       = logoData.styles;
+      ds.pointRadius      = logoData.radii;
+      ds.pointHoverRadius = logoData.hoverRadii;
+      _scChart.update('none');
     }
-    var cached = window._scLogoCache[cacheKey];
-    return (cached && cached !== 'err') ? cached : 'circle';
   });
 
-  var bgColors = pts.map(function(pt) {
-    var hex = SC_POS_HEX[pt._p.position || ''] || '#94A3B8';
-    return hex + 'CC';
-  });
+  var logoData  = ScatterLogoCache.getPointStyles(pts, ScatterEngine.tierSize);
 
+  // Store for highlight system (ScatterTopPanel.highlight → scHighlightPlayer)
+  _scCurrentColorBy = colorBy;
+  _scLastLogoData   = logoData;
+
+  // fallback circles use the colorBy value for semantic color
+  var bgColors  = pts.map(function(pt) { return ScatterEngine.pointColor(pt, colorBy) + 'CC'; });
+
+  // ── Trend line (computed once, used for both dataset and stat bar) ─────────
+  var reg = (_scTrend && pts.length >= 3) ? ScatterEngine.linReg(pts) : null;
+
+  // ── Build datasets ────────────────────────────────────────────────────────
   var datasets = [{
-    label: 'Prospects',
-    data: pts,
-    pointStyle: pointStyles,
-    backgroundColor: bgColors,
-    borderColor: bgColors,
-    borderWidth: 0,
-    pointRadius: SC_DOT_SIZE / 2,
-    pointHoverRadius: SC_DOT_SIZE / 2 + 3
+    label:            'Prospects',
+    data:             pts,
+    pointStyle:       logoData.styles,
+    backgroundColor:  bgColors,
+    borderColor:      bgColors,
+    borderWidth:      0,
+    pointRadius:      logoData.radii,
+    pointHoverRadius: logoData.hoverRadii,
   }];
 
-  // Trend line
-  if (_scTrend && pts.length >= 3) {
-    var reg = scLinReg(pts.map(function(pt) { return {x: pt._xr, y: pt._yr}; }));
-    if (reg) {
-      datasets.push({
-        label: 'Trend (R\u00b2=' + reg.r2.toFixed(2) + ')',
-        data: [{x: reg.x0, y: reg.m * reg.x0 + reg.b}, {x: reg.x1, y: reg.m * reg.x1 + reg.b}],
-        type: 'line',
-        borderColor: 'rgba(220,38,38,.7)',
-        borderWidth: 2,
-        borderDash: [6,4],
-        pointRadius: 0,
-        fill: false
-      });
-    }
+  if (reg) {
+    datasets.push({
+      label:       'Trend (R\u00b2=' + reg.r2.toFixed(2) + ')',
+      data:        [{ x:reg.x0, y:reg.m*reg.x0+reg.b }, { x:reg.x1, y:reg.m*reg.x1+reg.b }],
+      type:        'line',
+      borderColor: 'rgba(220,38,38,.65)',
+      borderWidth: 1.5,
+      borderDash:  [6, 4],
+      pointRadius: 0,
+      fill:        false,
+    });
   }
 
-  // Destroy old chart
-  if (_scChart) { _scChart.destroy(); _scChart = null; }
-
+  // ── Chart.js config ───────────────────────────────────────────────────────
   var canvas = document.getElementById('scCanvas');
   if (!canvas) return;
 
-  _scChart = new Chart(canvas, {
+  var axisStyle = {
+    grid:  { color:'rgba(203,213,225,.35)', lineWidth:1 },
+    ticks: { color:'#94A3B8', font:{ size:10 } },
+    title: { display:true, color:'#64748B', font:{ family:"'Barlow Condensed',sans-serif", weight:'700', size:12 } },
+  };
+
+  var chartConfig = {
     type: 'scatter',
     data: { datasets: datasets },
     options: {
-      responsive: true,
+      responsive:          true,
       maintainAspectRatio: false,
-      animation: { duration: 300 },
+      animation:           { duration: 0 },   // instant — no logo-scramble on axis switch
       plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false }
+        legend:  { display: false },
+        tooltip: { enabled: false },          // custom proximity tooltip below
       },
       scales: {
-        x: {
-          title: { display:true, text:xM.label, color:'#64748B',
-                   font:{family:'Barlow Condensed,sans-serif', weight:'700', size:12} },
-          grid:  { color:'rgba(241,245,249,.9)' },
-          ticks: { color:'#94A3B8', font:{size:10}, callback: function(v){ return xM.fmt(v); } },
-          reverse: !!xM.inv
-        },
-        y: {
-          title: { display:true, text:yM.label, color:'#64748B',
-                   font:{family:'Barlow Condensed,sans-serif', weight:'700', size:12} },
-          grid:  { color:'rgba(241,245,249,.9)' },
-          ticks: { color:'#94A3B8', font:{size:10}, callback: function(v){ return yM.fmt(v); } },
-          reverse: !!yM.inv
-        }
-      }
-    }
-  });
+        x: Object.assign({}, axisStyle, {
+          title:   { display:true, text:xM.label, color:'#64748B', font:{ family:"'Barlow Condensed',sans-serif", weight:'700', size:12 } },
+          ticks:   { color:'#94A3B8', font:{ size:10 }, callback:function(v){ return xM.fmt(v); } },
+          reverse: !!xM.inv,
+        }),
+        y: Object.assign({}, axisStyle, {
+          title:   { display:true, text:yM.label, color:'#64748B', font:{ family:"'Barlow Condensed',sans-serif", weight:'700', size:12 } },
+          ticks:   { color:'#94A3B8', font:{ size:10 }, callback:function(v){ return yM.fmt(v); } },
+          reverse: !!yM.inv,
+        }),
+      },
+    },
+  };
 
-  // Proximity tooltip via mousemove
+  // Destroy and recreate — fast with animation:0, avoids Chart.js partial-update edge cases
+  if (_scChart) { _scChart.destroy(); _scChart = null; }
+  _scChart = new Chart(canvas, chartConfig);
+
+  // ── Proximity tooltip ─────────────────────────────────────────────────────
+  // Detect hover within radius matching largest logo size (franchise = 28px)
   canvas.onmousemove = function(e) {
     if (!_scChart || !_scAllPts.length) return;
-    var rect = canvas.getBoundingClientRect();
-    var mx = e.clientX - rect.left;
-    var my = e.clientY - rect.top;
+    var rect  = canvas.getBoundingClientRect();
+    var mx    = e.clientX - rect.left;
+    var my    = e.clientY - rect.top;
     try {
       var xScale = _scChart.scales.x;
       var yScale = _scChart.scales.y;
-      var near = _scAllPts.filter(function(pt) {
-        var px = xScale.getPixelForValue(pt.x);
-        var py = yScale.getPixelForValue(pt.y);
-        return Math.sqrt((px - mx) * (px - mx) + (py - my) * (py - my)) <= 22;
+      var near   = _scAllPts.filter(function(pt) {
+        var px  = xScale.getPixelForValue(pt.x);
+        var py  = yScale.getPixelForValue(pt.y);
+        var r   = ScatterEngine.tierSize(pt._p.rank) / 2 + 2;
+        return Math.sqrt((px-mx)*(px-mx) + (py-my)*(py-my)) <= r;
       });
       scShowTip(e, near, xM, yM);
-    } catch (err) { scHideTip(); }
+    } catch(e) { scHideTip(); }
   };
   canvas.onmouseleave = function() { scHideTip(); };
 
-  // Stats bar
+  // Click a logo → open player profile modal
+  canvas.onclick = function(e) {
+    if (!_scChart || !_scAllPts.length) return;
+    var rect  = canvas.getBoundingClientRect();
+    var mx    = e.clientX - rect.left;
+    var my    = e.clientY - rect.top;
+    try {
+      var xScale  = _scChart.scales.x;
+      var yScale  = _scChart.scales.y;
+      var clicked = null;
+      var minDist = Infinity;
+      _scAllPts.forEach(function(pt) {
+        var px   = xScale.getPixelForValue(pt.x);
+        var py   = yScale.getPixelForValue(pt.y);
+        var r    = ScatterEngine.tierSize(pt._p.rank) / 2 + ScatterLogoCache.BUBBLE_PAD + 2;
+        var dist = Math.sqrt((px - mx) * (px - mx) + (py - my) * (py - my));
+        if (dist <= r && dist < minDist) { minDist = dist; clicked = pt; }
+      });
+      if (clicked && typeof openPlayerModal === 'function') {
+        openPlayerModal(clicked._p.rank, clicked._p._y || '2026');
+      }
+    } catch(err) {}
+  };
+
+  // ── Stats bar ─────────────────────────────────────────────────────────────
   var statEl = document.getElementById('scStatBar');
   if (statEl) {
     var xs = pts.map(function(pt){ return pt._xr; });
     var ys = pts.map(function(pt){ return pt._yr; });
     function statChip(vals, m) {
-      var mn  = Math.min.apply(null, vals);
-      var mx2 = Math.max.apply(null, vals);
-      var av  = vals.reduce(function(a,b){return a+b;},0) / vals.length;
-      return '<span class="sc-stat-chip"><b>' + m.label + '</b> '
-        + m.fmt(mn) + ' \u2192 avg ' + m.fmt(av) + ' \u2192 ' + m.fmt(mx2) + '</span>';
+      var mn = Math.min.apply(null, vals);
+      var mx = Math.max.apply(null, vals);
+      var av = vals.reduce(function(a,b){ return a+b; }, 0) / vals.length;
+      return '<span class="sc-stat-chip"><b>' + m.label + '</b> ' + m.fmt(mn) + ' \u2192 avg ' + m.fmt(av) + ' \u2192 ' + m.fmt(mx) + '</span>';
     }
-    var r2c = '';
-    if (_scTrend) {
-      var reg2 = scLinReg(pts.map(function(pt){ return {x:pt._xr,y:pt._yr}; }));
-      if (reg2) {
-        var str  = reg2.r2 > 0.5 ? 'Strong' : reg2.r2 > 0.25 ? 'Moderate' : 'Weak';
-        var scol = reg2.r2 > 0.5 ? '#16A34A' : reg2.r2 > 0.25 ? '#D97706' : '#94A3B8';
-        r2c = '<span class="sc-stat-chip"><b>R\u00b2</b> ' + reg2.r2.toFixed(3)
-            + ' <span style="color:' + scol + '">' + str + '</span></span>';
-      }
+    var r2html = '';
+    if (reg) {
+      var str  = reg.r2 > 0.5 ? 'Strong' : reg.r2 > 0.25 ? 'Moderate' : 'Weak';
+      var scol = reg.r2 > 0.5 ? '#16A34A' : reg.r2 > 0.25 ? '#D97706' : '#94A3B8';
+      r2html = '<span class="sc-stat-chip"><b>R\u00b2</b> ' + reg.r2.toFixed(3) + ' <span style="color:' + scol + '">' + str + '</span></span>';
     }
-    statEl.innerHTML = statChip(xs, xM) + statChip(ys, yM) + r2c;
+    statEl.innerHTML = statChip(xs, xM) + statChip(ys, yM) + r2html;
   }
 }
+
 
 
 // ── TIER MANAGEMENT FUNCTIONS ──────────────────────────────────────────────
@@ -6446,14 +7352,14 @@ function updateTierCuts() {
   document.getElementById('cutLateFirst').value = lf;
   document.getElementById('cutSecond').value    = s;
   TIER_CUTS = { franchise:f, lottery:l, lateFirst:lf, second:s };
-  try { localStorage.setItem('hw_tier_cuts', JSON.stringify(TIER_CUTS)); } catch(e) {}
+  StorageService.saveTierCuts(TIER_CUTS);
   rebuildBBTiers();
   renderBoard2026();
 }
 
 function resetTierCuts() {
   TIER_CUTS = { franchise:5, lottery:14, lateFirst:30, second:60 };
-  try { localStorage.removeItem('hw_tier_cuts'); } catch(e) {}
+  StorageService.clearTierCuts();
   rebuildBBTiers();
   var vals = {cutFranchise:5, cutLottery:14, cutLateFirst:30, cutSecond:60};
   Object.keys(vals).forEach(function(id) {
@@ -6881,27 +7787,9 @@ function compAvatarHtml(name, position, size, borderRadius) {
 }
 
 
-// ── SCATTER LOGO REFRESH ───────────────────────────────────────────────────
-// Called when a school logo finishes loading — updates pointStyle in place
-var _scRefreshTimer = null;
-function _scRefreshLogos() {
-  clearTimeout(_scRefreshTimer);
-  _scRefreshTimer = setTimeout(function() {
-    if (!_scChart || !_scAllPts.length) return;
-    var _dotSize = (typeof SC_DOT_SIZE !== 'undefined') ? SC_DOT_SIZE : 12;
-    var newStyles = _scAllPts.map(function(pt) {
-      var school = pt._p._s;
-      if (!school) return 'circle';
-      var c = window._scLogoCache[school + '@' + _dotSize];
-      return (c && c !== 'err') ? c : 'circle';
-    });
-    var ds = _scChart.data && _scChart.data.datasets && _scChart.data.datasets[0];
-    if (ds) {
-      ds.pointStyle = newStyles;
-      _scChart.update('none');
-    }
-  }, 60); // debounce: batch rapid logo loads into one update
-}
+// ── SCATTER LOGO REFRESH: now handled by ScatterLogoCache.setOnLoad() ─────
+// The onLoad callback is registered inside scRender() on each render pass.
+// ScatterLogoCache debounces logo arrivals and calls _scChart.update('none').
 
 
 
@@ -7319,6 +8207,148 @@ var FreeformComponents = (function() {
 
 })();
 
+// ── Freeform density state ────────────────────────────────────────────────────
+// Initialized to compact on mobile, standard on desktop.
+// persists across renders — user's choice is preserved on filter/sort changes.
+var _ffDensity = (typeof window !== 'undefined' && window.innerWidth < 768) ? 'compact' : 'standard';
+
+// Apply a density mode by toggling a CSS class on the shell.
+// Pure CSS change — NO re-render, NO layout recalc.
+function ffSetDensity(mode) {
+  _ffDensity = mode;
+  var shell = document.querySelector('.ff2-shell');
+  if (shell) {
+    ['compact', 'standard', 'comfortable'].forEach(function(m) {
+      shell.classList.toggle('ff2-density-' + m, m === mode);
+    });
+  }
+  document.querySelectorAll('.ff2-density-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-density') === mode);
+  });
+  // Reset zoom/pan when changing density so positions feel fresh
+  if (window.FreeformInteraction) FreeformInteraction.reset();
+}
+
+// ── MODULE: FreeformInteraction ───────────────────────────────────────────────
+// Owns pinch-to-zoom and drag-to-pan for the freeform board on touch devices.
+// Architecture: wraps ff2-body in ff2-viewport (overflow:hidden) + ff2-zoom-layer
+// (receives CSS transform). Zero re-renders — only the transform changes.
+//
+// Zoom math (zoom centered on pinch midpoint):
+//   A point p in layer-space maps to viewport-space as: vx = p.x*s + tx
+//   When scale changes s→ns, to keep midpoint m fixed:
+//   new_tx = m.x - (m.x - tx) * (ns/s)
+var FreeformInteraction = (function() {
+  'use strict';
+
+  var _s   = 1,  _tx  = 0,  _ty  = 0;   // scale and translation state
+  var S_MIN = 0.45, S_MAX = 1.65;
+
+  var _lastDist  = null;   // previous pinch distance (px)
+  var _lastMid   = null;   // previous pinch midpoint in viewport coords
+  var _dragging  = false;
+  var _dragStart = null;   // { tx, ty, x, y } snapshot when drag began
+  var _layer     = null;   // ff2-zoom-layer element reference
+  var _vp        = null;   // ff2-viewport element reference
+
+  // ── Geometry helpers ──────────────────────────────────────────────────────
+  function _dist(t) {
+    var dx = t[1].clientX - t[0].clientX;
+    var dy = t[1].clientY - t[0].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  // Returns midpoint in viewport-relative pixel coordinates
+  function _mid(t, vpEl) {
+    var r = vpEl.getBoundingClientRect();
+    return {
+      x: (t[0].clientX + t[1].clientX) / 2 - r.left,
+      y: (t[0].clientY + t[1].clientY) / 2 - r.top,
+    };
+  }
+
+  // ── Apply transform ───────────────────────────────────────────────────────
+  // translate3d forces GPU compositing — no layout invalidation on each frame.
+  function _apply() {
+    if (!_layer) return;
+    _layer.style.transform = 'translate3d(' + _tx.toFixed(1) + 'px,' + _ty.toFixed(1) + 'px,0) scale(' + _s.toFixed(4) + ')';
+  }
+
+  // ── Touch handlers ────────────────────────────────────────────────────────
+  function _onTouchStart(e) {
+    if (e.touches.length === 2) {
+      // Pinch start — capture initial distance + midpoint
+      e.preventDefault();
+      _lastDist = _dist(e.touches);
+      _lastMid  = _mid(e.touches, _vp);
+      _dragging  = false;
+      _dragStart = null;
+    } else if (e.touches.length === 1) {
+      // Single-finger pan start
+      _dragging  = true;
+      _dragStart = { tx: _tx, ty: _ty, x: e.touches[0].clientX, y: e.touches[0].clientY };
+      _lastDist  = null;
+    }
+  }
+
+  function _onTouchMove(e) {
+    if (e.touches.length === 2) {
+      // Pinch-to-zoom
+      e.preventDefault();
+      var d  = _dist(e.touches);
+      var m  = _mid(e.touches, _vp);
+      if (_lastDist !== null && _lastDist > 0) {
+        var ns = Math.max(S_MIN, Math.min(S_MAX, _s * (d / _lastDist)));
+        // Keep midpoint m fixed in viewport space
+        _tx = m.x - (m.x - _tx) * (ns / _s);
+        _ty = m.y - (m.y - _ty) * (ns / _s);
+        _s  = ns;
+      }
+      _lastDist = d;
+      _lastMid  = m;
+      _apply();
+    } else if (_dragging && e.touches.length === 1 && _dragStart) {
+      // Drag-to-pan — only prevent default when actually panning
+      e.preventDefault();
+      _tx = _dragStart.tx + (e.touches[0].clientX - _dragStart.x);
+      _ty = _dragStart.ty + (e.touches[0].clientY - _dragStart.y);
+      _apply();
+    }
+  }
+
+  function _onTouchEnd(e) {
+    if (e.touches.length < 2) _lastDist = null;
+    if (e.touches.length === 0) { _dragging = false; _dragStart = null; }
+  }
+
+  // ── Public API ────────────────────────────────────────────────────────────
+
+  // init: called after each render with fresh DOM references.
+  // Old listeners are automatically GC'd with the old DOM elements.
+  function init(vpEl, layerEl) {
+    _vp    = vpEl;
+    _layer = layerEl;
+    _s = 1; _tx = 0; _ty = 0;
+    _layer.style.transform = '';
+
+    vpEl.addEventListener('touchstart', _onTouchStart, { passive: false });
+    vpEl.addEventListener('touchmove',  _onTouchMove,  { passive: false });
+    vpEl.addEventListener('touchend',   _onTouchEnd,   { passive: true  });
+
+    // Visual feedback: grabbing cursor while panning
+    vpEl.addEventListener('touchstart', function() { vpEl.classList.add('ff2-panning'); },   { passive: true });
+    vpEl.addEventListener('touchend',   function() { vpEl.classList.remove('ff2-panning'); }, { passive: true });
+  }
+
+  // reset: called when density changes — snap back to natural scale + position.
+  function reset() {
+    _s = 1; _tx = 0; _ty = 0;
+    _apply();
+  }
+
+  return { init: init, reset: reset };
+})();
+
 // ── MODULE: Freeform Board ───────────────────────────────────────────────────
 // Orchestrator: wires layout engine, state store, and components together.
 // Owns the render pipeline and exposes the public interaction API.
@@ -7347,7 +8377,13 @@ var FreeformBoard = (function() {
     var placedCount = layout.placed.length;
     var out = '<div class="ff2-shell">';
 
-    // Header + legend
+    // Header + legend + density controls
+    var densityBtns = ['compact','standard','comfortable'].map(function(m) {
+      return '<button class="ff2-density-btn' + (_ffDensity === m ? ' active' : '') + '"'
+        + ' data-density="' + m + '" onclick="ffSetDensity(\'' + m + '\')" title="' + m.charAt(0).toUpperCase() + m.slice(1) + ' density">'
+        + (m === 'compact' ? 'S' : m === 'comfortable' ? 'L' : 'M')
+        + '</button>';
+    }).join('');
     out += '<div class="ff2-head">'
       + '<div><div class="ff2-title">Freeform Board</div>'
       + '<div class="ff2-meta">' + placedCount + ' prospects · size &amp; positional placement'
@@ -7355,13 +8391,19 @@ var FreeformBoard = (function() {
           ? ' · <span style="color:rgba(255,255,255,.2)">' + layout.unplaced.length + ' omitted</span>'
           : '')
       + '</div></div>'
+      + '<div style="display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap">'
+      + '<div class="ff2-density-bar">' + densityBtns + '</div>'
       + '<div class="ff2-legend">' + Comp.BoardLegend() + '</div>'
+      + '</div>'
       + '</div>';
 
     // Column header bar
     out += Comp.ColumnHeader();
 
-    // Body: rail + canvas
+    // Body: ff2-viewport (overflow:hidden, touch target) →
+    //        ff2-zoom-layer (receives CSS transform for pinch-zoom/pan) →
+    //          ff2-body (rail + canvas, layout unchanged)
+    out += '<div class="ff2-viewport" id="ff2Viewport"><div class="ff2-zoom-layer" id="ff2ZoomLayer">';
     out += '<div class="ff2-body">';
     out += Comp.TierRail(TIER_CUTS, maxRank, layout.placed, plotH, toYPct);
     out += '<div class="ff2-canvas"><div class="ff2-plot" id="ff2Plot" style="height:' + plotH + 'px">';
@@ -7408,10 +8450,20 @@ var FreeformBoard = (function() {
     });
 
     out += '</div></div></div>'; // ff2-plot, ff2-canvas, ff2-body
+    out += '</div></div>'; // ff2-zoom-layer, ff2-viewport
     out += Comp.UnplacedFooter(layout.unplaced);
     out += '</div>'; // ff2-shell
 
     el.innerHTML = out;
+
+    // Wire up zoom/pan interaction with the freshly-rendered DOM elements.
+    // Old listeners are GC'd with the replaced DOM — no cleanup needed.
+    var vpEl    = document.getElementById('ff2Viewport');
+    var layerEl = document.getElementById('ff2ZoomLayer');
+    if (vpEl && layerEl) FreeformInteraction.init(vpEl, layerEl);
+
+    // Apply density class to freshly-rendered shell (density persists across renders).
+    ffSetDensity(_ffDensity);
   }
 
   // ── Hover: expand card on mouseenter ────────────────────────────────────
@@ -7492,6 +8544,7 @@ var FreeformBoard = (function() {
   };
 
 })();
+
 
 
 // ── MOCK MODE SWITCHER ────────────────────────────────────────────────────────
@@ -8717,6 +9770,119 @@ function simUpdateMobilePicks() {
   document.head.appendChild(s);
 })();
 
+// ══ ARCHITECTURE LAYER 6: IntelService ══════════════════════════════════════
+// Owns the Anthropic API call mechanism.
+// hwIntel's tryFetchWebIntel/tryFetchVideoIds delegate here.
+// Centralises: model name, max_tokens, tool config, error handling.
+var IntelService = (function() {
+  'use strict';
+
+  var API_URL = 'https://api.anthropic.com/v1/messages';
+  var MODEL   = 'claude-sonnet-4-20250514';
+
+  // Core API call — replaces hwIntel's internal callAPI function.
+  // Returns a Promise<string> with the text response.
+  function call(prompt, maxTokens) {
+    return fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model:      MODEL,
+        max_tokens: maxTokens || 1000,
+        tools:      [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages:   [{ role: 'user', content: prompt }],
+      }),
+    })
+    .then(function(r) {
+      if (!r.ok) throw new Error('API error ' + r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      var text = '';
+      (data.content || []).forEach(function(b) { if (b.type === 'text') text += b.text; });
+      return text;
+    });
+  }
+
+  return { call: call };
+})();
+
+// ══ ARCHITECTURE LAYER 7: Bootstrap ═════════════════════════════════════════
+// Wires DOM events → AppState dispatch.
+// Wires AppState subscriptions → render calls.
+// This is the only module that knows about all others simultaneously.
+(function() {
+  'use strict';
+
+  // ── 1. Rehydrate persisted AppState ──────────────────────────────────────
+  var savedCuts = StorageService.getTierCuts();
+  if (savedCuts) AppState.dispatch({ type: 'SET_TIER_CUTS', payload: savedCuts });
+
+  // ── 2. Upload status → DOM ───────────────────────────────────────────────
+  AppState.subscribe(function(state, prev) {
+    if (state.upload === prev.upload) return;
+    var el = document.getElementById('uploadStatus');
+    if (!el) return;
+    el.textContent = state.upload.message || '';
+    el.style.color = state.upload.status === 'error' ? 'var(--red)'
+                   : state.upload.status === 'done'  ? 'var(--green)'
+                   : 'var(--gray-500)';
+  });
+
+  // ── 3. DATA_REFRESHED → re-render active tab ─────────────────────────────
+  AppState.subscribe(function(state, prev, action) {
+    if (action.type !== 'DATA_REFRESHED') return;
+    var activeTab = document.querySelector('.nav-tab.active');
+    if (!activeTab) { populateCompSelect(); return; }
+    var tab = activeTab.dataset.tab;
+    if      (tab === 'board2026')  renderBoard2026();
+    else if (tab === 'analytics')  renderAnalytics();
+    else if (tab === 'comps')      { populateCompSelect(); showCompExplorer(); }
+    else if (tab === 'mocks')      renderMocks();
+    else if (tab === 'history')    renderHistory();
+    else if (tab === 'future')     renderFuture();
+    else if (tab === 'resources')  renderResources();
+    else                           populateCompSelect();
+  });
+
+  // ── 4. Board filter events → AppState dispatch ───────────────────────────
+  // Attaches on DOMContentLoaded so elements exist.
+  function wireFilters() {
+    var searchEl = document.getElementById('search2026');
+    var posEl    = document.getElementById('posFilter');
+    var clsEl    = document.getElementById('clsFilter');
+
+    if (searchEl && !searchEl._hwWired) {
+      searchEl._hwWired = true;
+      searchEl.addEventListener('input', function(e) {
+        AppState.dispatch({ type: 'SET_BOARD_FILTER', payload: { search: e.target.value } });
+        renderBoard2026();
+      });
+    }
+    if (posEl && !posEl._hwWired) {
+      posEl._hwWired = true;
+      posEl.addEventListener('change', function(e) {
+        AppState.dispatch({ type: 'SET_BOARD_FILTER', payload: { posFilter: e.target.value } });
+        renderBoard2026();
+      });
+    }
+    if (clsEl && !clsEl._hwWired) {
+      clsEl._hwWired = true;
+      clsEl.addEventListener('change', function(e) {
+        AppState.dispatch({ type: 'SET_BOARD_FILTER', payload: { clsFilter: e.target.value } });
+        renderBoard2026();
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wireFilters);
+  } else {
+    wireFilters();
+  }
+
+})();
+
 </script>
 
 <!-- ── GLOBAL SEARCH MODAL ──────────────────────────────────── -->
@@ -9046,10 +10212,10 @@ window.hwIntel = (function() {
 
   var INTEL_TTL = 86400000; // 24 hours
 
-  // ── localStorage helpers ─────────────────────────────────────────────────
-  function lsGet(k)  { try{var v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){return null;} }
-  function lsSet(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
-  function lsDel(k)  { try{localStorage.removeItem(k);}catch(e){} }
+  // ── localStorage helpers (delegated to StorageService) ──────────────────
+  function lsGet(k)  { return StorageService._read(k); }
+  function lsSet(k,v){ StorageService._write(k, v); }
+  function lsDel(k)  { StorageService._delete(k); }
   function slug(s)   { return (s||'').replace(/\s+/g,'_').toLowerCase(); }
   function intelKey(n){ return 'hw_intel_v5_'+slug(n); }
   function videoKey(n){ return 'hw_video_v5_'+slug(n); }
@@ -9127,19 +10293,10 @@ window.hwIntel = (function() {
   }
 
   function _buildPData(playerName, school) {
-    var pData = { name: playerName, school: school||'' };
-    if (window.DATA && DATA.board2026) {
-      var found = DATA.board2026.find(function(p){
-        var base = p.name.indexOf(' - ')>0 ? p.name.slice(0,p.name.indexOf(' - ')) : p.name;
-        return base === playerName;
-      });
-      if (found) {
-        var sch = found.name.indexOf(' - ')>0 ? found.name.slice(found.name.indexOf(' - ')+3) : '';
-        pData = { name: playerName, school: sch, position: found.position||'',
-          rank: found.rank, cls: found.cls, comp: found.comp||found.comp_tool };
-      }
-    }
-    return pData;
+    // DataService.findByName replaces direct DATA.board2026.find()
+    var found = DataService.findByName(playerName);
+    if (found) return found;
+    return { name: playerName, school: school || '' };
   }
 
   // ── Public: refresh board badges ─────────────────────────────────────────
@@ -9147,11 +10304,9 @@ window.hwIntel = (function() {
     document.querySelectorAll('.intel-badge').forEach(function(b){ b.remove(); });
     document.querySelectorAll('.player-card[data-rank]').forEach(function(card) {
       var rank = parseInt(card.getAttribute('data-rank'),10);
-      if (!window.DATA || !DATA.board2026) return;
-      var player = DATA.board2026.find(function(p){ return p.rank===rank; });
+      var player = DataService.findByRank(rank); // O(n) but only on badge refresh
       if (!player) return;
-      var base = player.name.indexOf(' - ')>0 ? player.name.slice(0,player.name.indexOf(' - ')) : player.name;
-      var cached = lsGet(intelKey(base));
+      var cached = lsGet(intelKey(player.name));
       if (cached && cached.items && cached.items.length > 0) {
         var dot = document.createElement('div');
         dot.className='intel-badge'; dot.title='Intel available';
@@ -9385,24 +10540,12 @@ window.hwIntel = (function() {
     }, function() { /* silent — placeholder stays */ });
   }
 
-  // ── Anthropic API call ────────────────────────────────────────────────────
+  // ── API call: delegated to IntelService ──────────────────────────────────
+  // Model name, headers, tool config — all owned by IntelService now.
   function callAPI(prompt, maxTokens, onSuccess, onError) {
-    fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: maxTokens,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: [{ role: 'user', content: prompt }]
-      })
-    })
-    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-    .then(function(data){
-      var text=''; (data.content||[]).forEach(function(b){ if(b.type==='text') text+=b.text; });
-      onSuccess(text);
-    })
-    .catch(function(e){ if(onError) onError(e); });
+    IntelService.call(prompt, maxTokens)
+      .then(function(text) { onSuccess(text); })
+      .catch(function(e)   { if (onError) onError(e); });
   }
 
   // ── Click-to-play: replace thumbnail with nocookie iframe on click ─────────
@@ -9612,8 +10755,7 @@ window.hwRollForward = (function() {
 
   // ── Init: called on page load ─────────────────────────────────────────────
   function init() {
-    var stored = null;
-    try { stored = localStorage.getItem(STORAGE_KEY); } catch(e) {}
+    var stored = StorageService._read(STORAGE_KEY);
     if (stored === '2027') {
       _currentYear = '2027';
       _applyRollForward(false); // silent — no animation
@@ -9667,7 +10809,7 @@ window.hwRollForward = (function() {
 
   // ── Execute the roll forward ──────────────────────────────────────────────
   function execute() {
-    try { localStorage.setItem(STORAGE_KEY, '2027'); } catch(e) {}
+    StorageService._write(STORAGE_KEY, '2027');
     _currentYear = '2027';
     _applyRollForward(true);
     if (window.closeModal) closeModal('rollForwardModal');
@@ -9678,7 +10820,7 @@ window.hwRollForward = (function() {
 
   // ── Roll back to 2026 ─────────────────────────────────────────────────────
   function rollBack() {
-    try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+    StorageService._delete(STORAGE_KEY);
     _currentYear = '2026';
     _applyRollBack();
     if (window.closeModal) closeModal('rollForwardModal');
