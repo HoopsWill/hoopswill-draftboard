@@ -427,11 +427,21 @@ tr:hover td{background:var(--gray-50)}
 .analytics-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:3px}
 .analytics-sub{font-size:12px;color:var(--gray-400);margin-bottom:14px}
 .chart-wrap{position:relative;height:340px}
-/* AN-02: on mobile, 340px is too tall for narrow screens (bar chart needs
-   more height per bar). Set a taller height and let charts scroll if needed. */
+/* AN-02: Charts — use aspect-ratio-aware heights for narrow mobile screens.
+   340px at 360px wide is ~1:1 ratio — too square for bar charts.
+   First chart (distribution bar): needs 280px so bars are distinguishable.
+   Second chart (radar): 260px is fine — radial data reads well smaller.
+   Third chart (accuracy scatter): needs full height — 300px. */
 @media(max-width:640px){
-  .chart-wrap{height:260px}  /* bar/radar fit well at 260px on 360px-wide screens */
-  .chart-wrap + .chart-wrap{height:220px}
+  .chart-wrap{height:280px}
+  /* Radar chart (second .chart-wrap): radial shape works at smaller height */
+  .analytics-card:nth-child(2) .chart-wrap{height:260px}
+  /* Accuracy scatter (third): needs proportional space to see distribution */
+  .analytics-card:nth-child(3) .chart-wrap{height:300px}
+  /* Analytics cards: reduce outer padding to reclaim vertical space */
+  .analytics-card{padding:14px 14px;margin-bottom:14px}
+  .analytics-title{font-size:16px}
+  .analytics-sub{font-size:11px;margin-bottom:8px}
 }
 
 /* MOCKS */
@@ -467,7 +477,7 @@ tr:hover td{background:var(--gray-50)}
 .comp-search-card{background:white;border:1.5px solid var(--gray-200);border-radius:12px;padding:20px;margin-bottom:18px}
 .comp-result{background:white;border:1.5px solid var(--gray-200);border-radius:12px;padding:22px}
 
-.comp-table th{background:var(--gray-50);padding:8px 12px;font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--gray-200);text-align:left}
+.comp-table th{background:var(--gray-50);padding:8px 12px;font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--gray-200);text-align:left;white-space:nowrap}
 .comp-table td{padding:9px 12px;border-bottom:1px solid var(--gray-100);font-size:12px}
 .comp-table tr:last-child td{border-bottom:none}
 
@@ -553,47 +563,105 @@ tr:hover td{background:var(--gray-50)}
   .view-toggle{width:100%}
   .view-btn{flex:1;text-align:center;padding:4px 6px;font-size:11px}
   .tier-customize-btn{font-size:10px;padding:5px 8px}
-  /* Tier editor: full-width popup on mobile with scrollable inner row */
+  /* C-01: Tier editor popup — anchor to viewport center so it never clips either edge */
   .tier-editor{
-    min-width:calc(100vw - 20px) !important;
-    right:-10px;
+    position:fixed !important;
+    left:10px !important;
+    right:10px !important;
+    top:auto !important;
+    width:auto !important;
+    min-width:0 !important;
+    max-width:calc(100vw - 20px) !important;
     max-height:80vh;
-    overflow-y:auto
+    overflow-y:auto;
+    overflow-x:hidden;
+    z-index:9000 !important;
+    border-radius:12px !important;
+    box-shadow:0 16px 48px rgba(0,0,0,.45) !important
   }
-  /* Inner tier controls: allow vertical stacking so they aren't crushed */
-  .tier-editor > div{flex-wrap:wrap !important;gap:10px !important}
-  .tier-ed-group{flex:1 0 120px !important}
+  /* Inner tier controls: vertical stacking with proper spacing */
+  .tier-editor > div{flex-wrap:wrap !important;gap:12px !important;padding:4px 0}
+  .tier-ed-group{flex:1 0 140px !important}
 
-  /* Cards: 2-column grid on mobile — tighter but not cramped */
-  .cards-grid{grid-template-columns:1fr 1fr;gap:9px}
-  /* Tighten header padding, reduce gap so rank pip+avatar+identity still fit */
-  .card-header{padding:9px 10px 7px;gap:7px}
+  /* C-04: Cards — 2-column grid optimised for 360–430px screens */
+  /* Use 1fr 1fr but add gap + padding to keep cards breathable */
+  .cards-grid{grid-template-columns:1fr 1fr;gap:8px}
+
+  /* C-04: Card header — shrink rank pip and avatar so name gets more space */
+  /* Rank pip (first div child of .card-header): 44px → 34px */
+  .card-header > div:first-child{
+    width:34px !important;height:34px !important;
+    flex-shrink:0
+  }
+  /* Avatar (second div child of .card-header): 50px → 36px */
+  .card-header > div:nth-child(2){
+    width:36px !important;height:36px !important;
+    flex-shrink:0
+  }
+  .card-header{padding:8px 8px 6px;gap:6px}
   .card-identity{min-width:0}
-  /* Name: force smaller on mobile, !important beats the JS name-length scaler */
-  /* C-03: was font-size:13px !important which overrode the inline font-size
-     computed by buildPlayerCard() — every name rendered at 13px regardless of length.
-     Removed !important so JS-computed sizes (13–20px by name length) are honoured.
-     Max is capped at 16px on mobile via the clamp below to prevent overflow. */
-  .card-name{font-size:clamp(11px,3.8vw,16px);letter-spacing:0}
-  .card-school{font-size:9px;gap:3px;margin-top:2px}
-  /* Stats: keep 3-col, compress padding */
-  .card-stats{gap:3px;padding:0 8px 8px;padding-top:8px}
-  .stat-cell{padding:5px 2px 4px}
-  .stat-val{font-size:13px}
-  .stat-bar{display:none} /* hide bars on small cards — not enough room */
-  .stat-lbl{font-size:9px}  /* minimum legible text */
-  .stat-bar{display:block !important;opacity:.45}  /* restore stat bars */
-  /* Card comp: hidden on mobile — not enough real estate. Single rule, no conflict. */
-  .card-comp{display:none !important}
-  .player-card > .pc-tweet-btn{display:none}
-  .card-tags{padding:4px 9px 6px;gap:3px}
+
+  /* C-03: Card name font-size hierarchy — cap JS-injected inline sizes for mobile cards.
+     clamp() with !important overrides the inline style from buildPlayerCard().
+     Short names → up to 14px (prominent). Long names → down to 10px (legible). */
+  .card-name{
+    font-size:clamp(10px,3.2vw,14px) !important;
+    letter-spacing:0;
+    line-height:1.15 !important
+  }
+  /* School: slightly smaller, reduce margin */
+  .card-school{font-size:9px;gap:3px;margin-top:1px}
+  .card-logo-ring{width:16px !important;height:16px !important}
+
+  /* C-04: Metric chip — compact on mobile */
+  .card-rank-metric{padding:4px 6px !important;border-radius:7px !important}
+  .card-rank{font-size:10px !important}
+  .card-metric{font-size:17px !important}
+  .metric-lbl{font-size:7px !important}
+
+  /* C-04: Tags — tight but legible */
+  .card-tags{padding:3px 8px 5px;gap:3px}
   .tag{font-size:9px;padding:2px 5px}
+
+  /* C-04: Stats — compress for small cards, keep 3-col */
+  .card-stats{gap:3px;padding:0 6px 7px;padding-top:7px}
+  .stat-cell{padding:4px 2px 3px}
+  .stat-val{font-size:12px}
+  .stat-bar{display:block !important;opacity:.45;height:2px}
+  .stat-lbl{font-size:8px}
+
+  /* C-04: Hide comp footer — not enough room on 2-col mobile cards */
+  .card-comp{display:none !important}
+  /* Hide tweet button — touch-unfriendly at this density */
+  .player-card > .card-header > .pc-tweet-btn{display:none !important}
 
   /* Table: sticky rank + player columns — background must track the row colour.
      Using background:inherit on sticky cells means they automatically adopt
      the row's background (white, striped gray, or hover state) instead of
      always showing white and creating a seam during horizontal scroll. */
-  .table-wrap{-webkit-overflow-scrolling:touch}
+  .table-wrap{-webkit-overflow-scrolling:touch;position:relative}
+  /* T-04: right-edge fade gradient hints there is more content to scroll */
+  .table-wrap::after{
+    content:'';
+    position:absolute;top:0;right:0;bottom:0;
+    width:32px;
+    background:linear-gradient(to right,transparent,rgba(255,255,255,.95));
+    pointer-events:none;
+    border-radius:0 10px 10px 0;
+    z-index:5
+  }
+  /* T-04: swipe hint label above table — removes itself after user scrolls (via JS class) */
+  .table-wrap::before{
+    content:'Swipe to see all stats →';
+    display:block;
+    font-size:10px;font-weight:700;color:var(--gray-400);
+    letter-spacing:.3px;text-align:center;
+    padding:5px 12px 3px;
+    border-bottom:1px solid transparent
+  }
+  /* Once user has scrolled, JS adds .scrolled class to hide the hint */
+  .table-wrap.scrolled::before{display:none}
+  .table-wrap.scrolled::after{display:none}
   .board-table{min-width:580px;border-collapse:separate !important;border-spacing:0 !important}
   .board-table tbody td{border-bottom:1px solid #f1f5f9}
   /* Sticky rank column: inherit row bg so striped rows don't show white seam */
@@ -609,26 +677,102 @@ tr:hover td{background:var(--gray-50)}
   /* Ensure plain body rows have an explicit white bg to inherit from */
   .board-table tbody tr{background:white}
   .board-table tbody tr:nth-child(even){background:var(--gray-50)}
-  /* T-01: touch feedback on sortable headers */
-  .board-table th:active{color:var(--blue);background:var(--gray-100)}
+  /* T-01: touch feedback on sortable headers — stronger visual + no 300ms delay */
+  .board-table th{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  .board-table th:active{color:var(--blue)!important;background:#C7D2FE!important;transition:none}
   /* T-02: full row is tappable — cursor:pointer set in JS via data-rank */
   .board-table tbody tr[data-rank]{cursor:pointer}
-  .board-table tbody tr[data-rank]:active td{background:#EEF4FF !important}
+  .board-table tbody tr[data-rank]:active td{background:#EEF4FF !important;transition:none}
 
-  /* Big Board: tighter columns, stat legend always visible on mobile */
+  /* T-02: table rows — enforce 44px min touch target height */
+  .board-table tbody td{border-bottom:1px solid #f1f5f9;min-height:44px}
+  .board-table tbody tr{min-height:44px}
+  /* T-02 td padding: increase from 9px → 13px top/bottom so rows hit 44px even for short content */
+  .board-table tbody td{padding-top:13px;padding-bottom:13px}
   .bb-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  #bbMobileLegend{display:flex !important}  /* Show on mobile */
-  .bb-ch[data-tip]::after{display:none}     /* Hide hover tooltips on mobile */
-  .bb-board{min-width:480px}
-  /* Slightly taller rows on mobile for better tap targets */
-  .bb-row{height:52px !important}
-  .bb-cts,.bb-csb,.bb-cato,.bb-cftar,.bb-ctpar{flex:0.58 !important;min-width:40px !important}
-  .bb-cpa{flex:0.64 !important;min-width:42px !important}
-  .bb-cmet{flex:0.82 !important;min-width:52px !important}
-  .bb-ctag{flex:1.0 !important;min-width:76px !important}
-  .bb-cid{flex:1.4 !important;min-width:90px !important}
-  .bb-screenshot-bar{flex-wrap:wrap;gap:6px}
-  .bb-range-group{flex-wrap:wrap;gap:4px}
+  #bbMobileLegend{display:flex !important}
+  .bb-ch[data-tip]::after{display:none}
+  /* BB-02: Big Board column headers — 44px touch target */
+  .bb-ch{
+    min-height:44px !important;
+    padding:0 2px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    font-size:9px !important;
+    letter-spacing:.5px !important;
+    touch-action:manipulation
+  }
+  .bb-ch.left{justify-content:flex-start !important;padding-left:8px !important}
+  .bb-col-hdr{min-height:44px}
+  .bb-board{min-width:440px}
+
+  /* BB-03: Header — compact but still premium on mobile */
+  .bb-header{padding:12px 14px 8px}
+  .bb-logo-box{width:34px;height:34px;font-size:11px;border-radius:6px}
+  .bb-htitles .bb-brand{font-size:8.5px;letter-spacing:1.5px;margin-bottom:1px}
+  .bb-htitles .bb-title{font-size:17px;letter-spacing:.3px}
+  .bb-meta{margin-top:5px;gap:4px}
+  .bb-pill{font-size:9px;padding:1px 6px;letter-spacing:.2px}
+
+  /* BB-03: Row height — 48px keeps density, still comfortable tap target */
+  .bb-row{height:48px !important}
+
+  /* BB-04: Stat values — up 1px for legibility; labels slightly brighter */
+  .bb-sv{font-size:13px !important;font-weight:800 !important}
+  .bb-sl{
+    font-size:7.5px !important;
+    letter-spacing:.3px !important;
+    color:rgba(148,163,184,.7) !important;
+    margin-top:1px !important
+  }
+  /* BB-04: Metric cell — large enough to read at a glance */
+  .bb-met-val{font-size:15px !important;min-width:44px !important;padding:2px 4px !important}
+  .bb-met-cell{padding:0 1px}
+
+  /* BB-04: Name + school — tighter but never truncated badly */
+  .bb-name{font-size:13px !important;letter-spacing:-.1px}
+  .bb-school{font-size:9px;color:var(--gray-400)}
+  .bb-rk{font-size:15px !important;width:30px !important}
+  .bb-av{width:28px !important}
+
+  /* BB-04: Column flex ratios — give name more room, compress stat cols */
+  .bb-cts,.bb-csb,.bb-cato,.bb-cftar,.bb-ctpar{flex:0.50 !important;min-width:36px !important}
+  .bb-cpa{flex:0.56 !important;min-width:38px !important}
+  .bb-cmet{flex:0.76 !important;min-width:46px !important}
+  .bb-ctag{flex:0.90 !important;min-width:68px !important}
+  .bb-cid{flex:1.55 !important;min-width:90px !important}
+  .bb-cht{flex:0.52 !important;min-width:38px !important}
+
+  /* BB-04: Stat cells — tighter margin, preserve color coding */
+  .bb-stat-cell{margin:1px 0 !important;border-radius:4px !important;padding:0 2px}
+
+  /* BB-04: Tags — single max-width; truncate cleanly */
+  .bb-tags{max-width:68px !important;overflow:hidden}
+  .bb-tag{
+    font-size:8px !important;
+    max-width:64px !important;
+    padding:1px 3px !important;
+    letter-spacing:.1px !important
+  }
+
+  /* BB-04: Tier bands — compact */
+  .bb-tier-band{height:22px;padding:0 10px;gap:6px}
+  .bb-tier-label{font-size:9.5px;letter-spacing:1px}
+  .bb-tier-sub{font-size:8.5px}
+
+  /* BB-04: Screenshot bar — wrap gracefully on narrow screens */
+  .bb-screenshot-bar{flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .bb-range-group{flex-wrap:nowrap;gap:4px;padding:3px 8px}
+  .bb-range-lbl{font-size:9px}
+  .bb-range-input{width:32px;font-size:11px}
+  .bb-preset-btn{font-size:10px;padding:2px 6px}
+  .bb-sub-btn{font-size:11px;padding:4px 10px}
+
+  /* BB-04: Footer — reduce padding */
+  .bb-footer{padding:8px 14px}
+  .bb-footer-brand{font-size:12px}
+  .bb-footer-note{font-size:9px}
 
   /* Mock archive */
   .mock-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -708,11 +852,17 @@ tr:hover td{background:var(--gray-50)}
   .sc-top5-info{display:flex;flex-direction:column;align-items:center;min-width:0}
   .sc-top5-name{text-align:center;font-size:10px;line-height:1.2}
   .sc-top5-val{font-size:11px}
+  /* SC-03: selected state — use bottom border + stronger bg so it's visible in horiz layout */
+  .sc-top5-row-selected{
+    background:rgba(212,168,48,.15) !important;
+    border-bottom:3px solid var(--amber) !important;
+    border-left:none !important
+  }
   /* Controls: 2-column grid */
   .sc-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end}
   .sc-ctrl-group{min-width:0}
   .sc-select{min-width:0;width:100%;font-size:12px}
-  .sc-canvas-wrap{height:360px}  /* taller canvas for more plotting room */
+  .sc-canvas-wrap{height:400px}  /* SC-04: more vertical space → logos less crowded */
   /* Scatter warning banner for "All classes" on mobile */
   #scMobileWarning{
     display:none;
@@ -739,8 +889,16 @@ tr:hover td{background:var(--gray-50)}
   }
   .modal-overlay.open .modal{transform:translateY(0)}
   .modal-header{padding:14px 14px 10px;flex-shrink:0}
-  /* Modal body scrolls independently — no elastic bleed to overlay */
-  .modal-body{padding:12px 14px 8px;overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;min-height:0}
+  /* M-01: modal body scrolls independently — overscroll-behavior:contain stops
+     elastic bounce from bleeding through to the overlay (iOS overscroll chaining) */
+  .modal-body{
+    padding:12px 14px 8px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    flex:1;min-height:0;
+    overscroll-behavior:contain;
+    overscroll-behavior-y:contain
+  }
   /* FIX M-02: Mobile close bar — sticky thumb-reachable footer */
   .modal-close-bar{
     display:flex !important;
@@ -760,9 +918,10 @@ tr:hover td{background:var(--gray-50)}
     font-size:14px;font-weight:700;
     font-family:'DM Sans',sans-serif;
     cursor:pointer;
-    touch-action:manipulation
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent
   }
-  .modal-close-bar button:active{background:var(--gray-200)}
+  .modal-close-bar button:active{background:var(--gray-200);transition:none}
   /* Hide desktop close button on mobile — close bar replaces it */
   .modal-header .modal-close{display:none}
 
@@ -844,14 +1003,22 @@ tr:hover td{background:var(--gray-50)}
     border-radius:8px;
   }
 
-  /* Unpick button: always visible on mobile (no hover on touch) */
+  /* MDC-03: Unpick button — always visible on mobile + full 44px touch target */
   .mdc-unpick-btn{
     opacity:1 !important;
     background:rgba(239,68,68,.15) !important;
     color:#EF4444 !important;
-    border:1px solid rgba(239,68,68,.25) !important
+    border:1px solid rgba(239,68,68,.25) !important;
+    /* 44×44 tap zone: expand via min-width/height + negative margin so layout unchanged */
+    width:36px !important;
+    height:36px !important;
+    min-width:36px !important;
+    min-height:36px !important;
+    border-radius:8px !important;
+    font-size:16px !important;
+    touch-action:manipulation
   }
-  .mdc-unpick-btn:active{background:rgba(239,68,68,.3) !important}
+  .mdc-unpick-btn:active{background:rgba(239,68,68,.35) !important;transform:scale(.92)}
 
   /* Add bottom padding when pool panel is visible so board can scroll above it */
   #simPicksBoardWrap{padding-bottom:62vh}
@@ -882,6 +1049,58 @@ tr:hover td{background:var(--gray-50)}
     max-height:220px;overflow-y:auto;
   }
   #simMobilePicksList.open{display:block}
+
+  /* ── C-02: Tier editor inputs — 44px touch target on mobile ─────────── */
+  /* font-size:16px prevents iOS auto-zoom-on-focus */
+  .tier-ed-input{
+    padding:10px 8px !important;
+    min-height:44px !important;
+    font-size:16px !important;
+    width:56px !important;
+    border-radius:7px !important
+  }
+  .tier-ed-group{gap:8px !important}
+  /* Tier editor: show stacked on mobile for easier input */
+  .tier-editor > div{gap:12px !important}
+
+  /* ── GS-02: Global search year pills — fill row height for easy tapping ─ */
+  /* The .gs-result row is already 44px min; align pill to fill it vertically */
+  .gs-year-pill{
+    min-height:36px !important;
+    padding:8px 14px !important;
+    font-size:12px !important;
+    border-radius:8px !important;
+    align-self:center
+  }
+  /* Ensure the entire result row is clearly tappable */
+  .gs-result{
+    padding:10px 16px !important;
+    min-height:52px !important;
+    touch-action:manipulation
+  }
+
+  /* ── MA-02: Active states on nav links and interactive elements ───────── */
+  /* Nav tabs: stronger tap feedback */
+  .nav-tab{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  .nav-tab:active{
+    background:rgba(212,168,48,.18) !important;
+    color:var(--amber) !important;
+    transition:none
+  }
+  /* Intel link buttons, file items, future cards, upload items */
+  .intel-link-btn:active{opacity:.65;transform:scale(.97);transition:none}
+  .file-item:active{background:var(--gray-100) !important;transition:none}
+  .comp-mobile-card:active{background:var(--gray-100) !important;transition:none}
+  /* View toggle buttons on mobile — clearer tap state */
+  .view-btn{touch-action:manipulation}
+  .view-btn:active:not(.active){background:rgba(255,255,255,.18)!important;color:white!important;transition:none}
+
+  /* ── CE-02: Comp explorer table labels — prevent wrapping ────────────── */
+  .comp-table th{white-space:nowrap !important;font-size:9px !important;padding:7px 8px !important}
+  .comp-table td{white-space:nowrap !important;font-size:11px !important;padding:7px 8px !important}
+  /* Comp stat labels in the results table — prevent ugly multi-line headers */
+  .comp-tbl th{white-space:nowrap !important;font-size:9px !important;padding:6px 8px !important}
+  .comp-tbl td{font-size:11px !important;padding:6px 8px !important}
 }
 
 
@@ -892,7 +1111,8 @@ tr:hover td{background:var(--gray-50)}
   transition-duration:80ms
 }
 /* Nav tabs: tap feedback */
-.nav-tab:active{background:rgba(212,168,48,.08)}
+.nav-tab:active{background:rgba(212,168,48,.12);color:var(--amber);transition:none}
+.nav-tab{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 /* View toggle buttons */
 .view-btn:active:not(.active){background:rgba(255,255,255,.12);color:white}
 /* Filter selects and inputs: remove iOS tap highlight */
@@ -933,11 +1153,116 @@ tr:hover td{background:var(--gray-50)}
   .modal-body{padding-bottom:calc(8px + env(safe-area-inset-bottom, 0px))}
 }
 
-/* ── CONTROLS BAR — ensure view toggle goes full-width on very small screens */
+/* ── CONTROLS BAR + ULTRA-SMALL SCREENS (≤400px) ───────────────────────── */
 @media(max-width:400px){
+  .main{padding:8px 8px}
   .controls-bar{gap:4px}
   .search-wrap{min-width:100px}
   .filter-select{min-width:76px;font-size:11px;padding:5px 6px}
+  /* Cards: tighten further at 360px — gap 6px so grid fits without wrap */
+  .cards-grid{gap:6px}
+  .card-header{gap:5px;padding:7px 7px 5px}
+  .card-name{font-size:clamp(10px,2.9vw,13px) !important}
+}
+
+/* ── LAYOUT + DENSITY IMPROVEMENTS — 360px–430px screens ───────────────────
+   All rules below are targeted mobile-only improvements grouped by tab.
+   They do NOT affect desktop (>640px). ──────────────────────────────────── */
+@media(max-width:640px){
+
+  /* ── GLOBAL spacing — already 10px from MQ above; keep at 8px only for 360px phones handled via 400px MQ below */
+
+  /* ── TIER SECTION HEADERS: reduce wasted vertical rhythm */
+  .tier-section{margin-bottom:20px}
+  .tier-header{margin-bottom:8px;padding-bottom:6px;gap:8px}
+  .tier-name{font-size:16px}
+  .tier-pill{font-size:9px;padding:2px 8px}
+  .tier-ct{font-size:11px}
+
+  /* ── CONTROLS BAR: tighter on mobile */
+  .controls-bar{margin-bottom:12px}
+  .search-input{font-size:13px;padding:7px 10px 7px 30px}
+  .search-icon{font-size:12px;left:8px}
+
+  /* ── TABLE VIEW: improve readability at 360px */
+  .td-rank{font-size:15px;width:36px}
+  .td-mini-avatar{width:28px;height:28px}
+  .td-name-wrap .name{font-size:12px}
+  .td-name-wrap .school{font-size:10px}
+  .td-metric{font-size:14px}
+  .td-num{font-size:11px}
+  th{padding:8px 10px;font-size:10px;letter-spacing:.4px}
+  td{padding:10px 10px;font-size:12px}
+
+  /* ── ANALYTICS TAB: reduce card bloat */
+  .analytics-card{padding:12px;margin-bottom:12px;border-radius:10px}
+  .analytics-title{font-size:15px;margin-bottom:2px}
+  .analytics-sub{font-size:10.5px;margin-bottom:6px}
+
+  /* ── SCATTER: controls tighter on mobile */
+  .sc-controls{padding:12px 14px;margin-bottom:12px}
+  .sc-ctrl-label{font-size:9.5px}
+  .sc-select{padding:6px 8px;font-size:11px;border-radius:6px}
+  .sc-plot-wrap{padding:14px}
+  .sc-plot-title{font-size:15px}
+  .sc-plot-meta{font-size:10px}
+  /* Top-5 panel: min-height to always show at least header */
+  .sc-top5-hdr{padding:8px 12px 6px}
+  .sc-top5-hdr-label{font-size:8.5px}
+  .sc-top5-hdr-axis{font-size:12px}
+
+  /* ── COMPARE TAB: single-col stack */
+  .compare-grid{grid-template-columns:1fr}
+  .compare-radar-wrap{padding:14px}
+  .compare-radar-title{font-size:14px}
+
+  /* ── HISTORY TAB: controls wrap cleanly */
+  .history-controls{gap:8px;margin-bottom:12px}
+
+  /* ── FUTURE/WATCH TAB: watch banner compact */
+  .watch-banner{padding:12px 14px;gap:10px;border-radius:10px;flex-wrap:wrap}
+  .watch-banner > div:nth-child(2) > div:first-child{font-size:16px}
+  .watch-banner > div:nth-child(2) > div:last-child{font-size:11px}
+
+  /* ── COMP EXPLORER: search card compact */
+  .comp-search-card{padding:14px;border-radius:10px}
+  .comp-search-card > div > div > div:first-child{font-size:18px}
+  .comp-search-card > div > div > div:last-child{font-size:11px;line-height:1.5}
+
+  /* ── RESOURCES: search bar full-width */
+  .search-wrap{max-width:100% !important}
+
+  /* ── MODAL body: better text density */
+  .modal-metrics-row{gap:7px;margin-bottom:14px}
+  .metric-box{padding:9px 10px;border-radius:8px}
+  .metric-box .val{font-size:22px}
+  .metric-box .lbl{font-size:10px;margin-top:2px}
+  .metric-box .rank-ctx{font-size:8.5px}
+  .modal-name{font-size:24px}
+  .modal-meta{font-size:11px}
+  .modal-avatar{width:56px;height:56px;border-radius:10px}
+  .modal-header{padding:12px 14px}
+  /* Modal tab bar: compact */
+  .modal-tab-bar{padding:3px;gap:0;margin-bottom:12px}
+  .modal-tab{padding:7px 10px;font-size:11px;letter-spacing:.4px}
+  .modal-tab .tab-icon{font-size:12px}
+  /* S+W grid: single column on narrow */
+  .sw-grid,.sw-grid.has-neutral{grid-template-columns:1fr}
+  .sw-col{padding:10px 12px}
+  .notes-text{font-size:12px;padding:10px 12px}
+
+  /* ── EMPTY STATES: reduce over-padded empties */
+  .empty{padding:32px 20px}
+  .empty-icon{font-size:32px;margin-bottom:8px}
+
+  /* ── GLOBAL SEARCH MODAL: better keyboard layout */
+  #globalSearchModal{padding:40px 12px 12px}
+  #globalSearchModal > div{border-radius:12px}
+  #globalSearchResults{max-height:55vh}
+  .gs-section-header{padding:5px 14px;font-size:9.5px}
+  .gs-result-name{font-size:14px}
+  .gs-result-meta{font-size:10.5px}
+  .gs-stat{font-size:10px;padding:2px 5px}
 }
 
 
@@ -1513,25 +1838,52 @@ tr:hover td{background:var(--gray-50)}
     flex-shrink:0
   }
   .ff2-exp-close:active{background:rgba(255,255,255,.25)}
-  /* FF-05: compact header on mobile — two rows max to minimise wasted height.
-     Row 1: title + reset btn + density controls (flex)
-     Row 2: position legend (separate line via full-width flex child) */
-  .ff2-head{gap:6px;padding:10px 12px 8px;flex-wrap:wrap}
-  .ff2-head > div:first-child{flex:1;min-width:0}
-  .ff2-title{font-size:14px}
-  .ff2-meta{font-size:10px;opacity:.55}
-  /* Controls group: density + legend on same line */
-  .ff2-head > div:last-child{
-    display:flex;align-items:center;gap:8px;
-    flex-wrap:nowrap;width:100%
+  /* FF-05: Freeform header — single compact row to maximise viewport space.
+     Original two-row layout (title row + controls row) costs ~68px.
+     Single-row layout saves ~28px — meaningful on a 72vh canvas. */
+  .ff2-head{
+    gap:0;
+    padding:7px 12px 6px;
+    flex-wrap:nowrap;
+    align-items:center;
+    min-height:0
   }
-  .ff2-legend{gap:6px;flex:1;justify-content:flex-end}
-  .ff2-leg-item{font-size:10px;padding:3px 6px}
-  .ff2-density-bar{flex-shrink:0}
-  /* Constrain viewport to screen height on mobile */
-  .ff2-viewport{height:72vh !important;min-height:420px !important;max-height:740px}
-  /* Reset btn always visible on mobile */
-  .ff2-reset-btn{display:inline-block !important;font-size:11px;padding:4px 8px}
+  /* Title block: tight, no sub-label wasted line */
+  .ff2-head > div:first-child{flex:1;min-width:0}
+  .ff2-title{font-size:13px;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* FF-05: hide subtitle meta on mobile — saves a full line of height */
+  .ff2-meta{display:none}
+  /* Controls group: density bar + legend inline, no wrapping */
+  .ff2-head > div:last-child{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-wrap:nowrap;
+    flex-shrink:0
+  }
+  /* FF-05: legend — icon-only pills (no text), very compact */
+  .ff2-legend{gap:4px;align-items:center}
+  .ff2-leg-item{
+    font-size:0; /* hide text label */
+    padding:3px 5px;
+    gap:4px
+  }
+  .ff2-leg-item .ff2-leg-dot{
+    width:8px;height:8px; /* slightly larger dot since label is gone */
+    flex-shrink:0
+  }
+  /* Density bar: same height as header row */
+  .ff2-density-bar{flex-shrink:0;padding:2px}
+  .ff2-density-btn{padding:4px 8px;font-size:9px}
+  /* Reset btn: compact */
+  .ff2-reset-btn{
+    display:inline-block !important;
+    font-size:10px;
+    padding:3px 7px;
+    white-space:nowrap
+  }
+  /* Constrain viewport — with compact header the canvas gets more of 100vh */
+  .ff2-viewport{height:74vh !important;min-height:380px !important;max-height:780px}
 }
 /* ── Expanded hover panel ── */
 .ff2-exp-body{display:flex;align-items:flex-start;gap:9px;margin-top:7px;padding-top:7px;border-top:1px solid rgba(255,255,255,.08)}
@@ -2437,6 +2789,10 @@ tr:hover td{background:var(--gray-50)}
       <div class="trend-chart-wrap"><canvas id="trendChart"></canvas></div>
       <div style="font-size:11px;color:var(--gray-400);margin-top:10px;text-align:center">Pick position over time — lower number = higher pick = better</div>
       <div class="trend-snapshots" id="trendSnapshots"></div>
+    </div>
+    <!-- M-02: Mobile close bar — thumb-reachable footer -->
+    <div class="modal-close-bar">
+      <button onclick="closeModal('trendModal')">✕ Close</button>
     </div>
   </div>
 </div>
@@ -11418,6 +11774,11 @@ var IntelService = (function() {
     <div style="display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1.5px solid #F1F5F9">
       <span style="font-size:20px;opacity:.5">🔍</span>
       <input id="globalSearchInput" type="text" placeholder="Search any prospect — name, school, class…"
+        inputmode="search"
+        autocorrect="off"
+        autocapitalize="none"
+        autocomplete="off"
+        spellcheck="false"
         style="flex:1;border:none;outline:none;font-size:16px;font-family:'DM Sans',sans-serif;color:#0A1628"
         oninput="runGlobalSearch(this.value)"
         onkeydown="handleSearchKey(event)">
@@ -12471,6 +12832,68 @@ window.hwRollForward = (function() {
     execute: execute,
     rollBack: rollBack,
     get currentYear() { return _currentYear; }
+  };
+})();
+
+// ── MOBILE UX FIXES — QA PASS ────────────────────────────────────────────────
+
+// T-04: Dismiss scroll affordance hint once the user scrolls the table.
+// Uses event delegation — handles any .table-wrap added dynamically by renderBoard2026().
+(function() {
+  'use strict';
+  function attachScrollHint(wrap) {
+    if (!wrap || wrap._hwScrollWired) return;
+    wrap._hwScrollWired = true;
+    wrap.addEventListener('scroll', function onScroll() {
+      if (wrap.scrollLeft > 8) {
+        wrap.classList.add('scrolled');
+        wrap.removeEventListener('scroll', onScroll);
+      }
+    }, { passive: true });
+  }
+
+  // Wire any .table-wrap already in the DOM
+  function wireAll() {
+    document.querySelectorAll('.table-wrap').forEach(attachScrollHint);
+  }
+
+  // Re-wire after dynamic renders (setView/renderBoard2026 replace innerHTML)
+  var _observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(m) {
+      m.addedNodes.forEach(function(n) {
+        if (!n.querySelectorAll) return;
+        n.querySelectorAll('.table-wrap').forEach(attachScrollHint);
+        if (n.classList && n.classList.contains('table-wrap')) attachScrollHint(n);
+      });
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    wireAll();
+    _observer.observe(document.body, { childList: true, subtree: true });
+  });
+})();
+
+// M-02: Ensure the modal close bar is injected into modals that don't have it.
+// The .modal-close-bar block is already in CSS; this ensures the DOM element exists.
+(function() {
+  'use strict';
+  var CLOSE_BAR_HTML = '<div class="modal-close-bar"><button onclick="closeModal(this.closest(\'.modal-overlay\').id)" touch-action="manipulation">Close</button></div>';
+
+  function ensureCloseBar(overlay) {
+    if (!overlay) return;
+    var modal = overlay.querySelector('.modal');
+    if (!modal) return;
+    if (modal.querySelector('.modal-close-bar')) return; // already present
+    modal.insertAdjacentHTML('beforeend', CLOSE_BAR_HTML);
+  }
+
+  // Patch openModal to ensure close bar after each open
+  var _origOpen = window.openModal;
+  window.openModal = function(id) {
+    if (_origOpen) _origOpen.apply(this, arguments);
+    var overlay = document.getElementById(id);
+    if (overlay) setTimeout(function() { ensureCloseBar(overlay); }, 0);
   };
 })();
 
