@@ -6,6 +6,7 @@
 <title>HoopsWill — NBA Draft Board v10</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- display=swap: browsers show fallback font immediately, swap when loaded — eliminates FOIT -->
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -67,6 +68,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 .tier-section{margin-bottom:28px}
 .tier-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--gray-100)}
 .tier-pill{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:3px 10px;border-radius:4px;color:white}
+.tier-pill.franchise{background:var(--amber)}
 .tier-pill.lottery{background:var(--purple)}
 .tier-pill.late1{background:var(--blue)}
 .tier-pill.second{background:var(--cyan)}
@@ -122,6 +124,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 /* ── Tier accent bar: 3px gradient strip anchored to top edge ── */
 /* Visually groups cards by tier at a glance without needing to read the label */
 .pc-accent{height:3px;flex-shrink:0}
+.player-card.franchise .pc-accent{background:linear-gradient(90deg,#92400E,#D97706,#F59E0B)}
 .player-card.lottery .pc-accent{background:linear-gradient(90deg,#7C3AED,#A78BFA)}
 .player-card.late1   .pc-accent{background:linear-gradient(90deg,#2563EB,#93C5FD)}
 .player-card.second  .pc-accent{background:linear-gradient(90deg,#0891B2,#67E8F9)}
@@ -354,6 +357,8 @@ tr:hover td{background:var(--gray-50)}
 .modal-header{background:var(--navy);color:white;padding:22px 26px;border-radius:16px 16px 0 0;position:relative;display:flex;gap:18px;align-items:center}
 .modal-close{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.1);border:none;color:white;width:44px;height:44px;min-width:44px;min-height:44px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
 .modal-close:hover{background:rgba(255,255,255,.2)}
+/* Mobile close bar — sticky at bottom of sheet, easier thumb reach */
+.modal-close-bar{display:none}
 .modal-avatar{width:72px;height:72px;border-radius:12px;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,.15)}
 .modal-avatar img{width:100%;height:100%;object-fit:cover;object-position:top}
 .modal-avatar-fb{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;color:white}
@@ -422,6 +427,12 @@ tr:hover td{background:var(--gray-50)}
 .analytics-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:3px}
 .analytics-sub{font-size:12px;color:var(--gray-400);margin-bottom:14px}
 .chart-wrap{position:relative;height:340px}
+/* AN-02: on mobile, 340px is too tall for narrow screens (bar chart needs
+   more height per bar). Set a taller height and let charts scroll if needed. */
+@media(max-width:640px){
+  .chart-wrap{height:260px}  /* bar/radar fit well at 260px on 360px-wide screens */
+  .chart-wrap + .chart-wrap{height:220px}
+}
 
 /* MOCKS */
 
@@ -559,7 +570,11 @@ tr:hover td{background:var(--gray-50)}
   .card-header{padding:9px 10px 7px;gap:7px}
   .card-identity{min-width:0}
   /* Name: force smaller on mobile, !important beats the JS name-length scaler */
-  .card-name{font-size:13px !important;letter-spacing:0}
+  /* C-03: was font-size:13px !important which overrode the inline font-size
+     computed by buildPlayerCard() — every name rendered at 13px regardless of length.
+     Removed !important so JS-computed sizes (13–20px by name length) are honoured.
+     Max is capped at 16px on mobile via the clamp below to prevent overflow. */
+  .card-name{font-size:clamp(11px,3.8vw,16px);letter-spacing:0}
   .card-school{font-size:9px;gap:3px;margin-top:2px}
   /* Stats: keep 3-col, compress padding */
   .card-stats{gap:3px;padding:0 8px 8px;padding-top:8px}
@@ -568,31 +583,37 @@ tr:hover td{background:var(--gray-50)}
   .stat-bar{display:none} /* hide bars on small cards — not enough room */
   .stat-lbl{font-size:9px}  /* minimum legible text */
   .stat-bar{display:block !important;opacity:.45}  /* restore stat bars */
-  /* Card comp: show on mobile as a single-line truncated comp */
-  .card-comp{display:block !important;padding:5px 10px 8px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  /* Card school: minimum legible */
-  .card-school{font-size:10px !important}
-  /* Tag labels: minimum 10px */
-  .tag{font-size:10px !important}
-  /* Hide comp and tweet btn on mobile — not enough real estate */
-  .card-comp{display:none}
+  /* Card comp: hidden on mobile — not enough real estate. Single rule, no conflict. */
+  .card-comp{display:none !important}
   .player-card > .pc-tweet-btn{display:none}
   .card-tags{padding:4px 9px 6px;gap:3px}
   .tag{font-size:9px;padding:2px 5px}
 
-  /* Table: sticky rank + player columns.
-     position:sticky on <td>/<th> requires border-collapse:separate.
-     border-spacing:0 keeps the visual identical to collapse. */
+  /* Table: sticky rank + player columns — background must track the row colour.
+     Using background:inherit on sticky cells means they automatically adopt
+     the row's background (white, striped gray, or hover state) instead of
+     always showing white and creating a seam during horizontal scroll. */
   .table-wrap{-webkit-overflow-scrolling:touch}
   .board-table{min-width:580px;border-collapse:separate !important;border-spacing:0 !important}
   .board-table tbody td{border-bottom:1px solid #f1f5f9}
+  /* Sticky rank column: inherit row bg so striped rows don't show white seam */
   .board-table th:nth-child(1),.board-table td:nth-child(1){
-    position:sticky;left:0;z-index:3;background:white}
+    position:sticky;left:0;z-index:3;background:inherit}
+  /* Sticky player column: same bg inheritance + separator shadow */
   .board-table th:nth-child(2),.board-table td:nth-child(2){
-    position:sticky;left:44px;z-index:2;background:white;
+    position:sticky;left:44px;z-index:2;background:inherit;
     box-shadow:3px 0 6px rgba(10,22,40,.07)}
+  /* Header rows need explicit bg — they have no striping logic */
   .board-table thead th:nth-child(1),.board-table thead th:nth-child(2){
-    background:var(--navy);z-index:4}
+    background:var(--navy) !important;z-index:4}
+  /* Ensure plain body rows have an explicit white bg to inherit from */
+  .board-table tbody tr{background:white}
+  .board-table tbody tr:nth-child(even){background:var(--gray-50)}
+  /* T-01: touch feedback on sortable headers */
+  .board-table th:active{color:var(--blue);background:var(--gray-100)}
+  /* T-02: full row is tappable — cursor:pointer set in JS via data-rank */
+  .board-table tbody tr[data-rank]{cursor:pointer}
+  .board-table tbody tr[data-rank]:active td{background:#EEF4FF !important}
 
   /* Big Board: tighter columns, stat legend always visible on mobile */
   .bb-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -616,7 +637,11 @@ tr:hover td{background:var(--gray-50)}
   .mdc-wrap{flex-direction:column;height:auto;min-height:0;border:none;box-shadow:none;border-radius:0}
   .mdc-board{height:calc(100vh - 160px);min-height:400px}
   .mdc-pool{
-    display:none;
+    /* FIX MDC-01: Use visibility+transform instead of display:none so the
+       CSS transform transition fires correctly. display:none suppresses all
+       transitions; visibility:hidden does not. */
+    visibility:hidden;
+    pointer-events:none;
     position:fixed;bottom:0;left:0;right:0;
     width:100%;height:65vh;
     border-left:none;border-top:1.5px solid var(--gray-200);
@@ -624,9 +649,15 @@ tr:hover td{background:var(--gray-50)}
     box-shadow:0 -8px 40px rgba(10,22,40,.25);
     z-index:800;
     transform:translateY(100%);
-    transition:transform .28s cubic-bezier(.4,0,.2,1)
+    transition:transform .28s cubic-bezier(.4,0,.2,1), visibility 0s linear .28s;
+    display:flex;flex-direction:column;background:white
   }
-  .mdc-pool.open{display:flex;transform:translateY(0)}
+  .mdc-pool.open{
+    visibility:visible;
+    pointer-events:auto;
+    transform:translateY(0);
+    transition:transform .28s cubic-bezier(.4,0,.2,1), visibility 0s linear 0s
+  }
   .mdc-pool-header{border-radius:16px 16px 0 0}
   .mdc-picks-scroll{-webkit-overflow-scrolling:touch}
   .mdc-board-header{flex-wrap:wrap;gap:6px}
@@ -681,7 +712,7 @@ tr:hover td{background:var(--gray-50)}
   .sc-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end}
   .sc-ctrl-group{min-width:0}
   .sc-select{min-width:0;width:100%;font-size:12px}
-  .sc-canvas-wrap{height:340px}  /* taller canvas for more plotting room */
+  .sc-canvas-wrap{height:360px}  /* taller canvas for more plotting room */
   /* Scatter warning banner for "All classes" on mobile */
   #scMobileWarning{
     display:none;
@@ -696,12 +727,44 @@ tr:hover td{background:var(--gray-50)}
     line-height:1.5
   }
 
-  /* Modal */
-  .modal-overlay{padding:0;align-items:flex-end}
-  .modal{border-radius:16px 16px 0 0;max-width:100%;max-height:88vh;margin:0;transform:translateY(40px)}
+  /* Modal — bottom-sheet on mobile */
+  /* FIX M-01: Isolate scroll to the modal inner div, not the overlay.
+     overflow-y:hidden on overlay + overflow-y:auto on modal eliminates the
+     iOS elastic-bounce effect that exposed the dark backdrop. */
+  .modal-overlay{padding:0;align-items:flex-end;overflow-y:hidden}
+  .modal{
+    border-radius:16px 16px 0 0;max-width:100%;
+    max-height:88vh;margin:0;transform:translateY(40px);
+    display:flex;flex-direction:column;overflow:hidden
+  }
   .modal-overlay.open .modal{transform:translateY(0)}
-  .modal-header{padding:14px 14px 10px}
-  .modal-body{padding:12px 14px 24px}
+  .modal-header{padding:14px 14px 10px;flex-shrink:0}
+  /* Modal body scrolls independently — no elastic bleed to overlay */
+  .modal-body{padding:12px 14px 8px;overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;min-height:0}
+  /* FIX M-02: Mobile close bar — sticky thumb-reachable footer */
+  .modal-close-bar{
+    display:flex !important;
+    justify-content:center;
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    border-top:1px solid var(--gray-100);
+    background:white;
+    flex-shrink:0
+  }
+  .modal-close-bar button{
+    width:100%;max-width:340px;
+    padding:13px 0;
+    border:1.5px solid var(--gray-200);
+    border-radius:10px;
+    background:var(--gray-50);
+    color:var(--gray-700);
+    font-size:14px;font-weight:700;
+    font-family:'DM Sans',sans-serif;
+    cursor:pointer;
+    touch-action:manipulation
+  }
+  .modal-close-bar button:active{background:var(--gray-200)}
+  /* Hide desktop close button on mobile — close bar replaces it */
+  .modal-header .modal-close{display:none}
 
   /* Comp explorer: hide wide table on mobile, show card layout instead */
   .comp-tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -822,7 +885,62 @@ tr:hover td{background:var(--gray-50)}
 }
 
 
-/* ── PRINT / PDF EXPORT ───────────────────────────────────────── */
+/* ── TOUCH / ACTIVE STATES — applied globally, critical for mobile UX ──────── */
+/* These fire on tap where :hover never fires on touch devices */
+.player-card:active{
+  transform:translateY(-2px) scale(1.005);
+  transition-duration:80ms
+}
+/* Nav tabs: tap feedback */
+.nav-tab:active{background:rgba(212,168,48,.08)}
+/* View toggle buttons */
+.view-btn:active:not(.active){background:rgba(255,255,255,.12);color:white}
+/* Filter selects and inputs: remove iOS tap highlight */
+.filter-select,.search-input{-webkit-tap-highlight-color:transparent}
+/* Ensure all interactive rows have a minimum 44px tap target height */
+.bb-row{min-height:44px}
+.mdc-pick-row{min-height:44px}
+.mdc-pool-item{min-height:44px}
+/* Mock table rows */
+.mock-table tbody tr:active{background:#E8EEFA !important}
+/* Global search results */
+.gs-result:active{background:var(--gray-50)}
+/* Future cards */
+.future-card:active{transform:translateY(-2px);box-shadow:0 4px 16px rgba(10,22,40,.12)}
+
+/* ── FREEFORM BOARD — ensure viewport always has explicit height on mobile ─── */
+/* The ff2-viewport height is set inline (plotH px on desktop).
+   The 72vh mobile override must not collapse to 0 if plotH renders before layout. */
+@media(max-width:640px){
+  .ff2-viewport{height:72vh !important;min-height:340px}
+}
+
+/* ── SCATTER TOOLTIP — clamp to viewport on small screens ────────────────── */
+/* The JS tooltip uses fixed positioning; ensure it never clips off-screen edge */
+@media(max-width:640px){
+  /* Handled via JS clamp logic — extra safety: */
+  .sc-stat-chip{font-size:10px !important;padding:3px 7px !important}
+}
+
+/* ── TABLE — sticky columns handled by background:inherit in mobile MQ above ─ */
+/* thead cells need an explicit navy background since they have no row stripe */
+@media(max-width:640px){
+  .board-table thead th:nth-child(1),.board-table thead th:nth-child(2){background:var(--navy) !important}
+}
+
+/* ── MODAL — safe-area padding for phones with home indicator ────────────── */
+@media(max-width:640px){
+  .modal-body{padding-bottom:calc(8px + env(safe-area-inset-bottom, 0px))}
+}
+
+/* ── CONTROLS BAR — ensure view toggle goes full-width on very small screens */
+@media(max-width:400px){
+  .controls-bar{gap:4px}
+  .search-wrap{min-width:100px}
+  .filter-select{min-width:76px;font-size:11px;padding:5px 6px}
+}
+
+
 @media print{
   /* Hide all chrome */
   .header, .nav-tabs, .upload-panel, .controls-bar,
@@ -880,10 +998,11 @@ tr:hover td{background:var(--gray-50)}
 
 .global-search-btn{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);color:rgba(255,255,255,.9);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;cursor:pointer;transition:all .15s;white-space:nowrap}
 .share-btn:hover{background:rgba(212,168,48,.18);border-color:rgba(212,168,48,.5);color:var(--amber-light,#E8BF52)}.global-search-btn:hover{background:rgba(212,168,48,.18);border-color:var(--gold);color:var(--gold)}
-.gs-result{display:flex;align-items:flex-start;gap:12px;padding:10px 20px;cursor:pointer;border-bottom:1px solid #F8FAFC;transition:background .1s}
+.gs-result{display:flex;align-items:flex-start;gap:12px;padding:12px 20px;cursor:pointer;border-bottom:1px solid #F8FAFC;transition:background .1s;min-height:44px}
 .gs-result:hover{background:#F8FAFC}
 .gs-result:last-child{border-bottom:none}
-.gs-year-pill{display:inline-flex;align-items:center;background:rgba(37,99,235,.1);color:var(--blue);font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;flex-shrink:0;font-family:'Barlow Condensed',sans-serif;letter-spacing:.3px}
+/* GS-02: year pills need enough padding so the ~44px touch target is met via surrounding row click */
+.gs-year-pill{display:inline-flex;align-items:center;background:rgba(37,99,235,.1);color:var(--blue);font-size:11px;font-weight:700;padding:5px 10px;border-radius:10px;flex-shrink:0;font-family:'Barlow Condensed',sans-serif;letter-spacing:.3px;min-height:28px;touch-action:manipulation}
 .gs-result-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:#0A1628;line-height:1.2}
 .gs-result-meta{font-size:11px;color:#64748B;margin-top:2px}
 .gs-result-stats{display:flex;gap:10px;margin-top:5px;flex-wrap:wrap}
@@ -969,9 +1088,12 @@ tr:hover td{background:var(--gray-50)}
 /* Player row — tighter height, cleaner separator, clickable for modal */
 .bb-row{display:flex;align-items:center;height:48px;padding-right:6px;border-bottom:1px solid rgba(203,213,225,.5);transition:background .1s;overflow:hidden;cursor:pointer}
 .bb-row:hover{background:#F0F4FF}
+/* Touch feedback — :active fires on tap where :hover does not */
+.bb-row:active{background:#E8EEFA}
 .bb-row:last-child{border-bottom:none}
 .bb-row.alt{background:rgba(248,250,252,.7)}
 .bb-row.alt:hover{background:#E8EEFA}
+.bb-row.alt:active{background:#dde5f8}
 .bb-row.bbt1{border-left:3px solid #D97706}.bb-row.bbt1 .bb-rk{opacity:.5;color:#92400E}
 .bb-row.bbt2{border-left:3px solid #7C3AED}.bb-row.bbt2 .bb-rk{opacity:.4;color:#4C1D95}
 .bb-rk{font-family:'Barlow Condensed',sans-serif;font-size:19px;color:var(--navy);opacity:.18;line-height:1;user-select:none;flex-shrink:0}
@@ -1391,13 +1513,25 @@ tr:hover td{background:var(--gray-50)}
     flex-shrink:0
   }
   .ff2-exp-close:active{background:rgba(255,255,255,.25)}
-  .ff2-head{flex-wrap:wrap;gap:8px;padding:12px 14px 10px}
-  .ff2-legend{flex-wrap:wrap;gap:8px}
-  /* Constrain viewport to screen height on mobile so user can see
-     the rest of the page above/below. Zoom/pan reveals the full board. */
-  .ff2-viewport{height:72vh !important;min-height:460px !important;max-height:740px}
-  /* Reset btn always visible on mobile since hover state isn't available */
-  .ff2-reset-btn{display:inline-block !important}
+  /* FF-05: compact header on mobile — two rows max to minimise wasted height.
+     Row 1: title + reset btn + density controls (flex)
+     Row 2: position legend (separate line via full-width flex child) */
+  .ff2-head{gap:6px;padding:10px 12px 8px;flex-wrap:wrap}
+  .ff2-head > div:first-child{flex:1;min-width:0}
+  .ff2-title{font-size:14px}
+  .ff2-meta{font-size:10px;opacity:.55}
+  /* Controls group: density + legend on same line */
+  .ff2-head > div:last-child{
+    display:flex;align-items:center;gap:8px;
+    flex-wrap:nowrap;width:100%
+  }
+  .ff2-legend{gap:6px;flex:1;justify-content:flex-end}
+  .ff2-leg-item{font-size:10px;padding:3px 6px}
+  .ff2-density-bar{flex-shrink:0}
+  /* Constrain viewport to screen height on mobile */
+  .ff2-viewport{height:72vh !important;min-height:420px !important;max-height:740px}
+  /* Reset btn always visible on mobile */
+  .ff2-reset-btn{display:inline-block !important;font-size:11px;padding:4px 8px}
 }
 /* ── Expanded hover panel ── */
 .ff2-exp-body{display:flex;align-items:flex-start;gap:9px;margin-top:7px;padding-top:7px;border-top:1px solid rgba(255,255,255,.08)}
@@ -2280,6 +2414,10 @@ tr:hover td{background:var(--gray-50)}
       </div>
     </div>
     <div class="modal-body" id="modalBody"></div>
+    <!-- Mobile close bar: sticky footer, thumb-reachable at bottom of sheet -->
+    <div class="modal-close-bar">
+      <button onclick="closeModal('playerModal')">✕ Close</button>
+    </div>
   </div>
 </div>
 
@@ -3207,14 +3345,33 @@ function setView(v) {
   document.getElementById('viewBigboard').classList.toggle('active', v === 'bigboard');
   document.getElementById('viewFreeform').classList.toggle('active', v === 'freeform');
   var el = document.getElementById('board2026Content');
+
+  // Skip transition animation for users who prefer reduced motion
+  var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reducedMotion) {
+    renderBoard2026();
+    if (window.hwIntel) hwIntel.refreshBadges();
+    return;
+  }
+
   el.classList.add('view-exit');
-  setTimeout(function() {
+  // 160ms matches the CSS transition; use transitionend as primary signal with
+  // a 200ms fallback so we never leave a blank panel if the transition is skipped
+  var _rendered = false;
+  function doRender() {
+    if (_rendered) return;
+    _rendered = true;
     renderBoard2026();
     el.classList.remove('view-exit');
     el.classList.add('view-enter');
     requestAnimationFrame(function() { requestAnimationFrame(function() { el.classList.remove('view-enter'); }); });
     if (window.hwIntel) hwIntel.refreshBadges();
-  }, 160);
+  }
+  el.addEventListener('transitionend', function _te() {
+    el.removeEventListener('transitionend', _te);
+    doRender();
+  });
+  setTimeout(doRender, 200);
 }
 
 
@@ -3305,6 +3462,9 @@ var DataService = (function() {
   // ── Data update (called by ExcelService after Excel parse) ────────────────
   function applyUpdate(parsed) {
     _cache = {};  // invalidate all cached boards — new data, fresh normalization
+    // Also clear module-level caches that depend on the same underlying data
+    if (typeof schoolLogoUrl === 'function') schoolLogoUrl._cache = null;
+    if (typeof _statRankCache !== 'undefined') _statRankCache = {};
     if (parsed.board2026)  DATA.board2026  = parsed.board2026;
     if (parsed.board2027)  DATA.board2027  = parsed.board2027;
     if (parsed.historical) DATA.historical = parsed.historical;
@@ -3544,15 +3704,20 @@ var CHAMPIONSHIP_BADGES = {
 
 // Returns the HTML string for the trophy badge (if any) for a given player name.
 // Empty string if player has no badge — safe to concatenate unconditionally.
+// Matching: case-insensitive word-boundary check so "Haugh" doesn't match "Haughton".
 function getBadgeHtml(playerName) {
-  var name = playerName || '';
+  if (!playerName) return '';
+  var base = (playerName.indexOf(' - ') > 0 ? playerName.slice(0, playerName.indexOf(' - ')) : playerName).toLowerCase();
   for (var key in CHAMPIONSHIP_BADGES) {
-    if (name.indexOf(key) !== -1) {
+    // Word-boundary match: key must appear as a whole word in the name
+    if (new RegExp('\\b' + key.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '\\b').test(base)) {
       var badge = CHAMPIONSHIP_BADGES[key];
-      var yearSpan = badge.year
-        ? '<span class="champ-badge-year">' + badge.year + '</span>'
-        : '';
-      return '<span class="champ-badge" title="' + badge.title + '">🏆' + yearSpan + '</span>';
+      var tipText = badge.title + (badge.year ? ' (' + badge.year + ')' : '');
+      return '<span class="champ-badge" title="' + tipText + '" style="'
+        + 'display:inline-flex;align-items:center;margin-left:4px;'
+        + 'font-size:11px;line-height:1;vertical-align:middle;cursor:default'
+        + '">🏆' + (badge.year ? '<span style="font-size:8px;font-weight:700;color:var(--amber);margin-left:1px;vertical-align:super">' + badge.year.slice(2) + '</span>' : '')
+        + '</span>';
     }
   }
   return '';
@@ -3562,6 +3727,15 @@ function getBadgeHtml(playerName) {
 function buildPlayerCard(p, tierKey) {
   var name    = p.name   || '';
   var school  = p.school || '';
+
+  // ── Name font size: computed during string build — avoids post-render DOM read+write
+  // Each length tier maps to a readable size within the fixed card width (278px min).
+  var nameLen = name.length;
+  var nameFontSize = nameLen <= 9  ? '20px'
+                   : nameLen <= 12 ? '19px'
+                   : nameLen <= 14 ? '18px'
+                   : nameLen <= 17 ? '16px'
+                   : nameLen <= 20 ? '14px' : '13px';
 
   // ── Metric display: gradStyle provides bg+colour tint from class percentile
   var gm      = gradStyle(p.metric, 'metric');
@@ -3652,7 +3826,7 @@ function buildPlayerCard(p, tierKey) {
       /* Avatar: circular (50% radius) — modern vs the old 8px square */
       + avatarHtml(p.name, p.position || '', '50px', '50%')
       + '<div class="card-identity">'
-        + '<div class="card-name">' + name + getBadgeHtml(p.name) + '</div>'
+        + '<div class="card-name" style="font-size:' + nameFontSize + '">' + name + getBadgeHtml(p.name) + '</div>'
         /* School row: crisp circular logo + school name */
         + '<div class="card-school">' + schoolRow + '</div>'
       + '</div>'
@@ -3680,14 +3854,15 @@ function renderBoardCards(players) {
   }
 
   var tiers = [
-    {key:'lottery', label:'Lottery',                   min:1,                      max:TIER_CUTS.lottery},
-    {key:'late1',   label:'Late First Round',           min:TIER_CUTS.lottery+1,    max:TIER_CUTS.lateFirst},
-    {key:'second',  label:'Second Round',               min:TIER_CUTS.lateFirst+1,  max:TIER_CUTS.second},
-    {key:'udfa',    label:'UDFA / Undrafted Free Agents',min:TIER_CUTS.second+1,    max:9999},
+    {key:'franchise', label:'Franchise',                   min:1,                      max:TIER_CUTS.franchise},
+    {key:'lottery',   label:'Lottery',                     min:TIER_CUTS.franchise+1,  max:TIER_CUTS.lottery},
+    {key:'late1',     label:'Late First Round',            min:TIER_CUTS.lottery+1,    max:TIER_CUTS.lateFirst},
+    {key:'second',    label:'Second Round',                min:TIER_CUTS.lateFirst+1,  max:TIER_CUTS.second},
+    {key:'udfa',      label:'UDFA / Undrafted Free Agents',min:TIER_CUTS.second+1,     max:9999},
   ];
 
   var html = '';
-  var icons = {lottery:'🎰', late1:'1️⃣', second:'2️⃣', udfa:'🆓'};
+  var icons = {franchise:'⭐', lottery:'🎰', late1:'1️⃣', second:'2️⃣', udfa:'🆓'};
 
   for (var ti = 0; ti < tiers.length; ti++) {
     var tier = tiers[ti];
@@ -3710,21 +3885,6 @@ function renderBoardCards(players) {
   }
 
   el.innerHTML = html;
-
-  // ── Post-render: scale name font by character length.
-  // Runs after innerHTML write so all .card-name elements exist in DOM.
-  el.querySelectorAll('.player-card').forEach(function(card) {
-    var nm = card.querySelector('.card-name');
-    if (!nm) return;
-    var len = (nm.textContent || '').trim().replace(/\s+/g, ' ').length;
-    // Step function: longer names get smaller text to stay on 1-2 lines
-    if      (len <= 9)  nm.style.fontSize = '20px';
-    else if (len <= 12) nm.style.fontSize = '19px';
-    else if (len <= 14) nm.style.fontSize = '18px';
-    else if (len <= 17) nm.style.fontSize = '16px';
-    else if (len <= 20) nm.style.fontSize = '14px';
-    else                nm.style.fontSize = '13px';
-  });
 }
 
 // ── BOARD 2026 — TABLE VIEW ──────────────────────────────────────────────────
@@ -3744,7 +3904,7 @@ function renderBoardTable(players) {
     {k:'ato',l:'A/TO'},{k:'ftar',l:'FTAr'},{k:'tpar',l:'3PAr'},{k:'cls',l:'Class'}
   ];
 
-  let html = `<div class="table-wrap"><table><thead><tr>`;
+  let html = `<div class="table-wrap"><table class="board-table"><thead><tr>`;
   for (const c of cols) {
     const s = sortCol===c.k;
     html += `<th class="${s?'sorted':''}" onclick="sortBoardTable('${c.k}')">${c.l} <span style="opacity:.5">${s?(sortDir===1?'↑':'↓'):'↕'}</span></th>`;
@@ -3771,7 +3931,7 @@ function renderBoardTable(players) {
       const ftaV  = p.ftar    ? parseFloat(p.ftar).toFixed(3)    : '—';
       const tpaV  = p.tpar    ? parseFloat(p.tpar).toFixed(3)    : '—';
       const av    = avatarHtml(p.name, p.position, '32px', '6px').replace('class="avatar-fallback"','class="td-mini-fb"');
-      return `<tr>
+      return `<tr data-rank="${p.rank}" onclick="openPlayerModal(${p.rank})">
       <td class="td-rank ${top10?'top10':''}">${p.rank}</td>
       <td><div class="td-player-cell">
         ${av}
@@ -3804,7 +3964,9 @@ function renderBoardTable(players) {
 
 function sortBoardTable(col) {
   if (sortCol===col) sortDir*=-1; else { sortCol=col; sortDir=1; }
-  renderBoardTable(DATA.board2026);
+  // Use the same filtered dataset renderBoard2026 uses — never raw DATA
+  var filtered = LayoutEngine.applyFilters(DataService.getBoard('2026'), AppState.get().board);
+  renderBoardTable(filtered);
 }
 
 // ── PLAYER MODAL ──────────────────────────────────────────
@@ -3940,34 +4102,38 @@ function parseSwl(notesStr) {
   return { strengths: strengths, neutral: neutral, weaknesses: weaknesses };
 }
 
+// Per-modal stat rank arrays — cached per stat+position key, cleared by rebuildStatRanges()
+var _statRankCache = {};
+
 // Compute "Nth overall · Nth among Positions" for a stat value (higher = better)
 function statRankCtx(statKey, value, position) {
   if (value === null || value === undefined || value === '' || value === 0) return '';
-  var vals = DATA.board2026
-    .map(function(p) { return p[statKey]; })
-    .filter(function(v) { return v !== null && v !== undefined && v !== 0 && v !== ''; });
-  if (!vals.length) return '';
-  var overallRank = vals.filter(function(v) { return v > value; }).length + 1;
-  var posVals = DATA.board2026
-    .filter(function(p) { return p.position === position; })
-    .map(function(p) { return p[statKey]; })
-    .filter(function(v) { return v !== null && v !== undefined && v !== 0 && v !== ''; });
-  var posRank = posVals.length ? (posVals.filter(function(v) { return v > value; }).length + 1) : null;
+  var cacheKey = statKey + ':' + (position || '');
+  if (!_statRankCache[cacheKey]) {
+    // Build once per stat+position combination; reused across all 10 modal stat boxes
+    var board = DataService.getBoard('2026');
+    var allVals = board.map(function(p) { return p[statKey]; })
+                       .filter(function(v) { return v !== null && v !== undefined && v !== 0 && v !== ''; });
+    var posVals = position
+      ? board.filter(function(p) { return p.position === position; })
+             .map(function(p) { return p[statKey]; })
+             .filter(function(v) { return v !== null && v !== undefined && v !== 0 && v !== ''; })
+      : [];
+    _statRankCache[cacheKey] = { all: allVals, pos: posVals };
+  }
+  var cached = _statRankCache[cacheKey];
+  if (!cached.all.length) return '';
+  var overallRank = cached.all.filter(function(v) { return v > value; }).length + 1;
+  var posRank = cached.pos.length ? (cached.pos.filter(function(v) { return v > value; }).length + 1) : null;
   var posLabel = position ? position + 's' : '';
   var ctx = toOrdinal(overallRank) + ' overall';
   if (posRank !== null && posLabel) ctx += ' · ' + toOrdinal(posRank) + ' among ' + posLabel;
   return ctx;
 }
 
-// Compute height/weight percentile within position group (higher value = higher percentile)
-// Returns e.g. "76th pct. among Forwards" or '' if insufficient data
+// measPct: height/weight percentile within position group — not yet implemented.
+// Returns '' unconditionally; stub preserved for future use.
 function measPct(value, position) {
-  if (!value || !position) return '';
-  var posVals = DATA.board2026
-    .filter(function(p) { return p.position === position; })
-    .map(function(p) { return p.ht; })  // caller passes the right array if needed
-    .filter(function(v) { return v !== null && v !== undefined && v > 0; });
-  // This generic version is called with a pre-filtered array — see usage below
   return '';
 }
 
@@ -3980,16 +4146,22 @@ function pctileInArr(value, arr) {
 
 
 // Open modal by player name — used by comp explorer mobile cards
-// Searches board2026 + historical yoy data for a name match.
+// Searches 2026 board first (O(1) via DataService cache), then yoy historical data.
 function openPlayerModalByName(name) {
-  var all = (DATA.board2026||[]).concat(DATA.yoy||[]);
-  var match = all.find(function(p) {
-    var base = (p.name||'').indexOf(' - ') > 0
-      ? p.name.slice(0, p.name.indexOf(' - '))
-      : (p.name||'');
-    return base.trim().toLowerCase() === name.trim().toLowerCase();
+  var normName = (name || '').trim().toLowerCase();
+  // Fast path: check 2026 board via DataService (already normalized + cached)
+  var match2026 = DataService.getBoard('2026').find(function(p) {
+    return (p.name || '').toLowerCase() === normName;
   });
-  if (match && match.rank) openPlayerModal(match.rank);
+  if (match2026 && match2026.rank) { openPlayerModal(match2026.rank, '2026'); return; }
+  // Slow path: search yoy historical data (raw objects — do name split manually)
+  var yoyMatch = (DATA.yoy || []).find(function(p) {
+    var base = (p.name || '').indexOf(' - ') > 0
+      ? p.name.slice(0, p.name.indexOf(' - '))
+      : (p.name || '');
+    return base.trim().toLowerCase() === normName;
+  });
+  if (yoyMatch && yoyMatch.rank) openPlayerModal(yoyMatch.rank);
 }
 
 function openPlayerModal(rank, year) {
@@ -3997,14 +4169,21 @@ function openPlayerModal(rank, year) {
   const player = yr==='2026' ? DATA.board2026.find(p=>p.rank===rank) : (DATA.historical[yr]||[]).find(p=>p.rank===rank);
   if (!player) return;
 
+  // Coerce nullish/zero string fields so they never display as "0" in the modal.
+  // Raw DATA objects skip DataService._str() normalization, so we do it here.
+  function _s(v) { return (!v || v === 0 || v === '0') ? '' : String(v).trim(); }
+
   const [name, school] = splitName(player.name);
   const tier = getTier(player.rank);
   const elite = player.metric > 140;
   const color = posColor(player.position);
+  const position    = _s(player.position);
+  const cls         = _s(player.cls);
+  const torvik_role = _s(player.torvik_role);
 
   document.getElementById('modalRankLabel').textContent = `#${player.rank} · ${tier.label}`;
   document.getElementById('modalName').textContent = name;
-  document.getElementById('modalMeta').textContent = [school, player.cls, player.torvik_role, player.position].filter(Boolean).join(' · ');
+  document.getElementById('modalMeta').textContent = [school, cls, torvik_role, position].filter(Boolean).join(' · ');
   document.getElementById('modalAvatar').innerHTML = avatarHtml(player.name, player.position, '72px', '12px');
 
   // Pre-compute gradient styles for each stat
@@ -4222,12 +4401,33 @@ function openModal(id) {
 }
 function closeModal(id) {
   document.getElementById(id).classList.remove('open');
-  document.body.style.overflow = '';
+  // Only clear overflow:hidden if no other modal is still open
+  var anyOpen = document.querySelectorAll('.modal-overlay.open').length > 0;
+  if (!anyOpen) document.body.style.overflow = '';
 }
 function handleOverlayClick(e, id) {
   if (e.target === document.getElementById(id)) closeModal(id);
 }
 document.addEventListener('keydown', e => { if (e.key==='Escape') { closeModal('playerModal'); closeModal('trendModal'); } });
+
+// FIX GL-01: iOS Safari back-gesture (and other unexpected navigations) do not
+// call closeModal(), leaving body.overflow='hidden' permanently and locking scroll.
+// pageshow fires on back-forward cache restore; visibilitychange fires on app resume.
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    var anyOpen = document.querySelectorAll('.modal-overlay.open').length > 0;
+    if (!anyOpen) document.body.style.overflow = '';
+  }
+});
+window.addEventListener('pageshow', function(e) {
+  // persisted=true means this is a back-forward cache restore
+  if (e.persisted) {
+    document.querySelectorAll('.modal-overlay.open').forEach(function(m) {
+      m.classList.remove('open');
+    });
+    document.body.style.overflow = '';
+  }
+});
 
 // ── ANALYTICS ─────────────────────────────────────────────
 let chartA, chartB, chartC;
@@ -5723,6 +5923,8 @@ function rebuildStatRanges() {
       .filter(function(v){ return v !== null && v !== undefined && v !== 0 && v !== ''; });
     if (vals.length) STAT_RANGES[k] = { mn: Math.min.apply(null, vals), mx: Math.max.apply(null, vals) };
   });
+  // Invalidate memoized stat-rank arrays — data changed, stale rankings must be recalculated
+  if (typeof _statRankCache !== 'undefined') _statRankCache = {};
 }
 
 
@@ -5735,13 +5937,43 @@ function openGlobalSearch() {
   var input = document.getElementById('globalSearchInput');
   if (!modal) return;
   modal.style.display = 'block';
-  setTimeout(function() { if (input) { input.value = ''; input.focus(); } }, 30);
+  document.body.style.overflow = 'hidden';
+
+  // FIX GS-01: focus() must run synchronously inside the user-gesture stack on iOS.
+  // A setTimeout breaks the gesture context and suppresses the keyboard.
+  if (input) { input.value = ''; input.focus(); }
   runGlobalSearch('');
+
+  // FIX GS-03: On mobile the software keyboard shrinks window.innerHeight.
+  // We listen for resize (which fires when keyboard opens/closes) and
+  // reposition the dialog so the input + results stay visible above the keyboard.
+  function _reposition() {
+    var vh = window.innerHeight;
+    // On small screens with keyboard open, use the full reduced height
+    modal.style.paddingTop    = Math.max(8, Math.min(60, vh * 0.06)) + 'px';
+    modal.style.paddingBottom = '4px';
+    modal.style.alignItems    = 'flex-start';
+    // Constrain results area to whatever space is left below the input row (~56px)
+    var results = document.getElementById('globalSearchResults');
+    if (results) {
+      var maxH = Math.max(80, vh - 56 - parseInt(modal.style.paddingTop || 60) - 40);
+      results.style.maxHeight = maxH + 'px';
+    }
+  }
+  _reposition();
+  modal._gsResize = _reposition;
+  window.addEventListener('resize', _reposition);
 }
 
 function closeGlobalSearch() {
   var modal = document.getElementById('globalSearchModal');
-  if (modal) modal.style.display = 'none';
+  if (!modal) return;
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+  if (modal._gsResize) {
+    window.removeEventListener('resize', modal._gsResize);
+    modal._gsResize = null;
+  }
 }
 
 function handleSearchKey(e) {
@@ -5776,21 +6008,52 @@ function gsStatPills(p) {
 
 // Navigate to a tab and optionally scroll/highlight a player
 function gsNavigateTo(tab, playerName) {
-  setView(tab);
-  // Small delay so the tab renders, then try to scroll to player row
-  setTimeout(function() {
-    if (!playerName) return;
-    var rows = document.querySelectorAll('tr');
-    for (var i = 0; i < rows.length; i++) {
-      if (rows[i].textContent.indexOf(playerName) !== -1) {
-        rows[i].scrollIntoView({ behavior:'smooth', block:'center' });
-        rows[i].style.transition = 'background .3s';
-        rows[i].style.background = '#FEFCE8';
-        setTimeout(function(r){ r.style.background = ''; }, 1800, rows[i]);
-        break;
-      }
-    }
-  }, 180);
+  // switchToTab handles the board2026 tab and future tab correctly.
+  // For board2026, we also need the content to be rendered first.
+  if (tab === 'board2026') {
+    switchToTab('board2026', function() {
+      renderBoard2026();
+      if (!playerName) return;
+      // Scroll to the player's card or row within the 2026 board
+      setTimeout(function() {
+        var target = document.querySelector('[data-rank]');
+        var cards = document.querySelectorAll('.player-card[data-rank], .bb-row[data-rank], tr');
+        for (var i = 0; i < cards.length; i++) {
+          var el = cards[i];
+          var nm = el.querySelector('.name, .card-name, .bb-name');
+          if (nm && nm.textContent.toLowerCase().indexOf(playerName.toLowerCase()) !== -1) {
+            target = el; break;
+          }
+        }
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          target.style.transition = 'background .3s';
+          target.style.background = '#FEFCE8';
+          setTimeout(function() { target.style.background = ''; }, 1800);
+        }
+      }, 80);
+    });
+  } else if (tab === 'future') {
+    switchToTab('future', function() {
+      if (!playerName) return;
+      setTimeout(function() {
+        var cards = document.querySelectorAll('.future-card, #tab-future tr');
+        for (var i = 0; i < cards.length; i++) {
+          var el = cards[i];
+          var nm = el.querySelector('.future-card-name, .name, td:nth-child(2)');
+          if (nm && nm.textContent.toLowerCase().indexOf(playerName.toLowerCase()) !== -1) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.style.transition = 'background .3s';
+            el.style.background = '#FEFCE8';
+            setTimeout(function(r){ r.style.background = ''; }, 1800, el);
+            break;
+          }
+        }
+      }, 80);
+    });
+  } else {
+    switchToTab(tab);
+  }
 }
 
 function runGlobalSearch(query) {
@@ -5863,6 +6126,29 @@ function runGlobalSearch(query) {
     byName[base].push(r);
   });
 
+  // ── Pre-compute mock appearances for ALL matching players in one pass.
+  // Previously this scan (~2,500 iterations) ran once per rendered result card
+  // (inside the forEach loop below), multiplying work for common name queries.
+  var allMockApps = {};  // baseName → ['26 mock #3', ...]
+  if (DATA.mocks) {
+    Object.keys(DATA.mocks).forEach(function(yr) {
+      var yearData = DATA.mocks[yr] || {};
+      Object.keys(yearData).forEach(function(dateKey) {
+        var picks = yearData[dateKey] || [];
+        picks.forEach(function(pk) {
+          var pname = (pk.player || '').toLowerCase();
+          // Match against all results in one pass using the byName keys
+          Object.keys(byName).forEach(function(base) {
+            if (pname.indexOf(base.toLowerCase()) !== -1) {
+              if (!allMockApps[base]) allMockApps[base] = [];
+              allMockApps[base].push("'" + yr.slice(2) + ' mock #' + pk.pick);
+            }
+          });
+        });
+      });
+    });
+  }
+
   // For each unique player, show one consolidated card
   var rendered = {};
   results.forEach(function(r) {
@@ -5883,22 +6169,8 @@ function runGlobalSearch(query) {
       return '<span class="gs-year-pill" style="cursor:pointer" onclick="gsGoTo(\''+yr+'\',\''+encodeURIComponent(base)+'\')" title="Go to '+yr+' board">'+yr+'</span>'+draftInfo;
     }).join(' ');
 
-    // Mock draft appearances
-    var mockApps = [];
-    if (DATA.mocks) {
-      Object.keys(DATA.mocks).forEach(function(yr) {
-        var yearData = DATA.mocks[yr] || {};
-        Object.keys(yearData).forEach(function(dateKey) {
-          var picks = yearData[dateKey] || [];
-          picks.forEach(function(pk) {
-            var pname = (pk.player || '').toLowerCase();
-            if (pname.indexOf(base.toLowerCase()) !== -1) {
-              mockApps.push("'" + yr.slice(2) + ' mock #' + pk.pick);
-            }
-          });
-        });
-      });
-    }
+    // Use pre-computed mock appearances
+    var mockApps = allMockApps[base] || [];
 
     var statsRow = gsStatPills(primary);
     var metaLine = [
@@ -5936,6 +6208,31 @@ function runGlobalSearch(query) {
   el.innerHTML = html_out;
 }
 
+// ── Programmatic tab switch — replicates the nav-tab click handler behaviour.
+// Used by global search navigation and any module that needs to jump to a tab.
+function switchToTab(tabId, afterRender) {
+  document.querySelectorAll('.nav-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  var navTab = document.querySelector('.nav-tab[data-tab="' + tabId + '"]');
+  if (navTab) {
+    navTab.classList.add('active');
+    navTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+  var panel = document.getElementById('tab-' + tabId);
+  if (panel) panel.classList.add('active');
+  urlSetState({ tab: tabId });
+  // Trigger per-tab render functions
+  if (tabId === 'analytics')   renderAnalytics();
+  if (tabId === 'history')     renderHistory();
+  if (tabId === 'future')      renderFuture();
+  if (tabId === 'mocks')       renderMocks();
+  if (tabId === 'resources')   renderResources();
+  if (tabId === 'scatter')     scRender();
+  if (tabId === 'methodology') { if (typeof mcInit === 'function') mcInit(); }
+  if (tabId === 'compare')     { populateCompareSelect(); renderCompare(); }
+  if (afterRender) afterRender();
+}
+
 // Navigate from a search result to the right tab + highlight player
 function gsGoTo(year, encodedName) {
   closeGlobalSearch();
@@ -5945,29 +6242,37 @@ function gsGoTo(year, encodedName) {
   } else if (year === '2027') {
     gsNavigateTo('future', name);
   } else {
-    // Past boards — switch to history tab, wait for render, then scroll
-    setView('history');
-    setTimeout(function() {
-      // Set the history year filter if possible
-      var yrSelect = document.getElementById('histYear');
-      if (yrSelect) {
-        yrSelect.value = year;
-        renderHistory();
-      }
-      // Then scroll to player
+    // Past boards — switch to Past Boards tab, set year filter, scroll to player.
+    // Use switchToTab so renderHistory() fires correctly (not setView which is
+    // only for board-2026 sub-views and would corrupt currentView state).
+    var yrSelect = document.getElementById('histYear');
+    if (yrSelect) yrSelect.value = year;
+
+    switchToTab('history', function() {
+      // renderHistory() already called by switchToTab; now find and highlight the row.
+      // Use setTimeout(0) to let the browser commit the painted rows before scrolling.
       setTimeout(function() {
-        var rows = document.querySelectorAll('#tab-history tr');
+        var rows = document.querySelectorAll('#tab-history tr[data-name], #tab-history tbody tr');
+        var target = null;
+        var normQ  = name.toLowerCase().replace(/\s+/g, ' ').trim();
         for (var i = 0; i < rows.length; i++) {
-          if (rows[i].textContent.indexOf(name) !== -1) {
-            rows[i].scrollIntoView({ behavior:'smooth', block:'center' });
-            rows[i].style.transition = 'background .4s';
-            rows[i].style.background = '#FEFCE8';
-            setTimeout(function(r){ r.style.background = ''; }, 2000, rows[i]);
-            break;
+          var row = rows[i];
+          var rowName = (row.dataset.name || '').toLowerCase();
+          if (!rowName) {
+            var firstTd = row.querySelector('.name, td:nth-child(2)');
+            rowName = firstTd ? firstTd.textContent.toLowerCase().trim() : '';
           }
+          if (rowName && rowName.indexOf(normQ) !== -1) { target = row; break; }
         }
-      }, 200);
-    }, 80);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          var prevBg = target.style.background;
+          target.style.transition = 'background .4s';
+          target.style.background = '#FEFCE8';
+          setTimeout(function() { target.style.background = prevBg; }, 2200);
+        }
+      }, 0);
+    });
   }
 }
 
@@ -6337,19 +6642,52 @@ function bbScreenshot() {
 
   var filename = 'HoopsWill_BigBoard_' + rankFrom + '-' + rankTo + '.png';
 
+  // Detect iOS Safari — async a.click() doesn't trigger downloads there
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
   function doShot() {
     html2canvas(clone, {
       scale: 2, useCORS: true, allowTaint: false,
       backgroundColor: '#ffffff', logging: false,
     }).then(function(canvas) {
       document.body.removeChild(clone);
-      canvas.toBlob(function(blob) {
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url; a.download = filename; a.click();
-        URL.revokeObjectURL(url);
-      });
-    }).catch(function() { document.body.removeChild(clone); });
+
+      if (isIOS) {
+        // iOS: open image in a new tab so user can long-press to save
+        // (programmatic download via a.click() is blocked in async context)
+        canvas.toBlob(function(blob) {
+          var url = URL.createObjectURL(blob);
+          // Show inline preview modal with save instruction
+          var overlay = document.createElement('div');
+          overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:14px';
+          var img = document.createElement('img');
+          img.src = url;
+          img.style.cssText = 'max-width:100%;max-height:60vh;border-radius:8px;object-fit:contain';
+          var tip = document.createElement('div');
+          tip.style.cssText = 'color:white;font-size:14px;font-family:DM Sans,sans-serif;text-align:center;line-height:1.6;font-weight:600';
+          tip.textContent = 'Long-press the image above → "Save to Photos"';
+          var closeBtn = document.createElement('button');
+          closeBtn.textContent = '✕ Close';
+          closeBtn.style.cssText = 'background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif';
+          closeBtn.onclick = function() { document.body.removeChild(overlay); URL.revokeObjectURL(url); };
+          overlay.appendChild(img);
+          overlay.appendChild(tip);
+          overlay.appendChild(closeBtn);
+          document.body.appendChild(overlay);
+        });
+      } else {
+        // Non-iOS: standard programmatic download
+        canvas.toBlob(function(blob) {
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url; a.download = filename; a.click();
+          URL.revokeObjectURL(url);
+        });
+      }
+    }).catch(function() {
+      document.body.removeChild(clone);
+      alert('Screenshot failed. Try a different browser.');
+    });
   }
 
   if (typeof html2canvas === 'undefined') {
@@ -6599,16 +6937,36 @@ function mdcRenderPool() {
 }
 
 function mdcOpenPoolDrawer() {
-  if (window.innerWidth > 640) return; // desktop: no drawer needed
+  if (window.innerWidth > 640) return;
   var pool = document.getElementById('mdcWrapPool');
-  if (pool) { pool.classList.add('open'); pool.style.display='flex'; }
+  if (!pool) return;
+  pool.classList.add('open');
+  // No display toggle — visibility+transform CSS handles the slide animation
+
+  // MDC-02: prevent pick-board from scrolling under open drawer
+  var boardWrap = document.getElementById('mdcPicksScroll');
+  if (boardWrap && !boardWrap._poolOpenBlocker) {
+    boardWrap._poolOpenBlocker = function(e) {
+      if (!pool.contains(e.target)) e.preventDefault();
+    };
+    boardWrap.addEventListener('touchmove', boardWrap._poolOpenBlocker, { passive: false });
+  }
+  if (!pool._scrollTrap) {
+    pool._scrollTrap = function(e) { e.stopPropagation(); };
+    pool.addEventListener('touchmove', pool._scrollTrap, { passive: true });
+  }
 }
 
 function mdcClosePoolDrawer() {
   var pool = document.getElementById('mdcWrapPool');
-  if (pool) {
-    pool.classList.remove('open');
-    setTimeout(function(){ pool.style.display='none'; }, 280);
+  if (!pool) return;
+  pool.classList.remove('open');
+  // No display toggle — visibility transition hides it after 280ms automatically
+
+  var boardWrap = document.getElementById('mdcPicksScroll');
+  if (boardWrap && boardWrap._poolOpenBlocker) {
+    boardWrap.removeEventListener('touchmove', boardWrap._poolOpenBlocker, { passive: false });
+    boardWrap._poolOpenBlocker = null;
   }
 }
 
@@ -7868,8 +8226,12 @@ function scShowTip(e, nearby, xM, yM) {
   tt.innerHTML = h;
   tt.style.opacity = '1';
   var cx = e.clientX + 16, cy = e.clientY - 10;
-  if (cx + 260 > window.innerWidth)  cx = e.clientX - 268;
-  if (cy + 200 > window.innerHeight) cy = e.clientY - 210;
+  // Clamp tooltip to viewport — critical on mobile where screen is narrow
+  var ttW = 260, ttH = 200;
+  if (cx + ttW > window.innerWidth)  cx = Math.max(4, e.clientX - ttW - 4);
+  if (cy + ttH > window.innerHeight) cy = Math.max(4, e.clientY - ttH - 4);
+  if (cx < 4) cx = 4;
+  if (cy < 4) cy = 4;
   tt.style.left = cx + 'px';
   tt.style.top  = cy + 'px';
 }
@@ -8034,9 +8396,44 @@ function scRender() {
     },
   };
 
-  // Destroy and recreate — fast with animation:0, avoids Chart.js partial-update edge cases
-  if (_scChart) { _scChart.destroy(); _scChart = null; }
-  _scChart = new Chart(canvas, chartConfig);
+  // ── Chart.js: update existing instance when possible; recreate only on first
+  // render or when the number of datasets changes (e.g. trend line added/removed).
+  // Updating is dramatically faster than destroy+new: no full canvas repaint,
+  // no plugin re-registration, no scale reconstruction.
+  var needsDatasets = datasets.length;
+  var canUpdate = _scChart
+    && _scChart.data
+    && _scChart.data.datasets.length === needsDatasets;
+
+  if (canUpdate) {
+    // Patch existing datasets in-place — Chart.js reads these on next update()
+    datasets.forEach(function(ds, i) {
+      var existing = _scChart.data.datasets[i];
+      existing.data             = ds.data;
+      existing.pointStyle       = ds.pointStyle;
+      existing.backgroundColor  = ds.backgroundColor;
+      existing.borderColor      = ds.borderColor;
+      existing.pointRadius      = ds.pointRadius;
+      existing.pointHoverRadius = ds.pointHoverRadius;
+      if (ds.borderDash  !== undefined) existing.borderDash  = ds.borderDash;
+      if (ds.borderWidth !== undefined) existing.borderWidth = ds.borderWidth;
+      if (ds.label       !== undefined) existing.label       = ds.label;
+    });
+    // Sync all axis config: label, reverse, and tick formatter
+    var sx = _scChart.options.scales.x;
+    var sy = _scChart.options.scales.y;
+    sx.title.text = xM.label;
+    sy.title.text = yM.label;
+    sx.reverse    = !!xM.inv;
+    sy.reverse    = !!yM.inv;
+    sx.ticks.callback = function(v){ return xM.fmt(v); };
+    sy.ticks.callback = function(v){ return yM.fmt(v); };
+    _scChart.update('none');
+  } else {
+    // Full recreate: first render or dataset count changed
+    if (_scChart) { _scChart.destroy(); _scChart = null; }
+    _scChart = new Chart(canvas, chartConfig);
+  }
 
   // ── Proximity tooltip ─────────────────────────────────────────────────────
   // Detect hover within radius matching largest logo size (franchise = 28px)
@@ -8060,6 +8457,49 @@ function scRender() {
     } catch(e) { scHideTip(); }
   };
   canvas.onmouseleave = function() { scHideTip(); };
+
+  // ── Mobile touch: touchstart shows proximity tooltip; touchend dismisses it.
+  // IMPORTANT: use onX= assignment (not addEventListener) so each scRender()
+  // call replaces the handler rather than accumulating another copy.
+  // Using addEventListener without removal caused N tooltip show/hide handlers
+  // after N axis changes (verified regression: 10 renders → 10 simultaneous handlers).
+  var _scTipHideTimer = null;
+  canvas.ontouchstart = function(e) {
+    if (_scTipHideTimer) { clearTimeout(_scTipHideTimer); _scTipHideTimer = null; }
+    if (!_scChart || !_scAllPts.length) return;
+    var rect  = canvas.getBoundingClientRect();
+    var touch = e.touches[0];
+    if (!touch) return;
+    var mx = touch.clientX - rect.left;
+    var my = touch.clientY - rect.top;
+    try {
+      var xScale = _scChart.scales.x;
+      var yScale = _scChart.scales.y;
+      var near = _scAllPts.filter(function(pt) {
+        var px = xScale.getPixelForValue(pt.x);
+        var py = yScale.getPixelForValue(pt.y);
+        var r  = ScatterEngine.tierSize(pt._p.rank) / 2 + 16;
+        return Math.sqrt((px-mx)*(px-mx)+(py-my)*(py-my)) <= r;
+      });
+      if (near.length) scShowTip({ clientX: touch.clientX, clientY: touch.clientY }, near, xM, yM);
+      else scHideTip();
+    } catch(err) { scHideTip(); }
+  };
+  canvas.ontouchend = function() {
+    // Cancel any pending hide from a previous tap before scheduling new one
+    if (_scTipHideTimer) clearTimeout(_scTipHideTimer);
+    _scTipHideTimer = setTimeout(function() { scHideTip(); _scTipHideTimer = null; }, 600);
+  };
+  canvas.ontouchcancel = function() {
+    if (_scTipHideTimer) { clearTimeout(_scTipHideTimer); _scTipHideTimer = null; }
+    scHideTip();
+  };
+  // FIX SC-02: prevent page scroll/zoom when touching the chart canvas.
+  // Must use addEventListener with passive:false to call preventDefault().
+  // Stored on canvas._scTouchMove so each render replaces the prior listener.
+  if (canvas._scTouchMove) canvas.removeEventListener('touchmove', canvas._scTouchMove, { passive: false });
+  canvas._scTouchMove = function(e) { e.preventDefault(); };
+  canvas.addEventListener('touchmove', canvas._scTouchMove, { passive: false });
 
   // Click a logo → open player profile modal
   canvas.onclick = function(e) {
@@ -8164,8 +8604,26 @@ function resetTierCuts() {
 function toggleTierEditor() {
   var ed=document.getElementById('tierEditor'), btn=document.getElementById('tierCustomBtn');
   if (!ed) return;
+  var wasVisible = ed.classList.contains('visible');
   ed.classList.toggle('visible');
   if (btn) btn.classList.toggle('on', ed.classList.contains('visible'));
+
+  // Wire outside-click/tap dismiss when opening; remove listener when closing
+  if (!wasVisible) {
+    // setTimeout(0) defers listener attachment past the current click event
+    // so the opening click doesn't immediately re-trigger the dismiss
+    setTimeout(function() {
+      function outsideDismiss(e) {
+        if (ed.contains(e.target) || e.target === btn || (btn && btn.contains(e.target))) return;
+        ed.classList.remove('visible');
+        if (btn) btn.classList.remove('on');
+        document.removeEventListener('click',    outsideDismiss);
+        document.removeEventListener('touchend', outsideDismiss);
+      }
+      document.addEventListener('click',    outsideDismiss);
+      document.addEventListener('touchend', outsideDismiss);
+    }, 0);
+  }
 }
 
 // ── URL STATE ───────────────────────────────────────────────────────────────
@@ -8228,7 +8686,7 @@ function urlRestoreState() {
   }
   if(p.view){
     currentView=p.view;
-    ['Cards','Table','Bigboard'].forEach(function(v){
+    ['Cards','Table','Bigboard','Freeform'].forEach(function(v){
       var el=document.getElementById('view'+v);
       if(el) el.classList.toggle('active',p.view===v.toLowerCase());
     });
@@ -9044,14 +9502,17 @@ var FreeformInteraction = (function() {
   var EDGE_MARGIN   = 80;     // min px of board that must stay visible on screen
 
   // ── State ─────────────────────────────────────────────────────────────────
-  var _s   = 1, _tx = 0, _ty = 0;   // current transform state
-  var _layer = null, _vp = null;     // DOM references (set on init)
+  // _s/_tx/_ty live OUTSIDE init() so they survive FreeformBoard.render() calls
+  // triggered by filter changes or tab switches.  init() only resets them if
+  // the caller explicitly passes resetView:true (used by density change only).
+  var _s   = 1, _tx = 0, _ty = 0;   // persisted transform state
+  var _layer = null, _vp = null;     // DOM references — refreshed on each init
   var _layerW = 0, _layerH = 0;     // natural (unscaled) layer dimensions
 
   // Single-finger drag state
   var _dragActive = false;
-  var _dragStart  = null;    // { tx, ty, cx, cy } — snapshot when drag began
-  var _dragMoved  = false;   // true once movement exceeds TAP_THRESHOLD
+  var _dragStart  = null;
+  var _dragMoved  = false;
 
   // Pinch state
   var _pinchActive = false;
@@ -9122,6 +9583,11 @@ var FreeformInteraction = (function() {
       _dragMoved   = false;
       _lastDist = _touchDist(e.touches);
       _lastMid  = _touchMid(e.touches);
+      // FF-02: collapse any open tap-expanded card when a pinch begins —
+      // the expanded card's absolute position is incompatible with zoom.
+      document.querySelectorAll('.ff2-tap-expanded').forEach(function(c) {
+        if (typeof FreeformBoard !== 'undefined') FreeformBoard.collapseTapCard(c);
+      });
     } else if (e.touches.length === 1) {
       // ── Single-touch start ────────────────────────────────────────────────
       // Don't call preventDefault here — we need the tap to fire click events.
@@ -9208,24 +9674,32 @@ var FreeformInteraction = (function() {
   // ── Public API ────────────────────────────────────────────────────────────
 
   // init: called by FreeformBoard.render() with fresh DOM refs after each render.
-  // Event listeners on the old vpEl are GC'd with the replaced DOM — no cleanup needed.
-  function init(vpEl, layerEl) {
+  // resetView:true only when the user explicitly changes density (not on filter/tab).
+  // Without resetView, the persisted _s/_tx/_ty are restored to the new DOM layer.
+  function init(vpEl, layerEl, resetView) {
     _vp    = vpEl;
     _layer = layerEl;
-    _s = 1; _tx = 0; _ty = 0;
     _pinchActive = false;
     _dragActive  = false;
     _dragMoved   = false;
     _dragStart   = null;
 
+    // Only zero out view state when caller explicitly requests it
+    if (resetView) { _s = 1; _tx = 0; _ty = 0; }
+
     // Measure natural layer dimensions for boundary clamping.
-    // Use requestAnimationFrame so the DOM has been painted first.
+    // Double-rAF ensures viewport-relative CSS heights (72vh on mobile) are fully
+    // resolved before reading offsetWidth/offsetHeight.
     requestAnimationFrame(function() {
-      if (_layer) {
-        _layerW = _layer.offsetWidth;
-        _layerH = _layer.offsetHeight;
-      }
-      _layer.style.transform = '';
+      requestAnimationFrame(function() {
+        if (_layer) {
+          _layerW = _layer.offsetWidth  || _layer.getBoundingClientRect().width;
+          _layerH = _layer.offsetHeight || _layer.getBoundingClientRect().height;
+        }
+        // Restore the persisted transform to the new DOM element
+        _apply();
+        _syncResetBtn();
+      });
     });
 
     vpEl.addEventListener('touchstart', _onTouchStart, { passive: false });
@@ -9236,7 +9710,6 @@ var FreeformInteraction = (function() {
   // reset: animates back to home position. Called by density change + reset button.
   function reset() {
     if (!_layer) return;
-    // Temporarily enable transition for smooth animation
     _layer.style.transition = 'transform ' + RESET_ANIM_MS + 'ms cubic-bezier(.4,0,.2,1)';
     _s = 1; _tx = 0; _ty = 0;
     _apply();
@@ -9408,8 +9881,13 @@ var FreeformBoard = (function() {
   }
 
   // ── Hover: expand card on mouseenter ────────────────────────────────────
-  // O(1) player lookup via FreeformState instead of linear scan.
+  // Guard: on touch/coarse-pointer devices (Android Chrome fires synthetic
+  // mouseenter on first tap) we skip the hover path entirely — cardTap()
+  // owns expansion on touch. Without this guard, mouseenter injects
+  // .ff2-exp-body which then conflicts with _expandTapCard().
   function hoverCard(el) {
+    if (window.matchMedia && window.matchMedia('(pointer:coarse)').matches) return;
+    if ('ontouchstart' in window && !window.matchMedia('(pointer:fine)').matches) return;
     var rank   = parseInt(el.getAttribute('data-rank'), 10);
     var posCol = el.getAttribute('data-poscol') || '#8B5CF6';
     var p      = FreeformState.getPlayer(rank);
@@ -9420,7 +9898,6 @@ var FreeformBoard = (function() {
     el.insertAdjacentHTML('beforeend', Comp.HoverCardContent(p, posCol));
     el.classList.add('ff2-expanded');
 
-    // Smart expand origin — keep card visible regardless of edge proximity
     var xPct = parseFloat(el.style.left) || 50;
     var ox   = xPct < 18 ? '18%' : xPct > 82 ? '82%' : '50%';
     el.style.transformOrigin = ox + ' 50%';
@@ -9428,13 +9905,14 @@ var FreeformBoard = (function() {
     el.style.boxShadow       = '0 24px 64px rgba(0,0,0,.82),0 0 0 1.5px rgba(255,255,255,.18),0 0 32px ' + posCol + '28';
     el.style.background      = 'rgba(4,13,30,.97)';
 
-    // Dim peers of different positions — only when no persistent filter is active
     var pos = el.getAttribute('data-pos') || '';
     if (pos && !FreeformState.hasFilter()) _applyDim(pos);
   }
 
   // ── Hover: restore card on mouseleave ───────────────────────────────────
   function leaveCard(el) {
+    if (window.matchMedia && window.matchMedia('(pointer:coarse)').matches) return;
+    if ('ontouchstart' in window && !window.matchMedia('(pointer:fine)').matches) return;
     var expBody = el.querySelector('.ff2-exp-body');
     if (expBody) expBody.remove();
     el.classList.remove('ff2-expanded');
@@ -9517,14 +9995,10 @@ var FreeformBoard = (function() {
     var p      = FreeformState.getPlayer(rank);
     if (!p) return;
 
-    // Remove any stale exp-body
     var old = el.querySelector('.ff2-exp-body');
     if (old) old.remove();
 
-    // Build expanded content (reuse existing HoverCardContent)
     var content = Comp.HoverCardContent(p, posCol);
-
-    // Inject a close button before the content
     var closeBtn = '<button class="ff2-exp-close" '
       + 'onclick="event.stopPropagation();FreeformBoard.collapseTapCard(this.parentElement)">'
       + '✕</button>';
@@ -9532,16 +10006,36 @@ var FreeformBoard = (function() {
     el.insertAdjacentHTML('beforeend', closeBtn + content);
     el.classList.add('ff2-expanded', 'ff2-tap-expanded');
 
-    // Smart expand origin
-    var xPct = parseFloat(el.style.left) || 50;
-    var ox   = xPct < 18 ? '18%' : xPct > 82 ? '82%' : '50%';
+    // ── Viewport-clamped expand origin ────────────────────────────────────
+    // Use card's actual pixel rect (accounts for zoom/pan) not its % left value.
+    // Expanded card width is 224px; we shift it so it stays within the viewport.
+    var EXPANDED_W = 224;
+    var vpW        = window.innerWidth;
+    var cardRect   = el.getBoundingClientRect();
+    var cardCX     = cardRect.left + cardRect.width / 2;  // card centre in viewport px
+
+    // How far to shift: if card is near left edge shift right, near right edge shift left
+    var spaceLeft  = cardCX;
+    var spaceRight = vpW - cardCX;
+    var ox;
+    if (spaceLeft < EXPANDED_W * 0.5 + 8) {
+      // Near left wall — anchor from left edge of card
+      ox = '0%';
+      el.style.transform = 'translate(0, -50%)';
+    } else if (spaceRight < EXPANDED_W * 0.5 + 8) {
+      // Near right wall — anchor from right edge of card
+      ox = '100%';
+      el.style.transform = 'translate(-100%, -50%)';
+    } else {
+      // Centre — standard centred expand
+      ox = '50%';
+      el.style.transform = 'translate(-50%, -50%)';
+    }
     el.style.transformOrigin = ox + ' 50%';
-    el.style.transform       = 'translate(-' + ox + ', -50%)';
     el.style.boxShadow       = '0 24px 64px rgba(0,0,0,.82),0 0 0 1.5px rgba(255,255,255,.18),0 0 32px ' + posCol + '28';
     el.style.background      = 'rgba(4,13,30,.97)';
     el.style.zIndex          = '30';
 
-    // Dim peers
     var pos = el.getAttribute('data-pos') || '';
     if (pos && !FreeformState.hasFilter()) _applyDim(pos);
   }
@@ -10414,17 +10908,20 @@ function simReset() {
 
 // Show pool close button on mobile
 (function() {
-  function updatePoolCloseBtn() {
+  function updateMdcMobileControls() {
+    var isMobile = window.innerWidth <= 640;
     var btn = document.getElementById('mdcPoolCloseBtn');
-    if (!btn) return;
-    btn.style.display = window.innerWidth <= 640 ? 'flex' : 'none';
+    if (btn) btn.style.display = isMobile ? 'flex' : 'none';
+    // FAB was previously only set once in mdcInit — sync it on resize/rotation too
+    var fab = document.getElementById('mdcPoolFab');
+    if (fab) fab.style.display = isMobile ? 'flex' : 'none';
   }
   var _resizeTimer;
-  window.addEventListener('resize', function(){ clearTimeout(_resizeTimer); _resizeTimer = setTimeout(updatePoolCloseBtn, 100); });
+  window.addEventListener('resize', function(){ clearTimeout(_resizeTimer); _resizeTimer = setTimeout(updateMdcMobileControls, 100); });
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', updatePoolCloseBtn);
+    document.addEventListener('DOMContentLoaded', updateMdcMobileControls);
   } else {
-    updatePoolCloseBtn();
+    updateMdcMobileControls();
   }
 })();
 
