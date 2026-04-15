@@ -374,6 +374,9 @@ tr:hover td{background:var(--gray-50)}
 .metric-box .lbl{font-size:11px;color:inherit;opacity:.75;text-transform:uppercase;letter-spacing:.4px;font-weight:700;margin-top:3px}
 .metric-box .rank-ctx{font-size:9px;color:inherit;opacity:.55;margin-top:4px;letter-spacing:.2px;font-weight:500;line-height:1.3}
 .modal-section{margin-bottom:14px}
+.modal-section-label{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--gray-400);margin-bottom:8px;margin-top:4px}
+.modal-section-label--bpm{margin-top:14px;color:var(--blue);opacity:.7}
+.modal-bpm-row{grid-template-columns:repeat(3,1fr) !important;max-width:320px}
 /* ── MODAL TAB BAR ── */
 .modal-tab-bar{display:flex;gap:0;background:#f1f5f9;border-radius:10px;padding:4px;margin-bottom:18px;border:1px solid #e2e8f0}
 .modal-tab{flex:1;padding:9px 16px;border:none;border-radius:7px;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;transition:all .18s;background:transparent;color:#64748b;display:flex;align-items:center;justify-content:center;gap:6px}
@@ -1146,6 +1149,76 @@ tr:hover td{background:var(--gray-50)}
 /* thead cells need an explicit navy background since they have no row stripe */
 @media(max-width:640px){
   .board-table thead th:nth-child(1),.board-table thead th:nth-child(2){background:var(--navy) !important}
+}
+
+/* ── Mobile table: constrain player column + hide low-priority cols ────── */
+@media(max-width:640px){
+  /* Player cell: cap width, clip overflow, prevent layout blowout */
+  .board-table th:nth-child(2),
+  .board-table td:nth-child(2){
+    max-width:130px;
+    min-width:100px;
+  }
+  /* Name + school: truncate to single line with ellipsis */
+  .td-name-wrap .name{
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:100px;
+    display:block;
+  }
+  .td-name-wrap .school{
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:100px;
+  }
+  /* Shrink avatar slightly on mobile */
+  .td-mini-avatar,.td-mini-fb{
+    width:26px !important;
+    height:26px !important;
+    flex-shrink:0;
+  }
+  /* Hide low-priority columns — keep: Rank(1) Player(2) Metric(4) TS%(8) Class(14) */
+  .board-table th:nth-child(3), .board-table td:nth-child(3),
+  .board-table th:nth-child(5), .board-table td:nth-child(5),
+  .board-table th:nth-child(6), .board-table td:nth-child(6),
+  .board-table th:nth-child(7), .board-table td:nth-child(7),
+  .board-table th:nth-child(9), .board-table td:nth-child(9),
+  .board-table th:nth-child(10),.board-table td:nth-child(10),
+  .board-table th:nth-child(11),.board-table td:nth-child(11),
+  .board-table th:nth-child(12),.board-table td:nth-child(12),
+  .board-table th:nth-child(13),.board-table td:nth-child(13){
+    display:none;
+  }
+  /* Rank column: slightly tighter */
+  .board-table th:nth-child(1),
+  .board-table td:nth-child(1){
+    width:36px;
+    min-width:36px;
+    padding-left:8px;
+    padding-right:4px;
+    font-size:12px;
+  }
+  /* Metric column: compact but readable */
+  .board-table td:nth-child(4){
+    font-size:14px !important;
+  }
+  /* TS% column: compact */
+  .board-table td:nth-child(8){
+    font-size:11px !important;
+    padding-left:6px;
+    padding-right:6px;
+  }
+  /* Class column: abbreviate display */
+  .board-table td:nth-child(14){
+    font-size:10px;
+    color:var(--gray-500);
+    max-width:60px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
 }
 
 /* ── MODAL — safe-area padding for phones with home indicator ────────────── */
@@ -2160,7 +2233,7 @@ tr:hover td{background:var(--gray-50)}
     <div id="lotLabel" style="font-size:8px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(167,139,250,.75);line-height:1;margin-bottom:2px">Lottery</div>
     <div id="lotDisplay" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:#A78BFA;line-height:1;letter-spacing:.5px">—</div>
   </div>
-  <div id="draftCountdown" style="display:flex;flex-direction:column;align-items:center;background:rgba(212,168,48,.12);border:1px solid rgba(212,168,48,.28);border-radius:8px;padding:4px 12px;cursor:default;flex-shrink:0" title="2026 NBA Draft — June 25, 2026">
+  <div id="draftCountdown" style="display:flex;flex-direction:column;align-items:center;background:rgba(212,168,48,.12);border:1px solid rgba(212,168,48,.28);border-radius:8px;padding:4px 12px;cursor:default;flex-shrink:0" title="2026 NBA Draft — June 23, 2026">
     <div id="cdLabel" style="font-size:8px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(212,168,48,.65);line-height:1;margin-bottom:2px">Draft Day</div>
     <div id="cdDisplay" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:var(--amber-light,#E8BF52);line-height:1;letter-spacing:.5px">—</div>
   </div>
@@ -3786,7 +3859,11 @@ var DataService = (function() {
             : y === '2027' ? (DATA.board2027 || [])
             : (DATA.historical && DATA.historical[y]) ? DATA.historical[y]
             : [];
-    _cache[y] = raw.map(normalize);
+    // Cap current boards at Top 100; historical data kept full for scatter/yoy
+    var mapped = raw.map(normalize);
+    _cache[y] = (y === '2026' || y === '2027')
+      ? mapped.filter(function(p) { return p.rank <= 100; })
+      : mapped;
     return _cache[y];
   }
 
@@ -4563,18 +4640,25 @@ function openPlayerModal(rank, year) {
   }
 
   // ── Build metrics row HTML string ─────────────────────────────────────────
-  var metricsRowHtml = `<div class="modal-metrics-row">
-    <div class="metric-box" style="${mgMet}"><div class="val">${player.metric ? parseFloat(player.metric).toFixed(2) : '—'}</div><div class="lbl">Model Metric</div>${rcDiv('metric', player.metric)}</div>
-    <div class="metric-box" style="${mgTs}"><div class="val">${pct(player.ts_pct)}</div><div class="lbl">TS%</div>${rcDiv('ts_pct', player.ts_pct)}</div>
-    <div class="metric-box" style="${mgPa}"><div class="val">${round1(player.pa2_usg)}</div><div class="lbl">P+A/USG</div>${rcDiv('pa2_usg', player.pa2_usg)}</div>
-    <div class="metric-box" style="${mgSb}"><div class="val">${player.stl_bl ? parseFloat(player.stl_bl).toFixed(2) : '—'}</div><div class="lbl">Stl+Bl/75</div>${rcDiv('stl_bl', player.stl_bl)}</div>
-    <div class="metric-box" style="${mgAto}"><div class="val">${player.ato ? parseFloat(player.ato).toFixed(2) : '—'}</div><div class="lbl">A/TO</div>${rcDiv('ato', player.ato)}</div>
-    <div class="metric-box" style="${mgFt}"><div class="val">${player.ftar ? parseFloat(player.ftar).toFixed(3) : '—'}</div><div class="lbl">FTAr</div>${rcDiv('ftar', player.ftar)}</div>
-    <div class="metric-box" style="${mgTp}"><div class="val">${player.tpar ? parseFloat(player.tpar).toFixed(3) : '—'}</div><div class="lbl">3PAr</div>${rcDiv('tpar', player.tpar)}</div>
-    <div class="metric-box" style="${mgObpm}"><div class="val">${player.obpm !== null && player.obpm !== undefined ? parseFloat(player.obpm).toFixed(1) : '—'}</div><div class="lbl">OBPM</div>${rcDiv('obpm', player.obpm)}</div>
-    <div class="metric-box" style="${mgDbpm}"><div class="val">${player.dbpm !== null && player.dbpm !== undefined ? parseFloat(player.dbpm).toFixed(1) : '—'}</div><div class="lbl">DBPM</div>${rcDiv('dbpm', player.dbpm)}</div>
-    <div class="metric-box" style="${mgBpm}"><div class="val">${player.bpm !== null && player.bpm !== undefined ? parseFloat(player.bpm).toFixed(1) : '—'}</div><div class="lbl">BPM</div>${rcDiv('bpm', player.bpm)}</div>
-  </div>`;
+  // ── Performance Stats row (Metric + shooting/usage/defensive rates) ──────
+  var metricsRowHtml =
+    '<div class="modal-section-label">📊 Performance Stats</div>' +
+    '<div class="modal-metrics-row">' +
+      `<div class="metric-box" style="${mgMet}"><div class="val">${player.metric ? parseFloat(player.metric).toFixed(2) : '—'}</div><div class="lbl">Model Metric</div>${rcDiv('metric', player.metric)}</div>` +
+      `<div class="metric-box" style="${mgTs}"><div class="val">${pct(player.ts_pct)}</div><div class="lbl">TS%</div>${rcDiv('ts_pct', player.ts_pct)}</div>` +
+      `<div class="metric-box" style="${mgPa}"><div class="val">${round1(player.pa2_usg)}</div><div class="lbl">P+A/USG</div>${rcDiv('pa2_usg', player.pa2_usg)}</div>` +
+      `<div class="metric-box" style="${mgSb}"><div class="val">${player.stl_bl ? parseFloat(player.stl_bl).toFixed(2) : '—'}</div><div class="lbl">Stl+Bl/75</div>${rcDiv('stl_bl', player.stl_bl)}</div>` +
+      `<div class="metric-box" style="${mgAto}"><div class="val">${player.ato ? parseFloat(player.ato).toFixed(2) : '—'}</div><div class="lbl">A/TO</div>${rcDiv('ato', player.ato)}</div>` +
+      `<div class="metric-box" style="${mgFt}"><div class="val">${player.ftar ? parseFloat(player.ftar).toFixed(3) : '—'}</div><div class="lbl">FTAr</div>${rcDiv('ftar', player.ftar)}</div>` +
+      `<div class="metric-box" style="${mgTp}"><div class="val">${player.tpar ? parseFloat(player.tpar).toFixed(3) : '—'}</div><div class="lbl">3PAr</div>${rcDiv('tpar', player.tpar)}</div>` +
+    '</div>' +
+    // ── BPM Stats row (box-plus-minus breakdown) ─────────────────────────
+    '<div class="modal-section-label modal-section-label--bpm">📈 BPM Stats</div>' +
+    '<div class="modal-metrics-row modal-bpm-row">' +
+      `<div class="metric-box" style="${mgObpm}"><div class="val">${player.obpm !== null && player.obpm !== undefined ? parseFloat(player.obpm).toFixed(1) : '—'}</div><div class="lbl">OBPM</div>${rcDiv('obpm', player.obpm)}</div>` +
+      `<div class="metric-box" style="${mgDbpm}"><div class="val">${player.dbpm !== null && player.dbpm !== undefined ? parseFloat(player.dbpm).toFixed(1) : '—'}</div><div class="lbl">DBPM</div>${rcDiv('dbpm', player.dbpm)}</div>` +
+      `<div class="metric-box" style="${mgBpm}"><div class="val">${player.bpm !== null && player.bpm !== undefined ? parseFloat(player.bpm).toFixed(1) : '—'}</div><div class="lbl">BPM</div>${rcDiv('bpm', player.bpm)}</div>` +
+    '</div>';
 
   // ── Shot chart (build now, display conditionally) ──────────────────────────
   var shotResult = buildShotChart(player.name);
@@ -8344,9 +8428,15 @@ var ScatterLogoCache = (function() {
   function _makeCanvas(img, logoSize) {
     var total = logoSize + BUBBLE_PAD * 2;
     var cx    = total / 2;
+    var dpr   = window.devicePixelRatio || 1;
     var c     = document.createElement('canvas');
-    c.width   = total; c.height = total;
+    // Physical pixels scaled by DPR — CSS size locked to total×total so
+    // Chart.js pointRadius / hit-detection math is completely unchanged.
+    c.width   = total * dpr; c.height = total * dpr;
+    c.style.width  = total + 'px';
+    c.style.height = total + 'px';
     var ctx   = c.getContext('2d');
+    ctx.scale(dpr, dpr);
 
     // 1. Drop shadow baked into the canvas pixels
     ctx.shadowColor   = 'rgba(15,23,42,0.16)';
@@ -11261,7 +11351,7 @@ function simReset() {
   // 2026 NBA Draft Lottery: ~May 12, 2026 at 8:00 PM ET (est. — second Tue of May)
   var LOTTERY_TIME = new Date('2026-05-12T20:00:00-04:00').getTime();
   // 2026 NBA Draft: June 25, 2026 at 8:00 PM Eastern Time (UTC-4 in June)
-  var DRAFT_TIME = new Date('2026-06-25T20:00:00-04:00').getTime();
+  var DRAFT_TIME = new Date('2026-06-23T20:00:00-04:00').getTime();
 
   function padZ(n) { return n < 10 ? '0' + n : '' + n; }
 
