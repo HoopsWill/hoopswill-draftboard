@@ -4968,9 +4968,13 @@ function avatarHtml(playerName, position, size='52px', borderRadius='10px') {
 
 // ── TIER ─────────────────────────────────────────────────
 function getTier(rank) {
-  if (rank <= 14) return { key:'lottery', label:'Lottery' };
-  if (rank <= 30) return { key:'late1', label:'Late First Round' };
-  if (rank <= 60) return { key:'second', label:'Second Round' };
+  // M10: use live TIER_CUTS so modal labels/colours respect user customisation.
+  // Added 'franchise' tier which was previously missing (fell through to 'lottery').
+  var c = TIER_CUTS;
+  if (rank <= c.franchise) return { key:'franchise', label:'Franchise' };
+  if (rank <= c.lottery)   return { key:'lottery',   label:'Lottery' };
+  if (rank <= c.lateFirst) return { key:'late1',     label:'Late First Round' };
+  if (rank <= c.second)    return { key:'second',    label:'Second Round' };
   return { key:'udfa', label:'UDFA / Undrafted' };
 }
 
@@ -5145,6 +5149,9 @@ var DataService = (function() {
     if (parsed.mocks)      DATA.mocks      = parsed.mocks;
     if (parsed.resources)  DATA.resources  = parsed.resources;
     if (typeof rebuildStatRanges === 'function') rebuildStatRanges();
+    // M2: ScatterEngine caches player arrays keyed by year. Flush on every
+    // data update so the scatter plot reads fresh data after Excel reload.
+    if (typeof ScatterEngine !== 'undefined') ScatterEngine.invalidate();
   }
 
   // ── Private coercions ─────────────────────────────────────────────────────
@@ -5178,6 +5185,8 @@ var DataService = (function() {
       schoolLogoUrl._cache = null;
     }
     if (typeof rebuildStatRanges === 'function') rebuildStatRanges();
+    // M2: flush ScatterEngine cache on roll-forward/back
+    if (typeof ScatterEngine !== 'undefined') ScatterEngine.invalidate();
   }
 
   return {
@@ -8088,23 +8097,29 @@ function runGlobalSearch(query) {
   });
 
   // ── Pre-compute mock appearances for ALL matching players in one pass.
-  // Previously this scan (~2,500 iterations) ran once per rendered result card
-  // (inside the forEach loop below), multiplying work for common name queries.
+  // M7: Pre-lowercase base names once (not per pick) and invert the loop so we
+  // do a single O(names) scan per pick instead of O(picks × names × lowercase).
   var allMockApps = {};  // baseName → ['26 mock #3', ...]
   if (DATA.mocks) {
+    // Build lowercase lookup array once — avoids repeated .toLowerCase() inside loops
+    var _byNameKeys  = Object.keys(byName);
+    var _byNameLower = _byNameKeys.map(function(k) { return k.toLowerCase(); });
+
     Object.keys(DATA.mocks).forEach(function(yr) {
       var yearData = DATA.mocks[yr] || {};
+      var yrLabel  = "'" + yr.slice(2);  // compute once per year, not per pick
       Object.keys(yearData).forEach(function(dateKey) {
         var picks = yearData[dateKey] || [];
         picks.forEach(function(pk) {
           var pname = (pk.player || '').toLowerCase();
-          // Match against all results in one pass using the byName keys
-          Object.keys(byName).forEach(function(base) {
-            if (pname.indexOf(base.toLowerCase()) !== -1) {
+          // Single pass through pre-lowercased name array — no inner .toLowerCase()
+          for (var ni = 0; ni < _byNameLower.length; ni++) {
+            if (pname.indexOf(_byNameLower[ni]) !== -1) {
+              var base = _byNameKeys[ni];
               if (!allMockApps[base]) allMockApps[base] = [];
-              allMockApps[base].push("'" + yr.slice(2) + ' mock #' + pk.pick);
+              allMockApps[base].push(yrLabel + ' mock #' + pk.pick);
             }
-          });
+          }
         });
       });
     });
@@ -10111,15 +10126,19 @@ function scHighlightPlayer(name) {
     ds.pointRadius    = _scLastLogoData.radii;
     ds.pointHoverRadius = _scLastLogoData.hoverRadii;
   } else {
-    var newStyles = _scAllPts.map(function(pt, i) {
-      if (pt._p._n === name) return _scLastLogoData.styles[i];
-      return ScatterLogoCache.getCanvasDimmed(pt._p._s, ScatterEngine.tierSize(pt._p.rank));
-    });
-    var newRadii = _scAllPts.map(function(pt, i) {
-      return pt._p._n === name
-        ? _scLastLogoData.radii[i] + 3
-        : Math.max(4, _scLastLogoData.radii[i] * 0.72);
-    });
+    // M8: single pass — was two separate .map() calls over _scAllPts
+    var newStyles = new Array(_scAllPts.length);
+    var newRadii  = new Array(_scAllPts.length);
+    for (var _hi = 0; _hi < _scAllPts.length; _hi++) {
+      var _pt = _scAllPts[_hi];
+      if (_pt._p._n === name) {
+        newStyles[_hi] = _scLastLogoData.styles[_hi];
+        newRadii[_hi]  = _scLastLogoData.radii[_hi] + 3;
+      } else {
+        newStyles[_hi] = ScatterLogoCache.getCanvasDimmed(_pt._p._s, ScatterEngine.tierSize(_pt._p.rank));
+        newRadii[_hi]  = Math.max(4, _scLastLogoData.radii[_hi] * 0.72);
+      }
+    }
     ds.pointStyle  = newStyles;
     ds.pointRadius = newRadii;
   }
@@ -10144,10 +10163,37 @@ var SC_AXES = {
 };
 
 // ── Scatter state ─────────────────────────────────────────────────────────────
-var _scChart   = null;
-var _scTrend   = false;
-var _scTipEl   = null;
-var _scAllPts  = [];     // current rendered points — used by logo-refresh + highlight
+var _scChart       = null;
+var _scTrend       = false;
+var _scTipEl       = null;
+var _scAllPts      = [];     // current rendered points — used by logo-refresh + highlight
+var _scTipHideTimer = null;  // C4: module-level so all render closures share one timer
+
+// C4: Document-level touch handler — dismiss scatter tooltip when tapping outside canvas.
+// Wired once at module init (not per-render) so no duplicate listeners accumulate.
+// Uses capture phase so it fires before any canvas handler.
+(function() {
+  var _scDocTouchWired = false;
+  function _wireScDocDismiss() {
+    if (_scDocTouchWired) return;
+    _scDocTouchWired = true;
+    document.addEventListener('touchstart', function(e) {
+      // Only dismiss if a tip is currently visible AND the touch is outside the canvas
+      if (!_scTipEl || _scTipEl.style.opacity === '0') return;
+      var canvas = document.getElementById('scCanvas');
+      if (!canvas || canvas.contains(e.target)) return;
+      // Outside canvas tap — cancel pending timer and hide immediately
+      if (_scTipHideTimer) { clearTimeout(_scTipHideTimer); _scTipHideTimer = null; }
+      scHideTip();
+    }, { passive: true, capture: true });
+  }
+  // Wire after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _wireScDocDismiss);
+  } else {
+    _wireScDocDismiss();
+  }
+})();
 
 function scToggleTrend() {
   _scTrend = !_scTrend;
@@ -10228,6 +10274,12 @@ function scRenderDebounced() {
 // ── Main render ───────────────────────────────────────────────────────────────
 function scRender() {
   if (typeof Chart === 'undefined') return;
+
+  // C4: Hide any visible tooltip before re-rendering (axis change, year switch).
+  // Without this a tooltip from the previous render stays visible indefinitely
+  // because the new canvas handlers don't know about the old tooltip state.
+  if (_scTipHideTimer) { clearTimeout(_scTipHideTimer); _scTipHideTimer = null; }
+  scHideTip();
 
   var xEl = document.getElementById('scXAxis');
   var yEl = document.getElementById('scYAxis');
@@ -10437,7 +10489,10 @@ function scRender() {
   // call replaces the handler rather than accumulating another copy.
   // Using addEventListener without removal caused N tooltip show/hide handlers
   // after N axis changes (verified regression: 10 renders → 10 simultaneous handlers).
-  var _scTipHideTimer = null;
+  // C4: _scTipHideTimer is module-level — no local declaration needed.
+  // Clearing it here ensures any pending hide from a previous render is cancelled
+  // before new touch handlers are attached (prevents ghost dismiss on axis change).
+  if (_scTipHideTimer) { clearTimeout(_scTipHideTimer); _scTipHideTimer = null; }
   canvas.ontouchstart = function(e) {
     if (_scTipHideTimer) { clearTimeout(_scTipHideTimer); _scTipHideTimer = null; }
     if (!_scChart || !_scAllPts.length) return;
@@ -10575,27 +10630,39 @@ function resetTierCuts() {
   renderBoard2026();
 }
 
+// M6: Module-level reference so we can remove the exact listener that was added,
+// regardless of how many times the editor was opened/closed.
+var _tierEditorDismiss = null;
+
 function toggleTierEditor() {
   var ed=document.getElementById('tierEditor'), btn=document.getElementById('tierCustomBtn');
   if (!ed) return;
+
+  // M6: Always remove any existing dismiss listener before toggling state.
+  // Prevents accumulation when user opens → closes via button → reopens.
+  if (_tierEditorDismiss) {
+    document.removeEventListener('click',    _tierEditorDismiss);
+    document.removeEventListener('touchend', _tierEditorDismiss);
+    _tierEditorDismiss = null;
+  }
+
   var wasVisible = ed.classList.contains('visible');
   ed.classList.toggle('visible');
   if (btn) btn.classList.toggle('on', ed.classList.contains('visible'));
 
-  // Wire outside-click/tap dismiss when opening; remove listener when closing
   if (!wasVisible) {
-    // setTimeout(0) defers listener attachment past the current click event
-    // so the opening click doesn't immediately re-trigger the dismiss
+    // setTimeout(0) defers attachment past the current click event
     setTimeout(function() {
-      function outsideDismiss(e) {
+      _tierEditorDismiss = function(e) {
         if (ed.contains(e.target) || e.target === btn || (btn && btn.contains(e.target))) return;
         ed.classList.remove('visible');
         if (btn) btn.classList.remove('on');
-        document.removeEventListener('click',    outsideDismiss);
-        document.removeEventListener('touchend', outsideDismiss);
-      }
-      document.addEventListener('click',    outsideDismiss);
-      document.addEventListener('touchend', outsideDismiss);
+        document.removeEventListener('click',    _tierEditorDismiss);
+        document.removeEventListener('touchend', _tierEditorDismiss);
+        _tierEditorDismiss = null;
+      };
+      document.addEventListener('click',    _tierEditorDismiss);
+      document.addEventListener('touchend', _tierEditorDismiss);
     }, 0);
   }
 }
@@ -10664,6 +10731,10 @@ function urlRestoreState() {
       var el=document.getElementById('view'+v);
       if(el) el.classList.toggle('active',p.view===v.toLowerCase());
     });
+    // M9: restore freeform density if present in URL
+    if (p.view === 'freeform' && p.density) {
+      _ffDensity = p.density;  // set before render so the shell gets the right class
+    }
   }
   function setEl(id,val){var el=document.getElementById(id);if(el&&val)el.value=val;}
   setEl('posFilter',p.pos); setEl('clsFilter',p.cls); setEl('search2026',p.search);
@@ -11580,6 +11651,8 @@ function ffSetDensity(mode) {
   document.querySelectorAll('.ff2-density-btn').forEach(function(btn) {
     btn.classList.toggle('active', btn.getAttribute('data-density') === mode);
   });
+  // M9: persist density to URL so page reload / link share restores the same density
+  urlSetState({ density: mode });
   // Reset zoom/pan when changing density so positions feel fresh
   if (window.FreeformInteraction) FreeformInteraction.reset();
 }
@@ -11775,6 +11848,58 @@ var FreeformInteraction = (function() {
     }
   }
 
+  // ── C5: Reliable dimension measurement ──────────────────────────────────
+  // Measures _layerW/_layerH using ResizeObserver (preferred) or a retry loop.
+  // Called from init() — replaces the double-rAF which returned 0 on iOS Safari
+  // when the freeform board was inside a tab that had been display:none.
+  //
+  // Why ResizeObserver is reliable here:
+  //   - It fires synchronously after layout, even when triggered by tab reveal
+  //   - We disconnect immediately after getting non-zero dimensions (no ongoing cost)
+  //   - On browsers without ResizeObserver we fall back to a 16ms retry loop
+  //     (10 attempts = 160ms max, covers any slow layout path)
+  function _measureLayerDimensions() {
+    if (!_layer) return;
+
+    function _applyDimensions(w, h) {
+      if (!w || !h) return false;
+      _layerW = w;
+      _layerH = h;
+      _apply();
+      _syncResetBtn();
+      return true;
+    }
+
+    // Fast path: dimensions already available (desktop or subsequent renders)
+    var r = _layer.getBoundingClientRect();
+    if (_applyDimensions(r.width, r.height)) return;
+
+    // ResizeObserver path: fires when element truly has layout
+    if (typeof ResizeObserver !== 'undefined') {
+      var _ro = new ResizeObserver(function(entries) {
+        var entry = entries[0];
+        if (!entry) return;
+        var w = entry.contentRect.width  || (entry.borderBoxSize && entry.borderBoxSize[0] && entry.borderBoxSize[0].inlineSize) || 0;
+        var h = entry.contentRect.height || (entry.borderBoxSize && entry.borderBoxSize[0] && entry.borderBoxSize[0].blockSize)  || 0;
+        if (_applyDimensions(w, h)) {
+          _ro.disconnect();
+        }
+      });
+      _ro.observe(_layer);
+      return;
+    }
+
+    // Fallback: retry every 16ms for up to 160ms (covers slow iOS layout flush)
+    var _attempts = 0;
+    var _retryTimer = setInterval(function() {
+      _attempts++;
+      var r2 = _layer ? _layer.getBoundingClientRect() : { width: 0, height: 0 };
+      if (_applyDimensions(r2.width, r2.height) || _attempts >= 10) {
+        clearInterval(_retryTimer);
+      }
+    }, 16);
+  }
+
   // ── Public API ────────────────────────────────────────────────────────────
 
   // init: called by FreeformBoard.render() with fresh DOM refs after each render.
@@ -11791,20 +11916,13 @@ var FreeformInteraction = (function() {
     // Only zero out view state when caller explicitly requests it
     if (resetView) { _s = 1; _tx = 0; _ty = 0; }
 
-    // Measure natural layer dimensions for boundary clamping.
-    // Double-rAF ensures viewport-relative CSS heights (72vh on mobile) are fully
-    // resolved before reading offsetWidth/offsetHeight.
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() {
-        if (_layer) {
-          _layerW = _layer.offsetWidth  || _layer.getBoundingClientRect().width;
-          _layerH = _layer.offsetHeight || _layer.getBoundingClientRect().height;
-        }
-        // Restore the persisted transform to the new DOM element
-        _apply();
-        _syncResetBtn();
-      });
-    });
+    // C5: Measure layer dimensions after layout is fully resolved.
+    // Double-rAF alone fails on iOS Safari when the board is inside a tab that
+    // was previously display:none — layout hasn't flushed by the time rAF fires.
+    // ResizeObserver fires only when the element actually acquires dimensions,
+    // making it reliable across all browsers and tab-switch scenarios.
+    // A retry-loop fallback covers browsers without ResizeObserver support.
+    _measureLayerDimensions();
 
     vpEl.addEventListener('touchstart', _onTouchStart, { passive: false });
     vpEl.addEventListener('touchmove',  _onTouchMove,  { passive: false });
@@ -13021,7 +13139,34 @@ function simReset() {
     if (fab) fab.style.display = isMobile ? 'flex' : 'none';
   }
   var _resizeTimer;
-  window.addEventListener('resize', function(){ clearTimeout(_resizeTimer); _resizeTimer = setTimeout(updateMdcMobileControls, 100); });
+  window.addEventListener('resize', function() {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(function() {
+      updateMdcMobileControls();
+
+      // C6: Auto-close the pool drawer when viewport widens past the mobile
+      // breakpoint (e.g. phone rotated to landscape). Without this, the drawer
+      // stays open and overlaps the picks board at desktop widths.
+      if (window.innerWidth > 640) {
+        var pool = document.getElementById('mdcWrapPool');
+        if (pool && pool.classList.contains('open')) {
+          // Use the existing close function to handle scroll-trap cleanup
+          if (typeof mdcClosePoolDrawer === 'function') mdcClosePoolDrawer();
+        }
+      }
+
+      // C6: Re-render picks/pool if the mock builder is currently active.
+      // Layout slots change width on rotation; re-render ensures correct display.
+      if (typeof _currentMockMode !== 'undefined' && _currentMockMode === 'build') {
+        var mdcWrap = document.getElementById('mdcWrap');
+        if (mdcWrap && mdcWrap.offsetParent !== null) {
+          // Panel is visible — re-render to reflow pick rows and pool list
+          if (typeof mdcRenderPicks === 'function') mdcRenderPicks();
+          if (typeof mdcRenderPool  === 'function') mdcRenderPool();
+        }
+      }
+    }, 150);  // 150ms debounce — long enough to catch orientation change reflow
+  });
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', updateMdcMobileControls);
   } else {
