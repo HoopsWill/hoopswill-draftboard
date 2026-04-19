@@ -21,12 +21,40 @@
   --shadow-sm:0 1px 3px rgba(0,0,0,.08);
   --shadow-md:0 4px 16px rgba(0,0,0,.10),0 2px 6px rgba(0,0,0,.07);
   --shadow-xl:0 20px 60px rgba(0,0,0,.22);
+
+  /* ── Extended design system tokens ── */
+  /* Typography */
+  --text-primary:   #0A1628;   /* navy — headings, card names, body */
+  --text-secondary: #334155;   /* gray-700 — tier names, nav, tag text */
+  --text-muted:     #64748B;   /* gray-500 — labels, column headers, counts */
+  --rank-ink:       #475569;   /* gray-600 — rank numbers (clear but subordinate) */
+
+  /* Surfaces */
+  --surface-inset:  rgba(15,23,42,.035); /* stat cells, search bg, tag base tint */
+  --border-light:   rgba(15,23,42,.08);  /* hairline borders on white surfaces */
+
+  /* Radii */
+  --r-sm:  6px;
+  --r-md:  12px;  /* cards, dropdowns, tables */
+  --r-lg:  16px;  /* modals, sheets */
+
+  /* Brand accent (gold/amber — sort indicators, focus rings, active states) */
+  --accent: #C9971A;
+
+  /* Tier colours — used for accents, rank tints, pc-accent bars */
+  --tier-franchise: #C9971A;  /* gold — top 3-5 picks */
+  --tier-lottery:   #7C3AED;  /* purple — lottery range */
+  --tier-late1:     #2563EB;  /* blue — late first */
+  --tier-second:    #0891B2;  /* cyan — second round */
+
+  /* UI component tokens */
+  --border-med:   rgba(15,23,42,.14);  /* medium emphasis borders */
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy);min-height:100vh;line-height:1.5}
 
 /* HEADER */
-.header{background:linear-gradient(180deg,#0f1e38 0%,var(--navy) 100%);padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;height:66px;position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(0,0,0,.45);border-bottom:2px solid rgba(212,168,48,.35)}
+.header{background:linear-gradient(160deg,#0d1d36 0%,#0A1628 60%,#0c1a30 100%);padding:0 28px;display:flex;align-items:center;justify-content:space-between;gap:14px;height:64px;position:sticky;top:0;z-index:200;box-shadow:0 1px 0 rgba(255,255,255,.04),0 4px 24px rgba(0,0,0,.5);border-bottom:1.5px solid rgba(201,151,26,.3)}
 .header-brand{display:flex;align-items:center;gap:11px}
 .header-logo-img{width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 1px 6px rgba(212,168,48,.5));flex-shrink:0}
 .header-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:.3px;line-height:1.1}
@@ -36,37 +64,37 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 .header-badge{background:rgba(212,168,48,.15);border:1px solid rgba(212,168,48,.35);color:var(--amber-light);font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase;text-shadow:0 0 8px rgba(212,168,48,.4)}
 
 /* NAV */
-.nav-tabs{background:white;border-bottom:2px solid var(--gray-100);padding:0 20px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;position:sticky;top:66px;z-index:199}
+.nav-tabs{background:white;border-bottom:1px solid var(--gray-200);padding:0 24px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;position:sticky;top:64px;z-index:199;box-shadow:0 1px 4px rgba(10,22,40,.04)}
 .nav-tabs::-webkit-scrollbar{display:none}
-.nav-tab{padding:13px 18px;font-size:13px;font-weight:600;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .15s;display:flex;align-items:center;gap:6px;user-select:none}
+.nav-tab{padding:10px 18px;font-size:13px;font-weight:600;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .15s;display:flex;align-items:center;gap:6px;user-select:none}
 .nav-tab:hover{color:var(--gold,var(--amber))}
-.nav-tab.active{color:var(--amber);border-bottom-color:var(--amber)}
+.nav-tab.active{color:var(--navy);border-bottom-color:var(--amber);font-weight:700;background:linear-gradient(180deg,rgba(201,151,26,.04) 0%,transparent 100%)}
 
 /* MAIN */
-.main{padding:20px 24px;max-width:1440px;margin:0 auto}
+.main{padding:16px 24px 32px;max-width:1440px;margin:0 auto}
 .tab-panel{display:none}.tab-panel.active{display:block}
 
 /* CONTROLS */
-.controls-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.controls-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
 .search-wrap{position:relative;flex:1;min-width:180px;max-width:320px}
 .search-input{width:100%;padding:8px 12px 8px 34px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit;background:white;color:var(--navy);outline:none;transition:border-color .15s}
 .search-input:focus{border-color:var(--blue-light)}
 .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--gray-400);font-size:13px;pointer-events:none}
-.filter-select{padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit;background:white;color:var(--navy);outline:none;cursor:pointer;transition:border-color .15s}
+.filter-select{padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit;background:white;color:var(--navy);outline:none;cursor:pointer;transition:border-color .15s,box-shadow .15s;min-height:38px}
 .filter-select:focus{border-color:var(--blue-light)}
-.view-toggle{display:flex;background:#0A1628;border-radius:10px;padding:3px;gap:2px;border:1px solid rgba(255,255,255,.1);box-shadow:0 2px 12px rgba(0,0,0,.25)}
-.view-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);border:none;background:none;color:rgba(255,255,255,.45);font-family:'Barlow Condensed',sans-serif;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;position:relative}
+.view-toggle{display:flex;background:#071020;border-radius:10px;padding:3px;gap:2px;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 1px 2px rgba(0,0,0,.4),0 2px 12px rgba(0,0,0,.2)}
+.view-btn{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);border:none;background:none;color:rgba(255,255,255,.5);font-family:'Barlow Condensed',sans-serif;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;position:relative}
 .view-btn:hover:not(.active){background:rgba(255,255,255,.07);color:rgba(255,255,255,.75)}
-.view-btn.active{background:linear-gradient(135deg,#1e3a5f 0%,#0d2340 100%);color:white;box-shadow:0 2px 8px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1)}
+.view-btn.active{background:linear-gradient(135deg,#1a3a6e 0%,#0f2451 100%);color:white;box-shadow:0 2px 10px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12);border-bottom:2px solid rgba(201,151,26,.6)}
 .vb-icon{font-size:13px;line-height:1;opacity:.8}
 .view-btn.active .vb-icon{opacity:1}
 .vb-label{font-size:11px;font-weight:800;letter-spacing:.5px}
 .vb-badge{font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;background:linear-gradient(135deg,#F59E0B,#D97706);color:#0A1628;padding:1px 4px;border-radius:3px;margin-left:1px;line-height:1.4}
-.count-badge{font-size:12px;color:var(--gray-400);font-weight:500;margin-left:auto}
+.count-badge{font-size:11px;color:var(--gray-500);font-weight:600;margin-left:auto;background:var(--gray-100);padding:3px 9px;border-radius:20px;border:1px solid var(--gray-200);letter-spacing:.01em;white-space:nowrap}
 
 /* TIER */
 .tier-section{margin-bottom:28px}
-.tier-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--gray-100)}
+.tier-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid rgba(10,22,40,.06)}
 .tier-pill{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:3px 10px;border-radius:4px;color:white}
 .tier-pill.franchise{background:var(--amber)}
 .tier-pill.lottery{background:var(--purple)}
@@ -132,70 +160,138 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 
 /* ── Card header: rank pip + circular avatar + identity + metric ── */
 /* Increased gap from 8→10px, padding loosened for air */
-.card-header{display:flex;align-items:center;gap:10px;padding:12px 12px 8px}
+/* ── Card header ─────────────────────────────────────────────────────────── */
+.card-header{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:13px 12px 10px;
+}
 
-/* Avatar initials fallback — unchanged, used globally */
-.avatar-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:white;letter-spacing:-0.5px}
+/* ── Rank badge — pops immediately, large Barlow Condensed ─────── */
+.card-rank-badge{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:28px;
+  font-weight:900;
+  color:var(--navy);
+  letter-spacing:-.6px;
+  line-height:1;
+  flex-shrink:0;
+  min-width:36px;
+  text-align:center;
+  opacity:.9;
+}
 
-/* Identity block */
-.card-identity{flex:1;min-width:0}
-/* Name: stronger weight, tighter line-height, slight letter-spacing pull */
+/* ── Identity: name + school stacked ─────────────────────────────── */
+.card-identity{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:3px;
+}
 .card-name{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:19px;font-weight:800;
+  font-size:19px;
+  font-weight:800;
   color:var(--navy);
   line-height:1.1;
-  letter-spacing:-.15px;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden
+  letter-spacing:-.1px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
-/* School row: flex for logo + text alignment */
+/* School block: small logo above school name text */
+.card-school-block{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:2px;
+  margin-top:1px;
+}
+.card-school-logo{
+  display:flex;
+  align-items:center;
+}
+.card-school-name{
+  font-size:10px;
+  font-weight:600;
+  color:var(--gray-500);
+  letter-spacing:.01em;
+  line-height:1.2;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:120px;
+}
+/* card-school kept for backward compat with any non-card usage */
 .card-school{
   display:flex;align-items:center;gap:5px;
-  font-size:11px;color:var(--gray-500);font-weight:500;margin-top:3px
+  font-size:10px;color:var(--gray-500);font-weight:500;margin-top:2px
 }
-/* School logo: circular container with white bg — prevents transparency issues,
-   always crisp regardless of logo content */
+/* School logo ring — small, clean */
 .card-logo-ring{
-  width:20px;height:20px;border-radius:50%;
-  background:white;
-  box-shadow:0 0 0 1.5px rgba(10,22,40,.1);
-  overflow:hidden;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center
+  width:12px;
+  height:12px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  flex-shrink:0;
+  border-radius:2px;
 }
-.card-logo-ring img{width:16px;height:16px;object-fit:contain;display:block}
-
-/* Metric chip: right-aligned score — uses gradStyle bg from JS */
-/* Removed text-align:right in favour of centred column for cleaner reading */
-.card-rank-metric{
-  text-align:center;flex-shrink:0;
-  border-radius:9px;padding:5px 8px;
-  display:flex;flex-direction:column;align-items:center;gap:0
-}
-.card-rank{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--gray-300);line-height:1}
-.card-rank.top10{color:var(--amber)}
-/* Metric number: slightly larger (20→22px) for immediate scannability */
-.card-metric{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;line-height:1;color:var(--blue)}
-.card-metric.elite{color:var(--amber)}
-.metric-lbl{font-size:8px;color:inherit;opacity:.65;text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-top:1px}
-
-/* Tweet-card button: subtle, shows prominently on hover */
-/* Positioned naturally in header flex flow — no absolute hackery */
-.pc-tweet-btn{
-  background:transparent;
-  border:1px solid rgba(10,22,40,.1);
-  border-radius:6px;padding:3px 6px;
-  font-size:11px;cursor:pointer;
-  color:var(--gray-400);flex-shrink:0;
-  transition:background .15s,border-color .15s,color .15s;
-  align-self:flex-start;margin-left:2px;
-  font-family:inherit
-}
-.pc-tweet-btn:hover{
-  background:rgba(10,22,40,.06);
-  border-color:rgba(10,22,40,.18);color:var(--gray-600)
+.card-logo-ring img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
 }
 
-/* ── Tags: pill shape (radius 20px) — rounder feels modern vs boxy 4px ── */
+/* ── Metric chip — far right ─────────────────────────────────────── */
+.card-metric-chip{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  min-width:56px;
+  padding:7px 8px 6px;
+  border-radius:10px;
+  text-align:center;
+  align-self:stretch;
+}
+.card-metric{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:26px;
+  font-weight:900;
+  line-height:1;
+  color:inherit;
+  letter-spacing:-.5px;
+}
+.card-metric.elite{ font-size:28px; }
+.card-metric-label{
+  font-size:7px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:1.1px;
+  opacity:.6;
+  color:inherit;
+  margin-top:2px;
+}
+.card-elite-pip{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:1.1px;
+  text-transform:uppercase;
+  background:rgba(255,255,255,.28);
+  color:inherit;
+  padding:1px 5px;
+  border-radius:3px;
+  margin-top:2px;
+  white-space:nowrap;
+}
+
 .card-tags{display:flex;flex-wrap:wrap;gap:4px;padding:0 12px 8px}
 .tag{
   font-size:10.5px;font-weight:600;
@@ -435,17 +531,7 @@ tr:hover td{background:var(--gray-50)}
    First chart (distribution bar): needs 280px so bars are distinguishable.
    Second chart (radar): 260px is fine — radial data reads well smaller.
    Third chart (accuracy scatter): needs full height — 300px. */
-@media(max-width:640px){
-  .chart-wrap{height:280px}
-  /* Radar chart (second .chart-wrap): radial shape works at smaller height */
-  .analytics-card:nth-child(2) .chart-wrap{height:260px}
-  /* Accuracy scatter (third): needs proportional space to see distribution */
-  .analytics-card:nth-child(3) .chart-wrap{height:300px}
-  /* Analytics cards: reduce outer padding to reclaim vertical space */
-  .analytics-card{padding:14px 14px;margin-bottom:14px}
-  .analytics-title{font-size:16px}
-  .analytics-sub{font-size:11px;margin-bottom:8px}
-}
+
 
 /* MOCKS */
 
@@ -563,72 +649,55 @@ tr:hover td{background:var(--gray-50)}
   /* Main: account for 52px header + 42px nav = 94px combined sticky */
   .main{padding:10px 10px}
   /* Ensure the sticky nav doesn't overlap content when layout shifts */
-  .tab-panel.active{padding-top:4px}
+  .tab-panel.active{padding-top:4px;overscroll-behavior:contain;overflow-x:hidden}
   /* scroll-margin accounts for combined sticky header + nav (94px total) */
   .tab-panel{scroll-margin-top:96px}
 
   /* Controls bar */
   .controls-bar{gap:6px}
   .search-wrap{min-width:120px}
-  .filter-select{min-width:90px;font-size:12px;padding:6px 8px}
-  .view-toggle{width:100%}
+  .filter-select{min-width:90px;font-size:16px;padding:6px 8px}
+  .view-toggle{width:auto;flex-shrink:0}
   .view-btn{flex:1;text-align:center;padding:4px 6px;font-size:11px}
   .tier-customize-btn{font-size:10px;padding:5px 8px}
   /* C-01: Tier editor popup — anchor to viewport center so it never clips either edge */
   .tier-editor{
-    position:fixed !important;
-    left:10px !important;
-    right:10px !important;
-    top:auto !important;
-    width:auto !important;
+    position:fixed;
+    left:10px;
+    right:10px;
+    top:auto;
+    width:auto;
     min-width:0 !important;
-    max-width:calc(100vw - 20px) !important;
+    max-width:calc(100vw - 20px);
     max-height:80vh;
     overflow-y:auto;
     overflow-x:hidden;
     z-index:9000 !important;
-    border-radius:12px !important;
-    box-shadow:0 16px 48px rgba(0,0,0,.45) !important
+    border-radius:12px;
+    box-shadow:0 16px 48px rgba(0,0,0,.45)
   }
   /* Inner tier controls: vertical stacking with proper spacing */
-  .tier-editor > div{flex-wrap:wrap !important;gap:12px !important;padding:4px 0}
-  .tier-ed-group{flex:1 0 140px !important}
+  .tier-editor > div{flex-wrap:wrap;gap:12px;padding:4px 0}
+  .tier-ed-group{flex:1 0 140px}
 
   /* C-04: Cards — 2-column grid optimised for 360–430px screens */
   /* Use 1fr 1fr but add gap + padding to keep cards breathable */
   .cards-grid{grid-template-columns:1fr 1fr;gap:8px}
 
-  /* C-04: Card header — shrink rank pip and avatar so name gets more space */
-  /* Rank pip (first div child of .card-header): 44px → 34px */
-  .card-header > div:first-child{
-    width:34px !important;height:34px !important;
-    flex-shrink:0
-  }
-  /* Avatar (second div child of .card-header): 50px → 36px */
-  .card-header > div:nth-child(2){
-    width:36px !important;height:36px !important;
-    flex-shrink:0
-  }
-  .card-header{padding:8px 8px 6px;gap:6px}
-  .card-identity{min-width:0}
-
-  /* C-03: Card name font-size hierarchy — cap JS-injected inline sizes for mobile cards.
-     clamp() with !important overrides the inline style from buildPlayerCard().
-     Short names → up to 14px (prominent). Long names → down to 10px (legible). */
+  /* Mobile card: rank + photo prominent, metric right, school stacked */
+  .card-header{gap:8px;padding:10px 10px 8px}
+  .card-rank-badge{font-size:22px;min-width:28px}
+  .card-metric-chip{min-width:50px;padding:6px 6px 5px;border-radius:9px;align-self:stretch}
+  .card-metric{font-size:21px}
+  .card-metric.elite{font-size:23px}
+  .card-metric-label{font-size:6px}
   .card-name{
-    font-size:clamp(10px,3.2vw,14px) !important;
-    letter-spacing:0;
-    line-height:1.15 !important
+    font-size:clamp(13px,3.5vw,17px);
+    line-height:1.1
   }
-  /* School: slightly smaller, reduce margin */
+  .card-school-name{font-size:9px;max-width:90px}
+  .card-logo-ring{width:11px;height:11px}
   .card-school{font-size:9px;gap:3px;margin-top:1px}
-  .card-logo-ring{width:16px !important;height:16px !important}
-
-  /* C-04: Metric chip — compact on mobile */
-  .card-rank-metric{padding:4px 6px !important;border-radius:7px !important}
-  .card-rank{font-size:10px !important}
-  .card-metric{font-size:17px !important}
-  .metric-lbl{font-size:7px !important}
 
   /* C-04: Tags — tight but legible */
   .card-tags{padding:3px 8px 5px;gap:3px}
@@ -674,7 +743,7 @@ tr:hover td{background:var(--gray-50)}
   .table-wrap.scrolled::before{display:none}
   .table-wrap.scrolled::after{display:none}
   /* min-width removed — sticky columns provide context without forcing horizontal scroll */
-  .board-table{border-collapse:separate !important;border-spacing:0 !important}
+  .board-table{border-collapse:separate;border-spacing:0}
   .board-table tbody td{border-bottom:1px solid #f1f5f9}
   /* Sticky rank column */
   .board-table th:nth-child(1),.board-table td:nth-child(1){
@@ -708,21 +777,22 @@ tr:hover td{background:var(--gray-50)}
   .bb-ch[data-tip]::after{display:none}
   /* BB-02: Big Board column headers — 44px touch target */
   .bb-ch{
-    min-height:44px !important;
-    padding:0 2px !important;
+    min-height:44px;
+    padding:0 2px;
     display:flex !important;
-    align-items:center !important;
-    justify-content:center !important;
-    font-size:9px !important;
-    letter-spacing:.5px !important;
+    align-items:center;
+    justify-content:center;
+    font-size:9px;
+    letter-spacing:.5px;
     touch-action:manipulation
   }
-  .bb-ch.left{justify-content:flex-start !important;padding-left:8px !important}
-  .bb-col-hdr{min-height:40px;padding-right:2px !important}
+  .bb-ch.left{justify-content:flex-start;padding-left:8px}
+  .bb-col-hdr{min-height:40px;padding-right:2px}
   /* BB-MOB: board width determined by visible columns (no fixed min-width) */
   .bb-board{min-width:0 !important}
-  /* Hide columns that do not fit a phone screen */
-  .bb-cht,.bb-ctag,.bb-cftar,.bb-ctpar,.bb-compare-col{display:none !important}
+  /* Hide columns that do not fit a phone screen.
+     NOTE: .bb-compare-col is re-shown below (see bb-compare-dot section) */
+  .bb-cht,.bb-ctag,.bb-cftar,.bb-ctpar{display:none !important}
 
   /* BB-03: Header — compact but still premium on mobile */
   .bb-header{padding:12px 14px 8px}
@@ -733,50 +803,50 @@ tr:hover td{background:var(--gray-50)}
   .bb-pill{font-size:9px;padding:1px 6px;letter-spacing:.2px}
 
   /* BB-03: Row height — 48px keeps density, still comfortable tap target */
-  .bb-row{height:48px !important}
+  .bb-row{height:48px}
 
   /* BB-04: Stat values — up 1px for legibility; labels slightly brighter */
-  .bb-sv{font-size:12px !important;font-weight:800 !important;letter-spacing:-.2px}
-  .bb-sl{font-size:7px !important;letter-spacing:.2px}
+  .bb-sv{font-size:12px;font-weight:800;letter-spacing:-.2px}
+  .bb-sl{font-size:7px;letter-spacing:.2px}
   .bb-sl{
-    font-size:7.5px !important;
-    letter-spacing:.3px !important;
-    color:rgba(148,163,184,.7) !important;
-    margin-top:1px !important
+    font-size:7.5px ;
+    letter-spacing:.3px ;
+    color:rgba(148,163,184,.7) ;
+    margin-top:1px 
   }
   /* BB-04: Metric cell — large enough to read at a glance */
-  .bb-met-val{font-size:15px !important;min-width:44px !important;padding:2px 4px !important}
+  .bb-met-val{font-size:15px;min-width:44px;padding:2px 4px}
   .bb-met-cell{padding:0 1px}
 
   /* BB-04: Name + school — tighter but never truncated badly */
-  .bb-name{font-size:13px !important;letter-spacing:-.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bb-name{font-size:13px;letter-spacing:-.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .bb-school{font-size:9px;color:var(--gray-400)}
-  .bb-rk{font-size:15px !important;width:30px !important}
-  .bb-av{width:28px !important}
+  .bb-rk{font-size:15px;width:30px}
+  .bb-av{width:28px}
 
   /* BB-04: Column flex ratios — give name more room, compress stat cols */
   /* Visible columns on mobile: rank | avatar | name | metric | TS% | P+A | Stl+Bl | A/TO */
   /* Ht/Wt, Pos/Role, FTAr, 3PAr, compare are hidden (see above)             */
   /* Target total ≈ 300px so zero horizontal scroll on 320px+ screens         */
-  .bb-cr{width:24px !important;flex-shrink:0 !important}
-  .bb-cav{width:22px !important;flex-shrink:0 !important}
-  .bb-cid{flex:1.8 !important;min-width:80px !important;max-width:none !important}
-  .bb-cmet{flex:0 0 44px !important;min-width:44px !important;max-width:44px !important}
-  .bb-cts{flex:1 !important;min-width:30px !important}
-  .bb-cpa{flex:1 !important;min-width:30px !important}
-  .bb-csb{flex:1 !important;min-width:28px !important}
-  .bb-cato{flex:1 !important;min-width:28px !important}
+  .bb-cr{width:24px;flex-shrink:0}
+  .bb-cav{width:22px;flex-shrink:0}
+  .bb-cid{flex:1.8;min-width:80px;max-width:none}
+  .bb-cmet{flex:0 0 44px;min-width:44px;max-width:44px}
+  .bb-cts{flex:1;min-width:30px}
+  .bb-cpa{flex:1;min-width:30px}
+  .bb-csb{flex:1;min-width:28px}
+  .bb-cato{flex:1;min-width:28px}
 
   /* BB-04: Stat cells — tighter margin, preserve color coding */
-  .bb-stat-cell{margin:1px 0 !important;border-radius:3px !important;padding:0 1px !important}
+  .bb-stat-cell{margin:1px 0;border-radius:3px;padding:0 1px}
 
   /* BB-04: Tags — single max-width; truncate cleanly */
-  .bb-tags{max-width:68px !important;overflow:hidden}
+  .bb-tags{max-width:68px;overflow:hidden}
   .bb-tag{
-    font-size:8px !important;
-    max-width:64px !important;
-    padding:1px 3px !important;
-    letter-spacing:.1px !important
+    font-size:8px;
+    max-width:64px;
+    padding:1px 3px;
+    letter-spacing:.1px
   }
 
   /* BB-04: Tier bands — compact */
@@ -877,16 +947,18 @@ tr:hover td{background:var(--gray-50)}
   .sc-top5-val{font-size:11px}
   /* SC-03: selected state — use bottom border + stronger bg so it's visible in horiz layout */
   .sc-top5-row-selected{
-    background:rgba(212,168,48,.15) !important;
-    border-bottom:3px solid var(--amber) !important;
-    border-left:none !important
+    background:rgba(212,168,48,.15);
+    border-bottom:3px solid var(--amber);
+    border-left:none
   }
   /* Controls: 2-column grid */
   .sc-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end}
   .sc-ctrl-group{min-width:0}
   .sc-select{min-width:0;width:100%;font-size:12px}
   .sc-canvas-wrap{
-    height:300px; /* SC-MOB: 300px + narrow width ≈ good aspect ratio */
+    height:280px; /* SC-MOB: 280px canonical height for mobile */
+    touch-action:none;   /* prevent iOS page scroll hijack on canvas */
+    -webkit-overflow-scrolling: touch;
   }
   /* Controls: stack vertically for best mobile UX */
   .sc-controls{grid-template-columns:1fr 1fr;gap:6px;padding:10px 12px}
@@ -1032,20 +1104,20 @@ tr:hover td{background:var(--gray-50)}
 
   /* MDC-03: Unpick button — always visible on mobile + full 44px touch target */
   .mdc-unpick-btn{
-    opacity:1 !important;
-    background:rgba(239,68,68,.15) !important;
-    color:#EF4444 !important;
-    border:1px solid rgba(239,68,68,.25) !important;
+    opacity:1;
+    background:rgba(239,68,68,.15);
+    color:#EF4444;
+    border:1px solid rgba(239,68,68,.25);
     /* 44×44 tap zone: expand via min-width/height + negative margin so layout unchanged */
-    width:36px !important;
-    height:36px !important;
-    min-width:36px !important;
-    min-height:36px !important;
-    border-radius:8px !important;
+    width:36px;
+    height:36px;
+    min-width:36px;
+    min-height:36px;
+    border-radius:8px;
     font-size:16px !important;
     touch-action:manipulation
   }
-  .mdc-unpick-btn:active{background:rgba(239,68,68,.35) !important;transform:scale(.92)}
+  .mdc-unpick-btn:active{background:rgba(239,68,68,.35);transform:scale(.92)}
 
   /* Add bottom padding when pool panel is visible so board can scroll above it */
   #simPicksBoardWrap{padding-bottom:62vh}
@@ -1053,7 +1125,7 @@ tr:hover td{background:var(--gray-50)}
   /* Pool panel: already fixed bottom 60vh — ensure full width */
   #simPoolPanel{
     position:fixed;bottom:0;left:0;right:0;
-    width:100%!important;height:62vh;
+    width:100%;height:62vh;
     border-radius:16px 16px 0 0;
     box-shadow:0 -8px 40px rgba(10,22,40,.3);
     z-index:900;
@@ -1080,29 +1152,29 @@ tr:hover td{background:var(--gray-50)}
   /* ── C-02: Tier editor inputs — 44px touch target on mobile ─────────── */
   /* font-size:16px prevents iOS auto-zoom-on-focus */
   .tier-ed-input{
-    padding:10px 8px !important;
-    min-height:44px !important;
+    padding:10px 8px;
+    min-height:44px;
     font-size:16px !important;
-    width:56px !important;
-    border-radius:7px !important
+    width:56px;
+    border-radius:7px
   }
-  .tier-ed-group{gap:8px !important}
+  .tier-ed-group{gap:8px}
   /* Tier editor: show stacked on mobile for easier input */
-  .tier-editor > div{gap:12px !important}
+  .tier-editor > div{gap:12px}
 
   /* ── GS-02: Global search year pills — fill row height for easy tapping ─ */
   /* The .gs-result row is already 44px min; align pill to fill it vertically */
   .gs-year-pill{
-    min-height:36px !important;
-    padding:8px 14px !important;
-    font-size:12px !important;
-    border-radius:8px !important;
+    min-height:36px;
+    padding:8px 14px;
+    font-size:12px;
+    border-radius:8px;
     align-self:center
   }
   /* Ensure the entire result row is clearly tappable */
   .gs-result{
-    padding:10px 16px !important;
-    min-height:52px !important;
+    padding:10px 16px;
+    min-height:52px;
     touch-action:manipulation
   }
 
@@ -1110,8 +1182,8 @@ tr:hover td{background:var(--gray-50)}
   /* Nav tabs: stronger tap feedback */
   .nav-tab{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
   .nav-tab:active{
-    background:rgba(212,168,48,.18) !important;
-    color:var(--amber) !important;
+    background:rgba(212,168,48,.18);
+    color:var(--amber);
     transition:none
   }
   /* Intel link buttons, file items, future cards, upload items */
@@ -1123,12 +1195,516 @@ tr:hover td{background:var(--gray-50)}
   .view-btn:active:not(.active){background:rgba(255,255,255,.18)!important;color:white!important;transition:none}
 
   /* ── CE-02: Comp explorer table labels — prevent wrapping ────────────── */
-  .comp-table th{white-space:nowrap !important;font-size:9px !important;padding:7px 8px !important}
-  .comp-table td{white-space:nowrap !important;font-size:11px !important;padding:7px 8px !important}
+  .comp-table th{white-space:nowrap;font-size:9px;padding:7px 8px}
+  .comp-table td{white-space:nowrap;font-size:11px;padding:7px 8px}
   /* Comp stat labels in the results table — prevent ugly multi-line headers */
-  .comp-tbl th{white-space:nowrap !important;font-size:9px !important;padding:6px 8px !important}
-  .comp-tbl td{font-size:11px !important;padding:6px 8px !important}
+  .comp-tbl th{white-space:nowrap;font-size:9px;padding:6px 8px}
+  .comp-tbl td{font-size:11px;padding:6px 8px
+
+  /* ════════════════════════════════════════════════════════════
+     CONSOLIDATED MOBILE CSS — merged from 21 orphan MQ blocks
+     All max-width:640px rules now in this single block
+     ════════════════════════════════════════════════════════════ */
+
+  /* ──────────── [30579] ──────────── */
+  .chart-wrap{height:280px}
+  /* Radar chart (second .chart-wrap): radial shape works at smaller height */
+  .analytics-card:nth-child(2) .chart-wrap{height:260px}
+  /* Accuracy scatter (third): needs proportional space to see distribution */
+  .analytics-card:nth-child(3) .chart-wrap{
+  height:320px;
+  border-radius:8px;
+  overflow:hidden;
 }
+  /* Analytics cards: reduce outer padding to reclaim vertical space */
+  .analytics-card{padding:14px 14px;margin-bottom:14px}
+  .analytics-title{font-size:16px}
+  .analytics-sub{font-size:11px;margin-bottom:8px}
+
+  /* ──────────── [61879] ──────────── */
+  .ff2-viewport{height:72vh !important;min-height:340px}
+
+  /* ──────────── [62128] ──────────── */
+  /* Handled via JS clamp logic — extra safety: */
+  .sc-stat-chip{font-size:10px !important;padding:3px 7px !important}
+
+  /* ──────────── [62441] ──────────── */
+  .board-table thead th:nth-child(1),.board-table thead th:nth-child(2){background:var(--navy) !important}
+
+  /* ──────────── [65715] ──────────── */
+  .modal-body{padding-bottom:calc(8px + env(safe-area-inset-bottom, 0px))}
+
+  /* ──────────── [168604] ──────────── */
+  .mc-hero-outer {
+    padding: 20px 16px 18px !important;
+    border-radius: 10px !important;
+    margin-bottom: 16px !important;
+  }
+  .mc-content-wrap {
+    padding: 0 !important;
+  }
+  /* Flex items with min-width:260px → full width stack on mobile */
+  .mc-content-wrap [style*="min-width:260px"],
+  .mc-content-wrap [style*="min-width: 260px"] {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+  /* Stat boxes: allow wrapping to 2-col on small screens */
+  .mc-content-wrap [style*="min-width:90px"] {
+    min-width: 80px !important;
+    padding: 10px 12px !important;
+  }
+  /* Width:220px button-like elements → stretch to full */
+  .mc-content-wrap [style*="width:220px"] {
+    width: 100% !important;
+    max-width: 300px !important;
+  }
+  /* Inline flex containers in methodology → wrap */
+  .mc-content-wrap [style*="display:flex"] {
+    flex-wrap: wrap !important;
+  }
+  /* [169577 countdown duplicate — intentionally omitted] */
+
+  /* ──────────── [169979] ──────────── */
+  /* sc-canvas-wrap 300px: superseded by canonical 280px rule in main block above */
+  /* Top-5 panel: compact card format on mobile */
+  .sc-top5-row {
+    padding: 7px 10px;
+    gap: 8px;
+  }
+  .sc-top5-name { font-size: 12px; }
+  .sc-top5-school { font-size: 9px; }
+  .sc-top5-val { font-size: 13px; }
+  .sc-top5-idx { font-size: 11px; min-width: 14px; }
+  /* Stat bar: scroll horizontally on very small screens */
+  #scStatBar {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+  .sc-stat-chip { white-space: nowrap; }
+  /* Controls: 2 items per row looks good on 360px+ */
+  .sc-controls {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 10px 12px;
+  }
+  .sc-ctrl-label { font-size: 9.5px; }
+
+  /* ──────────── [170918] ──────────── */
+  /* Team select grid: 5-per-row at 360px+ */
+  #simTeamGrid {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .sim-team-btn {
+    flex: 0 0 calc(20% - 4px);  /* 5-col grid */
+    min-width: 0;
+    min-height: 40px;
+    font-size: 10px;
+    padding: 3px 4px;
+    text-align: center;
+    touch-action: manipulation;
+  }
+  /* Pool drawer: ensure adequate height on landscape */
+  .mdc-pool {
+    height: min(65vh, 480px);
+  }
+  /* Pick rows: tap-friendly height */
+  .mdc-pick-row { min-height: 48px; }
+  .mdc-pool-item { min-height: 48px; }
+  /* FAB: nudge up from bottom safe area on iOS */
+  #mdcPoolFab {
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+  /* Simulator speed / rounds controls: stack cleanly */
+  #simSpeedSelect, #simRoundsSelect {
+    font-size: 13px;
+    padding: 7px 8px;
+    min-width: 0;
+    width: 100%;
+  }
+  /* Team tabs in results: horizontal scroll */
+  #simTeamTabBtns {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    gap: 6px;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+  #simTeamTabBtns::-webkit-scrollbar { display: none; }
+
+  /* ──────────── [172144] ──────────── */
+  /* Cards strip: 2 columns at 360px, 1 column at 380px */
+  .compare-strip {
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+  /* Stat mini-grid in card: reduce to 3 cols on very small screens */
+  @media (max-width: 380px) {
+    .ccard-stats { grid-template-columns: repeat(3, 1fr); }
+    .compare-strip { grid-template-columns: 1fr; }
+  }
+  /* Radar section */
+  #compareRadar { min-height: 240px; height: 240px !important; }
+
+  /* ──────────── [172665] ──────────── */
+  .modal-overlay {
+    /* Prevent rubber-band bounce exposing dark background */
+    overscroll-behavior: contain;
+  }
+  .modal {
+    /* Ensure modal content doesn't sit under iOS home indicator */
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+  /* Bio text: better line-height on mobile */
+  .modal-notes { font-size: 13px; line-height: 1.65; }
+
+  /* ──────────── [173122] ──────────── */
+  /* Cards must be large enough to tap */
+  .ff2-card { min-width: 72px; }
+  /* Density buttons: 44px touch target */
+  .ff2-density-btn {
+    min-width: 36px;
+    min-height: 36px;
+    font-size: 13px;
+  }
+  .ff2-reset-btn {
+    min-height: 36px;
+    padding: 4px 12px;
+  }
+
+  /* ──────────── [173777] ──────────── */
+  /* iOS sets min font-size to 16px for inputs to prevent zoom — match it */
+  select, input[type="text"], input[type="search"], input[type="number"] {
+    font-size: 16px !important;  /* prevents iOS auto-zoom on focus */
+  }
+  /* But keep label/filter text small */
+  .filter-select {
+    font-size: 14px !important;
+  }
+
+  /* ──────────── [175174] ──────────── */
+  /* Hide freeform on mobile — spatial drag requires precise pointer */
+  #viewFreeform { display: none !important; }
+  /* Cards view becomes the default; table as secondary. Freeform/BigBoard hidden. */
+  /* User gets: Cards | Table — both work perfectly on mobile */
+
+  /* View toggle: make full-width, even sizing */
+  .view-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
+    width: 100%;
+  }
+  .view-btn {
+    padding: 7px 4px;
+    font-size: 11px;
+    gap: 3px;
+    min-height: 40px;
+  }
+  .vb-badge { display: none; }
+  /* Count badge: inline after toggle */
+  .count-badge { font-size: 11px; }
+
+  /* Controls bar: 2-row layout on mobile */
+  .controls-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .search-wrap {
+    flex: 1 1 100%; /* full width on first row */
+    min-width: 0;
+  }
+  /* Filters: share second row */
+  #posFilter, #clsFilter {
+    flex: 1 1 calc(50% - 3px);
+    min-width: 0;
+  }
+  /* Tier customize button: icon-only on mobile */
+  .tier-customize-btn .tier-btn-label { display: none; }
+
+  /* ──────────── [176753] ──────────── */
+  /* Export controls: completely hidden. Exporting from a phone is edge case. */
+  .bb-screenshot-bar .bb-range-group { display: none !important; }
+  /* Hide twitter card button */
+  .bb-sub-btn[onclick*="twitter"],
+  .bb-sub-btn[onclick*="setBBSubMode"] {
+    /* Keep "Full Board (60)" — it's the mode selector. Only hide twitter. */
+    /* Selector: the twitter-specific button contains 'twitter' in onclick */
+  }
+  /* BB screenshot bar: just the mode buttons, no export */
+  .bb-screenshot-bar {
+    flex-wrap: nowrap;
+    gap: 6px;
+    margin-bottom: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .bb-screenshot-bar::-webkit-scrollbar { display: none; }
+
+  /* Sort pill: hidden — active sort shown by arrow on column header */
+  /* The sort indicator div is not a class, so target by structure */
+  /* It's rendered as: div > span.sort-pill + button "reset..." */
+  /* We can hide the whole container if it has a "Sorted:" text node */
+
+  /* Active sort label: collapse to save space */
+  .bb-wrap + div[style*="Sorted"] { display: none !important; }
+
+  /* ──────────── [178395] ──────────── */
+  /* Tags: age, ht, wt hidden on mobile via this 640px MQ */
+  .tag.age, .tag.ht, .tag.wt { display: none !important; }
+
+  /* Comp footer: removed */
+  .card-comp { display: none !important; }
+
+  /* Tweet button: removed */
+  .pc-tweet-btn { display: none !important; }
+
+  /* Compare button (⊕): larger tap target */
+  .hw-card-compare-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px !important;
+    bottom: 6px;
+    right: 6px;
+    border-radius: 8px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation !important;
+  }
+  /* Card: tighter vertical padding */
+  .player-card {
+    border-radius: 10px;
+  }
+  /* Stats: 3-col grid is correct; reduce cell padding */
+  .stat-cell {
+    padding: 4px 2px 3px;
+  }
+  /* stat-val 12px handled by 640px MQ above */
+  .stat-bar { height: 2px; }
+  .stat-lbl { font-size: 8px; }
+
+  /* ──────────── [179944] ──────────── */
+  /* Remove 2027 option visual noise — keep functional */
+  /* Controls bar: stack year + player selectors vertically */
+  #tab-compare .controls-bar > div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    width: 100%;
+  }
+  #compareYear, #compareSelect {
+    width: 100%;
+    min-width: 0;
+    font-size: 14px;
+  }
+  #tab-compare .compare-add-btn {
+    width: 100%;
+    padding: 9px 14px;
+    font-size: 14px;
+    min-height: 44px;
+    touch-action: manipulation !important;
+  }
+  #tab-compare .compare-clear-btn {
+    font-size: 12px;
+    padding: 7px 12px;
+    min-height: 40px;
+    touch-action: manipulation !important;
+  }
+
+  /* Hero: vertical stack — covered by 760px MQ above; phone-specific overrides below */
+  /* 640px adds: phone-specific card sizing and radar height */
+  .compare-radar-wrap { width: 100%; }
+  #compareRadar { height: 240px; min-height: 240px; }
+
+  /* Stats table: tighter on mobile */
+  .compare-table td, .compare-table thead th {
+    padding: 4px 7px;
+    font-size: 11px;
+  }
+  .ctd-val { font-size: 13px; }
+  .ctd-delta { font-size: 8px; }
+
+  /* Mini stats grid in card: 5-col still works at 160px+ card */
+  .ccard-stats { grid-template-columns: repeat(5, 1fr); }
+  .ccs-val { font-size: 12px; }
+  .ccs-lbl { font-size: 7px; }
+
+  /* ──────────── [182271] ──────────── */
+  /* Hide the 3rd and 4th control groups (color-by, position filter) */
+  .sc-controls .sc-ctrl-group:nth-child(3),
+  .sc-controls .sc-ctrl-group:nth-child(4),
+  .sc-controls .sc-ctrl-group:nth-child(5) {
+    display: none !important;
+  }
+  /* Only X + Y axis selectors remain — full width, clear */
+  .sc-controls {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .sc-ctrl-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .sc-select {
+    font-size: 14px; /* prevent iOS zoom */
+    padding: 8px 8px;
+    min-height: 40px;
+    touch-action: manipulation !important;
+  }
+
+  /* Canvas: taller for better axis readability */
+  /* sc-canvas-wrap 280px: canonical 280px rule handles this */
+
+  /* Top-5 panel: hidden on mobile — tap-to-focus is the discovery model */
+  .sc-top5-wrap { display: none !important; }
+  #scTop5, .sc-top5 { display: none !important; }
+
+  /* Mobile focus indicator: shown when a player is tapped */
+  #scMobileFocus {
+    display: none; /* shown via JS when bubble tapped */
+    background: white;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  #scMobileFocus.visible { display: block; }
+  .sc-mf-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px; font-weight: 800; color: var(--navy);
+    line-height: 1.1; margin-bottom: 3px;
+  }
+  .sc-mf-school { font-size: 11px; color: var(--gray-400); margin-bottom: 8px; }
+  .sc-mf-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .sc-mf-stat {
+    background: var(--gray-50); border-radius: 6px; padding: 5px 8px;
+  }
+  .sc-mf-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px; font-weight: 900; color: var(--navy);
+  }
+  .sc-mf-lbl { font-size: 9px; color: var(--gray-400); text-transform: uppercase; letter-spacing: .4px; }
+  .sc-mf-dismiss {
+    margin-top: 8px; width: 100%; padding: 8px;
+    background: none; border: 1px solid var(--gray-200); border-radius: 7px;
+    font-size: 12px; font-weight: 600; color: var(--gray-400);
+    cursor: pointer; touch-action: manipulation;
+  }
+  .sc-mf-dismiss:active { background: var(--gray-50); }
+
+  /* Instruction hint below canvas (dismisses on first tap) */
+  #scTapHint {
+    text-align: center;
+    font-size: 11px; color: var(--gray-400);
+    padding: 5px 0 2px;
+    font-style: italic;
+    transition: opacity .3s;
+  }
+  #scTapHint.hidden { opacity: 0; pointer-events: none; }
+
+  /* ──────────── [185475] ──────────── */
+  /* Archive mode: hidden on mobile */
+  #mockModeArchive { display: none !important; }
+  #mockPanelArchive { display: none !important; }
+
+  /* Mode toggle: 2 buttons instead of 3 */
+  .mock-mode-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+  .mock-mode-btn {
+    padding: 10px 8px;
+    min-height: 56px;
+    touch-action: manipulation !important;
+  }
+  .mock-mode-sub { font-size: 9px; }
+
+  /* Build mock controls: simpler on mobile */
+  .mdc-board-header { padding: 10px 12px 8px; }
+  .mdc-board-title { font-size: 14px; }
+  /* Action buttons: touch-friendly */
+  .mdc-act-btn {
+    min-height: 36px;
+    padding: 5px 10px;
+    font-size: 11px;
+    touch-action: manipulation !important;
+  }
+
+  /* Pick rows: clear active state */
+  .mdc-pick-row.active {
+    border-left: 3px solid var(--amber);
+    background: #FFFBEB;
+  }
+  /* Pool item: larger tap target */
+  .mdc-pool-item {
+    min-height: 48px;
+    padding: 8px 10px;
+    touch-action: manipulation !important;
+  }
+  /* Pool search: full-width, font-size prevents iOS zoom */
+  #mdcPoolSearch {
+    font-size: 16px !important;
+    padding: 9px 12px;
+  }
+  /* Sim speed/rounds: full width */
+  .sim-controls-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ──────────── [187273] ──────────── */
+  /* Universal touch-action for all interactive elements */
+  button, [onclick], .nav-tab, .view-btn, .filter-select,
+  .player-card, .bb-row, .board-table tr[data-rank] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0,0,0,0.06);
+  }
+  /* Active feedback for all tappable rows/cards */
+  .player-card:active { transform: scale(0.98); transition: transform 0.08s; }
+  .bb-row:active { background: #E8EEFA !important; transition: none; }
+  /* Nav tabs: ensure sticky works correctly on iOS */
+  .nav-tabs {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+  /* Modals: bottom sheet feels native */
+  .modal {
+    border-radius: 16px 16px 0 0;
+    overscroll-behavior: contain !important;
+  }
+  /* Page-level overflow: no horizontal scroll on any tab */
+  /* ──────────── [188600] ──────────── */
+  .bb-compare-dot {
+    /* Normally opacity-less; on mobile always visible */
+    opacity: 1;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    font-size: 13px;
+    background: rgba(37,99,235,.08);
+    color: var(--blue);
+    border-color: rgba(37,99,235,.2);
+    touch-action: manipulation !important;
+  }
+  /* Make the bb-compare-col visible again on mobile */
+  .bb-compare-col { display: flex !important; }
+}
+
 
 
 /* ── TOUCH / ACTIVE STATES — applied globally, critical for mobile UX ──────── */
@@ -1149,7 +1725,7 @@ tr:hover td{background:var(--gray-50)}
 .mdc-pick-row{min-height:44px}
 .mdc-pool-item{min-height:44px}
 /* Mock table rows */
-.mock-table tbody tr:active{background:#E8EEFA !important}
+.mock-table tbody tr:active{background:#E8EEFA}
 /* Global search results */
 .gs-result:active{background:var(--gray-50)}
 /* Future cards */
@@ -1158,24 +1734,19 @@ tr:hover td{background:var(--gray-50)}
 /* ── FREEFORM BOARD — ensure viewport always has explicit height on mobile ─── */
 /* The ff2-viewport height is set inline (plotH px on desktop).
    The 72vh mobile override must not collapse to 0 if plotH renders before layout. */
-@media(max-width:640px){
-  .ff2-viewport{height:72vh !important;min-height:340px}
-}
+
 
 /* ── SCATTER TOOLTIP — clamp to viewport on small screens ────────────────── */
 /* The JS tooltip uses fixed positioning; ensure it never clips off-screen edge */
-@media(max-width:640px){
-  /* Handled via JS clamp logic — extra safety: */
-  .sc-stat-chip{font-size:10px !important;padding:3px 7px !important}
-}
+
 
 /* ── TABLE — sticky columns handled by background:inherit in mobile MQ above ─ */
 /* thead cells need an explicit navy background since they have no row stripe */
-@media(max-width:640px){
-  .board-table thead th:nth-child(1),.board-table thead th:nth-child(2){background:var(--navy) !important}
-}
+
 
 /* ── Mobile table: constrain player column + hide low-priority cols ────── */
+}
+
 @media(max-width:640px){
   /* ── TABLE VIEW: Mobile column layout ────────────────────────────────────
    Column map (renderBoardTable):
@@ -1261,16 +1832,14 @@ tr:hover td{background:var(--gray-50)}
 }
 
 /* ── MODAL — safe-area padding for phones with home indicator ────────────── */
-@media(max-width:640px){
-  .modal-body{padding-bottom:calc(8px + env(safe-area-inset-bottom, 0px))}
-}
+
 
 /* ── CONTROLS BAR + ULTRA-SMALL SCREENS (≤400px) ───────────────────────── */
 @media(max-width:400px){
   .main{padding:8px 8px}
   .controls-bar{gap:4px}
   .search-wrap{min-width:100px}
-  .filter-select{min-width:76px;font-size:11px;padding:5px 6px}
+  .filter-select{min-width:76px;font-size:16px;padding:5px 6px}
   /* Cards: tighten further at 360px — gap 6px so grid fits without wrap */
   .cards-grid{gap:6px}
   .card-header{gap:5px;padding:7px 7px 5px}
@@ -1293,7 +1862,7 @@ tr:hover td{background:var(--gray-50)}
 
   /* ── CONTROLS BAR: tighter on mobile */
   .controls-bar{margin-bottom:12px}
-  .search-input{font-size:13px;padding:7px 10px 7px 30px}
+  .search-input{font-size:13px;padding:8px 10px 8px 32px;letter-spacing:.01em;min-height:38px;border-radius:8px}
   .search-icon{font-size:12px;left:8px}
 
   /* ── TABLE VIEW: improve readability at 360px */
@@ -1307,9 +1876,20 @@ tr:hover td{background:var(--gray-50)}
   td{padding:10px 10px;font-size:12px}
 
   /* ── ANALYTICS TAB: reduce card bloat */
-  .analytics-card{padding:12px;margin-bottom:12px;border-radius:10px}
-  .analytics-title{font-size:15px;margin-bottom:2px}
-  .analytics-sub{font-size:10.5px;margin-bottom:6px}
+  .analytics-card{
+  padding:18px 20px;
+  margin-bottom:16px;
+  border-radius:12px;
+  background:white;
+  border:1px solid var(--border-light);
+  box-shadow:0 1px 4px rgba(10,22,40,.05);
+}
+  .analytics-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:800;color:var(--navy);
+  margin-bottom:4px;letter-spacing:.1px;
+}
+  .analytics-sub{font-size:11px;color:var(--text-muted);margin-bottom:10px;font-weight:500;}
 
   /* ── SCATTER: controls tighter on mobile */
   .sc-controls{padding:12px 14px;margin-bottom:12px}
@@ -1329,7 +1909,7 @@ tr:hover td{background:var(--gray-50)}
   .compare-radar-title{font-size:14px}
 
   /* ── HISTORY TAB: controls wrap cleanly */
-  .history-controls{gap:8px;margin-bottom:12px}
+  .history-controls{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 
   /* ── FUTURE/WATCH TAB: watch banner compact */
   .watch-banner{padding:12px 14px;gap:10px;border-radius:10px;flex-wrap:wrap}
@@ -1342,7 +1922,7 @@ tr:hover td{background:var(--gray-50)}
   .comp-search-card > div > div > div:last-child{font-size:11px;line-height:1.5}
 
   /* ── RESOURCES: search bar full-width */
-  .search-wrap{max-width:100% !important}
+  .search-wrap{max-width:280px !important}
 
   /* ── MODAL body: better text density */
   .modal-metrics-row{gap:7px;margin-bottom:14px}
@@ -1420,7 +2000,7 @@ tr:hover td{background:var(--gray-50)}
 
 /* Print header (hidden on screen, shown on print) */
 .print-header {
-  display:none;
+  display:none !important;   /* hidden on screen — only shows when printing */
   padding:0 0 12px 0;
   border-bottom:2px solid #C9971A;
   margin-bottom:16px;
@@ -1644,7 +2224,7 @@ tr:hover td{background:var(--gray-50)}
 .mock-th-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 14px;gap:2px;min-width:0}
 
 /* ── MOCK DRAFT CREATOR ─────────────────────────────────────────────────── */
-.mdc-wrap{display:flex;gap:0;height:calc(100vh - 160px);min-height:600px;border:1.5px solid var(--gray-200);border-radius:12px;overflow:hidden;box-shadow:0 2px 24px rgba(10,22,40,.1)}
+.mdc-wrap{display:flex;gap:0;height:calc(100vh - 112px);min-height:560px;border:1.5px solid var(--gray-200);border-radius:12px;overflow:hidden;box-shadow:0 2px 24px rgba(10,22,40,.1)}
 .mdc-board{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--gray-50)}
 .mdc-board-header{background:var(--navy);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap}
 .mdc-board-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:white;letter-spacing:.5px}
@@ -1779,7 +2359,7 @@ tr:hover td{background:var(--gray-50)}
 
 /* ── SCATTER PLOT TAB ────────────────────────────────────────────────────── */
 .sc-wrap{max-width:1200px;margin:0 auto}
-.sc-controls{background:white;border:1.5px solid var(--gray-200);border-radius:12px;padding:18px 22px;margin-bottom:18px;display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;box-shadow:0 1px 8px rgba(10,22,40,.06)}
+.sc-controls{background:white;border:1px solid var(--border-light);border-radius:12px;padding:14px 18px;margin-bottom:14px;display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;box-shadow:0 1px 8px rgba(10,22,40,.06)}
 .sc-ctrl-group{display:flex;flex-direction:column;gap:5px;min-width:0}
 .sc-ctrl-label{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.7px}
 .sc-select{background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:7px;padding:7px 10px;font-size:12px;font-weight:600;color:var(--navy);font-family:'DM Sans',sans-serif;cursor:pointer;outline:none;min-width:150px;transition:border-color .15s}
@@ -1911,6 +2491,49 @@ tr:hover td{background:var(--gray-50)}
 .ff2-density-btn:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.06)}
 .ff2-density-btn.active{background:rgba(255,255,255,.13);color:rgba(255,255,255,.9)}
 /* ── Mobile auto-compact + touch hints ── */
+
+/* ═══════════════════════════════════════════════════════════════════
+   COMPARE TAB — DESKTOP LAYOUT (global, no breakpoint)
+   Side-by-side hero: [cards col 380px fixed] | [radar flex:1]
+   These rules are required because the layout definitions below
+   are inside @media(max-width:767px) which doesn't fire on desktop.
+   ═══════════════════════════════════════════════════════════════════ */
+.compare-hero {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+.compare-cards-col {
+  width: 360px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.compare-radar-wrap {
+  flex: 1;
+  min-width: 0;
+  background: white;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 18px 20px 16px;
+  display: flex;
+  flex-direction: column;
+}
+.compare-radar-canvas-wrap {
+  flex: 1;
+  min-height: 380px;
+  position: relative;
+}
+#compareRadar {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 380px;
+}
+.compare-panel { display: flex; flex-direction: column; gap: 12px; }
+
 @media(max-width:767px){
   .ff2-shell{--ff-card-w:76px;--ff-card-pad:4px 6px 4px 9px;--ff-card-name-fs:11px}
   .ff2-card-role{display:none}
@@ -2111,7 +2734,7 @@ tr:hover td{background:var(--gray-50)}
 }
 .mock-mode-btn{
   display:flex;flex-direction:column;align-items:flex-start;
-  padding:12px 18px;border-radius:12px;cursor:pointer;
+  padding:14px 20px;border-radius:12px;cursor:pointer;
   border:2px solid var(--gray-200);background:white;
   transition:all .18s;text-align:left;min-width:160px;flex:1;
   box-shadow:0 1px 4px rgba(10,22,40,.06)
@@ -2304,31 +2927,31 @@ tr:hover td{background:var(--gray-50)}
 
 /* ── GLOBAL BODY REFINEMENT ──────────────────────────────────────────────── */
 body {
-  background: #F0F2F5;
+  background: var(--gray-50);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── HEADER — leaner, no gold border noise ───────────────────────────────── */
+/* ── HEADER — tight, dark, brand gold accent ─────────────────────────────── */
 .header {
-  background: #0A1628;
-  border-bottom: 1px solid rgba(255,255,255,.06);
-  box-shadow: 0 1px 0 rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.2);
-  height: 58px;
+  background: linear-gradient(180deg, #0f1e38 0%, #0A1628 100%);
+  border-bottom: 2px solid rgba(201,151,26,.45);  /* gold accent — brand identity */
+  box-shadow: 0 2px 20px rgba(0,0,0,.45);
+  height: 60px;
 }
 
-/* ── NAV TABS — minimal, sharp ───────────────────────────────────────────── */
+/* ── NAV TABS — clean underline style ────────────────────────────────────── */
 .nav-tabs {
   background: #FFFFFF;
   border-bottom: 1px solid var(--border-light);
   padding: 0 24px;
-  box-shadow: 0 1px 0 rgba(15,23,42,.05);
-  top: 58px;
+  box-shadow: 0 1px 0 rgba(15,23,42,.04);
+  top: 60px;   /* matches header height */
 }
 .nav-tab {
   padding: 0 16px;
-  height: 44px;
+  height: 42px;
   font-size: 12px;
   font-weight: 600;
   color: var(--text-muted);
@@ -2336,7 +2959,7 @@ body {
   gap: 5px;
   transition: color .12s, border-color .12s;
 }
-.nav-tab:hover { color: var(--text-secondary); }
+.nav-tab:hover  { color: var(--text-secondary); }
 .nav-tab.active {
   color: var(--text-primary);
   border-bottom-color: var(--accent);
@@ -2344,63 +2967,47 @@ body {
 }
 
 /* ── MAIN CONTENT AREA ───────────────────────────────────────────────────── */
-.main { padding: 20px 24px; max-width: 1440px; }
+.main { padding: 18px 24px; max-width: 1440px; }
 
-/* ── CONTROLS BAR — tighter, more refined ───────────────────────────────── */
+/* ── CONTROLS BAR — flat, inline, no card wrapper ───────────────────────── */
+/* The controls bar blends into the page background. The view-toggle is the   */
+/* primary visual anchor — it doesn't need a competing white card behind it.  */
 .controls-bar {
-  background: white;
-  border: 1px solid var(--border-light);
-  border-radius: var(--r-md);
-  padding: 10px 14px;
-  margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(15,23,42,.04);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: 14px;
+  box-shadow: none;
   gap: 8px;
 }
 .search-input {
   font-size: 13px;
-  border-radius: 7px;
-  border: 1.5px solid var(--border-med);
+  border-radius: 8px;
+  border: 1.5px solid var(--gray-200);
   padding: 7px 12px 7px 32px;
-  background: var(--surface-inset);
+  background: white;
   color: var(--text-primary);
+  box-shadow: 0 1px 2px rgba(10,22,40,.04);
   transition: border-color .15s, box-shadow .15s;
 }
 .search-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(201,151,26,.1);
-  background: white;
+  box-shadow: 0 0 0 3px rgba(201,151,26,.12);
   outline: none;
 }
 .filter-select {
-  font-size: 12px;
-  border-radius: 7px;
-  border: 1.5px solid var(--border-med);
+  font-size: 13px;
+  border-radius: 8px;
+  border: 1.5px solid var(--gray-200);
   background: white;
   color: var(--text-secondary);
-  padding: 7px 28px 7px 10px;
+  padding: 6px 10px;
+  box-shadow: 0 1px 2px rgba(10,22,40,.04);
   transition: border-color .15s;
+  cursor: pointer;
 }
 .filter-select:focus { border-color: var(--accent); outline: none; }
-
-.view-btn {
-  height: 32px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .02em;
-  background: var(--surface-inset);
-  color: var(--text-muted);
-  border: 1.5px solid transparent;
-  transition: all .12s;
-  padding: 0 10px;
-}
-.view-btn.active {
-  background: white;
-  color: var(--text-primary);
-  border-color: var(--border-med);
-  box-shadow: 0 1px 4px rgba(15,23,42,.08);
-}
-.view-btn:hover:not(.active) { color: var(--text-secondary); }
 
 /* ─────────────────────────────────────────────────────────────────────────
    CARDS VIEW — major redesign
@@ -2413,95 +3020,31 @@ body {
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
+  gap: 14px;
 }
+/* ══════════════════════════════════════════════════════════════════
+   COMPONENT EXTENSIONS — new selectors & improved variants
+   These extend the canonical rules above; no duplicate overrides.
+   ══════════════════════════════════════════════════════════════════ */
 
-/* Tier section headers — much simpler */
-.tier-section { margin-bottom: 24px; }
-.tier-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-.tier-pill {
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 1.4px;
-  padding: 3px 9px;
-  border-radius: 4px;
-}
-.tier-name {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-.tier-ct {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-left: auto;
-}
+ */
 
-/* Player card — refined surface */
-.player-card {
-  background: #FFFFFF;
-  border: 1px solid rgba(15,23,42,.07);
-  border-radius: var(--r-md);
-  box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.04);
-  transition:
-    transform 200ms cubic-bezier(.22,1,.36,1),
-    box-shadow 200ms cubic-bezier(.22,1,.36,1),
-    border-color 200ms;
-  overflow: hidden;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  will-change: transform;
-  position: relative;
-}
-.player-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(15,23,42,.08), 0 12px 28px rgba(15,23,46,.1);
-  border-color: rgba(15,23,42,.12);
-}
-.player-card:active {
-  transform: translateY(-1px);
-  transition-duration: 60ms;
-}
-
-/* Tier accent — kept, but subtler */
-.pc-accent { height: 2px; flex-shrink: 0; }
-.player-card.franchise .pc-accent { background: var(--tier-franchise); }
-.player-card.lottery   .pc-accent { background: var(--tier-lottery);   }
-.player-card.late1     .pc-accent { background: var(--tier-late1);     }
-.player-card.second    .pc-accent { background: var(--tier-second);    }
-.player-card.udfa      .pc-accent { background: #94A3B8;               }
-
-/* Card header */
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 11px 12px 8px;
-}
-
-/* Rank — demoted to small muted text, not a glowing orb */
 .hw-card-rank {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--rank-ink);
-  letter-spacing: -.3px;
-  min-width: 20px;
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--navy);
+  letter-spacing: -.5px;
+  min-width: 24px;
   text-align: center;
   flex-shrink: 0;
   line-height: 1;
+  opacity: .55;            /* subtle but present — hierarchy anchor */
 }
 
 /* Avatar circle — same size, cleaner */
+
 .hw-card-avatar {
   width: 40px;
   height: 40px;
@@ -2511,144 +3054,22 @@ body {
 }
 
 /* Identity block */
-.card-identity { flex: 1; min-width: 0; }
-.card-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--text-primary);
-  line-height: 1.1;
-  letter-spacing: -.1px;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.card-school {
-  font-size: 10px;
-  color: var(--text-muted);
-  font-weight: 500;
-  margin-top: 2px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
 
 /* Metric chip — right side of header, single authoritative number */
-.card-rank-metric {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 5px 8px !important;
-  border-radius: 8px !important;
-  flex-shrink: 0;
-  min-width: 52px;
-}
-.card-metric {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 20px;
-  font-weight: 900;
-  line-height: 1;
-}
-.metric-lbl {
-  font-size: 7px;
-  opacity: .6;
-  text-transform: uppercase;
-  letter-spacing: .6px;
-  font-weight: 700;
-  margin-top: 1px;
-}
 
 /* Tags row — role promoted, others smaller */
-.card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 0 12px 8px;
-}
-.tag {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 4px;
-  background: var(--surface-inset);
-  color: var(--text-secondary);
-  letter-spacing: .01em;
-}
-.tag.pos  { background: rgba(37,99,235,.08);  color: #1D4ED8; }
-.tag.role { background: rgba(15,23,42,.06);   color: var(--text-secondary); font-weight: 700; }
-.tag.cls  { background: rgba(180,83,9,.07);   color: #92400E; }
-.tag.age  { background: rgba(124,58,237,.07); color: #6D28D9; }
-.tag.ht, .tag.wt { display: none; } /* measurables live in the modal */
+
+/* tag.ht, tag.wt hidden on mobile via 640px MQ — visible on desktop */
 
 /* Stats grid — tighter, cleaner */
-.card-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3px;
-  padding: 0 10px 10px;
-  border-top: 1px solid var(--border-light);
-  padding-top: 8px;
-  margin-top: 2px;
-}
-.stat-cell {
-  background: var(--surface-inset);
-  border-radius: 6px;
-  padding: 6px 3px 5px;
-  text-align: center;
-  transition: background .1s;
-}
-.stat-val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  font-weight: 800;
-  color: inherit;
-  line-height: 1;
-}
-.stat-bar { height: 2px; border-radius: 1px; margin: 3px auto 0; opacity: .3; min-width: 2px; }
-.stat-lbl {
-  font-size: 8px;
-  color: inherit;
-  opacity: .55;
-  text-transform: uppercase;
-  letter-spacing: .3px;
-  font-weight: 700;
-  display: block;
-  margin-top: 2px;
-}
 
 /* Comp footer */
-.card-comp {
-  padding: 6px 12px 10px;
-  font-size: 10px;
-  color: var(--text-muted);
-  border-top: 1px solid var(--border-light);
-  margin-top: auto;
-}
-.card-comp strong { color: var(--text-secondary); font-weight: 600; }
 
 /* Add-to-compare button — subtle, on hover */
-.hw-card-compare-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  background: rgba(15,23,42,.06);
-  border: 1px solid transparent;
-  color: var(--text-muted);
-  font-size: 12px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity .15s, background .15s, color .15s;
-  z-index: 2;
-  font-weight: 700;
-}
+
+
 .player-card:hover .hw-card-compare-btn { opacity: 1; }
+
 .hw-card-compare-btn:hover {
   background: rgba(37,99,235,.12);
   color: #1D4ED8;
@@ -2658,14 +3079,7 @@ body {
 /* ─────────────────────────────────────────────────────────────────────────
    TABLE VIEW — improved scannability
    ─────────────────────────────────────────────────────────────────────────*/
-.table-wrap {
-  background: white;
-  border: 1px solid var(--border-light);
-  border-radius: var(--r-md);
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(15,23,42,.04);
-}
-.board-table { border-collapse: collapse; }
+
 .board-table thead th {
   background: #F8FAFC;
   font-size: 10px;
@@ -2677,409 +3091,327 @@ body {
   border-bottom: 1px solid var(--border-light);
   white-space: nowrap;
 }
+
 .board-table thead th:first-child { padding-left: 16px; }
+
 .board-table thead th.sorted { color: var(--accent); }
-.board-table tbody tr {
-  background: white;
-  transition: background .08s;
-  cursor: pointer;
-}
-.board-table tbody tr:nth-child(even) { background: #FAFBFC; }
+
 .board-table tbody tr:hover { background: #F0F4FF !important; }
-.board-table tbody td {
-  padding: 10px 12px;
-  border-bottom: 1px solid rgba(15,23,42,.04);
-  font-size: 12px;
-}
-.td-rank {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--rank-ink);
-  padding-left: 16px !important;
-  width: 42px;
-}
-.td-rank.top10 { color: var(--tier-franchise); opacity: 1; }
 
 /* ─────────────────────────────────────────────────────────────────────────
    BIG BOARD — refined
    ─────────────────────────────────────────────────────────────────────────*/
-.bb-board {
-  background: white;
-  border-radius: var(--r-md);
-  border: 1px solid var(--border-light);
-  box-shadow: 0 1px 4px rgba(15,23,42,.06);
-  overflow: hidden;
-}
+
 
 /* Header — reduce noise */
-.bb-header {
-  background: var(--navy);
-  padding: 18px 24px 14px;
-}
-.bb-header::before { display: none; } /* remove the busy grid overlay */
-.bb-header::after  {
-  background: linear-gradient(90deg, transparent 0%, var(--accent) 30%, var(--accent) 70%, transparent 100%);
-  opacity: .5;
-}
-.bb-htitles .bb-brand {
-  font-size: 9px;
-  letter-spacing: 1.8px;
-  opacity: .5;
-}
-.bb-htitles .bb-title {
-  font-size: 20px;
-  font-weight: 900;
-  letter-spacing: .3px;
-}
+
+ /* remove the busy grid overlay */
+
 /* Pill strip — fewer pills */
-.bb-pill {
-  font-size: 9px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 20px;
-  background: rgba(255,255,255,.08);
-  color: rgba(255,255,255,.5);
-  border: none;
-  letter-spacing: .3px;
-}
-.bb-pill.gold {
-  background: rgba(201,151,26,.2);
-  color: var(--accent);
-}
 
 /* Row — subtle tier left-border only (not heavy color) */
-.bb-row {
-  height: 44px;
-  border-bottom: 1px solid rgba(15,23,42,.04);
-  transition: background .08s;
-}
-.bb-row:hover { background: #F5F7FF; }
-.bb-row.alt   { background: #FAFBFC; }
-.bb-row.alt:hover { background: #EEF2FF; }
 
 /* Rank number — quieter */
-.bb-rk {
-  font-size: 16px;
-  color: var(--rank-ink);
-  opacity: 1;
-}
-.bb-row.bbt1 .bb-rk { color: var(--tier-franchise); opacity: .85; }
-.bb-row.bbt2 .bb-rk { color: var(--tier-lottery);   opacity: .75; }
 
 /* Tier band — thinner */
-.bb-tier-band {
-  padding: 6px 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.bb-tier-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.7);
-}
 
 /* Column headers */
-.bb-col-hdr {
-  padding: 0 14px;
-  background: #F8FAFC;
-  border-bottom: 1px solid var(--border-light);
-}
-.bb-ch {
-  font-size: 9px !important;
-  font-weight: 700 !important;
-  text-transform: uppercase;
-  letter-spacing: .8px;
-  color: var(--text-muted) !important;
-}
-.bb-ch.bb-sorted { color: var(--accent) !important; }
 
 /* ─────────────────────────────────────────────────────────────────────────
    PLAYER MODAL — cleaner structure, better hierarchy
    ─────────────────────────────────────────────────────────────────────────*/
-.modal {
-  background: white;
-  border-radius: var(--r-lg);
-  max-width: 740px;
-  box-shadow: 0 24px 80px rgba(0,0,0,.25), 0 0 0 1px rgba(15,23,42,.08);
-}
-.modal-header {
-  background: #0D1B2E;
-  padding: 20px 22px;
-  border-radius: var(--r-lg) var(--r-lg) 0 0;
-  position: relative;
-}
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  min-height: 32px;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 6px;
-  color: rgba(255,255,255,.6);
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background .12s, color .12s;
-}
-.modal-close:hover { background: rgba(255,255,255,.16); color: white; }
 
-.modal-rank-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--accent);
-  margin-bottom: 2px;
-}
-.modal-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px;
-  font-weight: 900;
-  color: white;
-  line-height: 1;
-  letter-spacing: -.2px;
-}
-.modal-meta {
-  font-size: 12px;
-  color: rgba(255,255,255,.5);
-  margin-top: 4px;
-  font-weight: 500;
-}
-
-.modal-body { padding: 18px 22px; }
+/* modal body padding is set in canonical CSS */
 
 /* Section titles — cleaner, smaller */
-.modal-sec-title {
-  font-size: 9px;
-  font-weight: 800;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1.4px;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  border-bottom: 1px solid var(--border-light);
-  padding-bottom: 5px;
-}
-.modal-section { margin-bottom: 16px; }
 
 /* Metric boxes */
-.modal-metrics-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-  gap: 6px;
-  margin-bottom: 14px;
-}
-.metric-box {
-  background: var(--surface-inset);
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 9px 10px;
-  text-align: center;
-  transition: background .15s;
-}
-.metric-box .val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 22px;
-  font-weight: 900;
-  line-height: 1;
-}
-.metric-box .lbl {
-  font-size: 9px;
-  opacity: .6;
-  text-transform: uppercase;
-  letter-spacing: .5px;
-  font-weight: 700;
-  margin-top: 3px;
-}
 
 /* Measurables */
-.meas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 6px; }
-.meas-item {
-  background: white;
-  border: 1px solid var(--border-light);
-  border-radius: 7px;
-  padding: 8px 10px;
-  text-align: center;
-}
-.meas-item .val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--text-primary);
-}
-.meas-item .lbl {
-  font-size: 9px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: .5px;
-  margin-top: 2px;
-}
 
 /* Scouting report */
-.sw-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-.sw-grid.has-neutral { grid-template-columns: 1fr 1fr 1fr; }
-.sw-col {
-  background: var(--surface-inset);
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 10px 12px;
-}
-.sw-col-title {
-  font-size: 9px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .8px;
-  margin-bottom: 7px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.sw-col-title.str { color: #059669; }
-.sw-col-title.ntr { color: #D97706; }
-.sw-col-title.wkn { color: #DC2626; }
-.sw-list { padding-left: 14px; }
-.sw-list li { font-size: 12px; color: var(--text-secondary); line-height: 1.55; margin-bottom: 3px; }
 
 /* BPM section label */
-.modal-section-label {
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: .6px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 7px;
-  margin-top: 2px;
-}
-.modal-section-label--bpm { margin-top: 12px; color: var(--tier-late1); opacity: .8; }
-.modal-bpm-row { grid-template-columns: repeat(3, 1fr) !important; max-width: 280px; }
 
 /* Shot chart — visible immediately on click */
+
 #modalShotPanel {
   animation: fadeIn .15s ease-out;
 }
+
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
-/* ═══════════════════════════════════════════════════════════════════
-   COMPARE TAB v4 — Side-by-side hero: cards left / radar right
-   ─────────────────────────────────────────────────────────────────
-   Desktop layout:
-     [cards col 380px] | [radar flex:1, fills remaining width]
-     [stats table — full width]
-   Mobile ≤760px: stacks vertically
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════════
+   COMPARE TAB v5 — Radar-dominant layout
+   ─────────────────────────────────────────────────────────────────────
+   Philosophy: The radar IS the product. Everything else supports it.
 
-/* ── Controls ── */
-.compare-add-btn {
-  background:#B8860F;color:white;border:none;border-radius:6px;
-  padding:6px 14px;font-size:12px;font-weight:700;
-  font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;
-  cursor:pointer;transition:background .12s,transform .1s;
-}
-.compare-add-btn:hover{background:#96700C;}
-.compare-add-btn:active{transform:scale(.97);}
-.compare-clear-btn{
-  background:none;color:var(--gray-400);border:1.5px solid var(--gray-200);
-  border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;
-  cursor:pointer;transition:all .12s;margin-left:auto;
-}
-.compare-clear-btn:hover{color:#DC2626;border-color:rgba(220,38,38,.4);}
+   Layout (desktop ≥761px):
+     ┌─────────────────────────────────────────────────────────┐
+     │  CONTROLS BAR                                           │
+     ├─────────────────────────────────────────────────────────┤
+     │  RADAR PANEL (large, prominent)                         │
+     │  ┌─ legend/title ──────────────────────────────────┐   │
+     │  │  [canvas — 480px min-height]                    │   │
+     │  └─────────────────────────────────────────────────┘   │
+     ├──────────────────────────────────────────────────────── │
+     │  PLAYER CARDS (horizontal strip, equal width)           │
+     │  [card1] [card2] [card3] [card4]                        │
+     ├─────────────────────────────────────────────────────────┤
+     │  STATS TABLE (full width, collapsible)                  │
+     └─────────────────────────────────────────────────────────┘
 
-/* ── Hero: cards left, radar right ──────────────────────────────── */
-.compare-hero {
+   Mobile ≤760px: radar first, then cards vertically, then table.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Compare controls bar ───────────────────────────────────────────── */
+.compare-controls-row {
   display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  margin-bottom: 14px;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
 }
 
-/* ── Cards column ────────────────────────────────────────────────── */
-.compare-cards-col {
-  width: 380px;
-  flex-shrink: 0;
+.compare-add-btn {
+  background: var(--amber);
+  color: white;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: .6px;
+  cursor: pointer;
+  transition: background .12s, transform .1s;
+  text-transform: uppercase;
+}
+.compare-add-btn:hover { background: #a8780f; }
+.compare-add-btn:active { transform: scale(.97); }
+
+.compare-clear-btn {
+  background: none;
+  color: var(--gray-400);
+  border: 1.5px solid var(--gray-200);
+  border-radius: 7px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .12s;
+  margin-left: auto;
+}
+.compare-clear-btn:hover { color: var(--red); border-color: rgba(239,68,68,.4); }
+
+/* ── Compare layout: top-down ─────────────────────────────────────── */
+.compare-panel {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
 }
 
-/* ── Player card — expanded ──────────────────────────────────────── */
-.compare-card {
+/* ── 1. Radar Panel — DOMINANT, full-width ────────────────────────── */
+.compare-radar-section {
   background: white;
   border: 1.5px solid var(--gray-200);
-  border-radius: 10px;
-  overflow: hidden;
+  border-radius: 14px 14px 0 0;
+  border-bottom: none;
+  padding: 20px 24px 16px;
   position: relative;
-  transition: box-shadow .12s;
 }
-.compare-card:hover { box-shadow: 0 4px 16px rgba(15,23,42,.1); }
-.compare-card-accent { height: 3px; width: 100%; display: block; }
+
+.compare-radar-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.compare-radar-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--navy);
+  letter-spacing: .3px;
+  text-transform: uppercase;
+}
+
+.compare-radar-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.crl-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.crl-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.compare-radar-canvas-wrap {
+  position: relative;
+  width: 100%;
+  min-height: 460px;
+}
+
+#compareRadar {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 460px;
+}
+
+/* ── 2. Player Cards Strip — horizontal, compact ─────────────────── */
+.compare-cards-section {
+  background: white;
+  border: 1.5px solid var(--gray-200);
+  border-top: 1px solid var(--gray-100);
+  border-bottom: none;
+  padding: 0;
+}
+
+.compare-cards-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0;
+}
+
+/* Each compare card: compact horizontal layout */
+.compare-card {
+  background: white;
+  border-right: 1px solid var(--gray-100);
+  border-bottom: none;
+  position: relative;
+  transition: background .1s;
+  overflow: hidden;
+}
+.compare-card:last-child { border-right: none; }
+.compare-card:hover { background: #FAFBFF; }
+
+.compare-card-accent {
+  height: 4px;
+  width: 100%;
+  display: block;
+}
 
 .compare-card-header {
-  padding: 10px 12px 0;
-  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
 }
+
 .compare-card-remove {
-  position: absolute; top: 8px; right: 8px;
-  background: none; border: 1px solid transparent;
-  border-radius: 50%; width: 20px; height: 20px;
-  cursor: pointer; font-size: 11px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--gray-300); transition: all .12s; opacity: 0;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-300);
+  transition: all .12s;
+  opacity: 0;
 }
 .compare-card:hover .compare-card-remove { opacity: 1; }
 .compare-card-remove:hover {
-  background: rgba(220,38,38,.1); color: #DC2626;
+  background: rgba(220,38,38,.1);
+  color: #DC2626;
   border-color: rgba(220,38,38,.2);
 }
+
 .compare-card-rank {
-  width: 36px; height: 36px; border-radius: 7px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
-  color: white; flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  color: white;
+  flex-shrink: 0;
 }
-.compare-card-rank .rn { font-size: 18px; line-height: 1; }
+.compare-card-rank .rn { font-size: 20px; line-height: 1; }
 .compare-card-rank .rl { font-size: 7px; opacity: .65; text-transform: uppercase; }
+
 .compare-card-info { min-width: 0; flex: 1; }
 .compare-card-info .cn {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 17px; font-weight: 800; color: var(--navy);
-  line-height: 1.15;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .compare-card-info .cs {
-  font-size: 10px; color: var(--gray-400);
-  display: flex; align-items: center; gap: 4px; margin-top: 2px;
-}
-.compare-metric-row {
-  padding: 7px 12px 8px;
-  display: flex; align-items: center; justify-content: space-between;
-  margin-top: 8px; background: var(--gray-50); border-top: 1px solid var(--gray-100);
-}
-.compare-metric-val {
-  font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900;
-}
-.compare-metric-lbl {
-  font-size: 9px; color: var(--gray-400); text-transform: uppercase; letter-spacing: .4px;
+  font-size: 10px;
+  color: var(--gray-400);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
 }
 
-/* ── Inline stat mini-grid ───────────────────────────────────────── */
+/* Metric row inside card */
+.compare-metric-row {
+  padding: 6px 14px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--gray-100);
+  background: var(--gray-50);
+}
+.compare-metric-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+}
+.compare-metric-lbl {
+  font-size: 9px;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+
+/* "LEADER" badge on best card */
+.compare-card-leader-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--amber);
+  background: rgba(201,151,26,.12);
+  border: 1px solid rgba(201,151,26,.25);
+  border-radius: 4px;
+  padding: 2px 6px;
+  display: inline-block;
+  margin-top: 2px;
+}
+
+/* Mini stat grid inside compare card */
 .ccard-stats {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -3088,157 +3420,288 @@ body {
   border-top: 1px solid var(--gray-100);
 }
 .ccs-cell {
-  background: white; padding: 6px 3px; text-align: center;
+  background: white;
+  padding: 7px 3px;
+  text-align: center;
 }
 .ccs-val {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px; font-weight: 800; display: block; line-height: 1.1;
+  font-size: 13px;
+  font-weight: 800;
+  display: block;
+  line-height: 1.1;
+  color: var(--navy);
 }
 .ccs-lbl {
-  font-size: 8px; color: rgba(0,0,0,.35);
-  text-transform: uppercase; letter-spacing: .3px;
-  display: block; margin-top: 1px;
+  font-size: 8px;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  display: block;
+  margin-top: 1px;
 }
-/* Leader stat cell gets a star below the label */
 .ccs-cell.ccs-lead .ccs-val { color: #15803D; }
 .ccs-cell.ccs-lead::after {
-  content: '★'; font-size: 7px; color: #15803D;
-  display: block; margin-top: 0px; opacity: .65;
+  content: '★';
+  font-size: 7px;
+  color: #15803D;
+  display: block;
+  margin-top: 0;
+  opacity: .65;
   text-align: center;
 }
+.compare-card.crd-hover { box-shadow: inset 0 0 0 2px var(--blue); }
 
-/* Card hover ring (cross-section sync) */
-.compare-card.crd-hover { box-shadow: 0 0 0 2px var(--blue); }
-
-/* ── Radar — right column, large ─────────────────────────────────── */
-.compare-radar-wrap {
-  flex: 1; min-width: 0;
-  background: white; border: 1.5px solid var(--gray-200); border-radius: 10px;
-  padding: 16px 18px 14px;
-  display: flex; flex-direction: column;
-}
-.compare-radar-top {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 8px; margin-bottom: 12px; flex-shrink: 0;
-}
-.compare-radar-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px; font-weight: 800; color: var(--navy); letter-spacing: .2px;
-}
-.compare-radar-legend { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-/* Canvas fills remaining vertical space of radar panel */
-.compare-radar-canvas-wrap { flex: 1; min-height: 360px; position: relative; }
-#compareRadar {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-  min-height: 360px;
+/* ── 3. Stats Table ───────────────────────────────────────────────── */
+.compare-table-section {
+  background: white;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 0 0 14px 14px;
+  overflow: hidden;
 }
 
-/* ── Stats table ─────────────────────────────────────────────────── */
-.compare-panel { display: flex; flex-direction: column; gap: 12px; }
-.compare-table-wrap {
-  background: white; border: 1.5px solid var(--gray-200); border-radius: 10px; overflow: hidden;
+.compare-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--gray-100);
+  cursor: pointer;
+  user-select: none;
+  transition: background .1s;
 }
+.compare-table-header:hover { background: var(--gray-50); }
+
 .compare-table-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px; font-weight: 800; color: var(--navy);
-  padding: 9px 12px; border-bottom: 1px solid var(--gray-100); letter-spacing: .2px;
-  display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: .2px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
+
+.compare-table-toggle {
+  font-size: 11px;
+  color: var(--gray-400);
+  font-weight: 600;
+  transition: transform .2s;
+}
+.compare-table-section.expanded .compare-table-toggle {
+  transform: rotate(180deg);
+}
+
+.compare-table-body {
+  overflow-x: auto;
+  max-height: 0;
+  overflow-y: hidden;
+  transition: max-height .3s cubic-bezier(.4,0,.2,1);
+}
+.compare-table-section.expanded .compare-table-body {
+  max-height: 1200px;
+}
+
+/* Table internals */
 .compare-table { overflow-x: auto; }
-.compare-table table {
-  width: 100%; border-collapse: collapse;
-  /* table-layout: auto (default) — lets width:1% on stat col shrink to content minimum */
-}
+.compare-table table { width: 100%; border-collapse: collapse; }
+
 .compare-table thead th {
-  background: var(--gray-50); padding: 5px 10px;
-  font-size: 10px; font-weight: 700; color: var(--gray-500);
-  text-transform: uppercase; letter-spacing: .4px;
-  border-bottom: 1px solid var(--gray-100); white-space: nowrap;
-  position: sticky; top: 0; z-index: 2;
+  background: var(--gray-50);
+  padding: 6px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  border-bottom: 1px solid var(--gray-100);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 .compare-table thead th:first-child {
-  width: 1%; white-space: nowrap; text-align: left;
-  min-width: 90px;
-  position: sticky; left: 0; z-index: 3;
-  padding-right: 18px; /* breathing room between label and values */
+  width: 1%;
+  white-space: nowrap;
+  text-align: left;
+  min-width: 100px;
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  padding-right: 18px;
 }
 .compare-table th.cth {
-  text-align: center; border-top: 3px solid transparent;
-  min-width: 120px; max-width: 280px;
+  text-align: center;
+  border-top: 3px solid transparent;
+  min-width: 120px;
+  max-width: 280px;
 }
 .compare-table td {
-  padding: 4px 10px; font-size: 12px;
+  padding: 5px 10px;
+  font-size: 12px;
   border-bottom: 1px solid var(--gray-100);
-  text-align: center; vertical-align: middle;
+  text-align: center;
+  vertical-align: middle;
 }
 .compare-table tr:last-child td { border-bottom: none; }
 .compare-table tr:nth-child(even) td { background: #FAFBFC; }
 .compare-table tr:hover td { background: #EFF6FF; transition: background .1s; }
 .compare-table td:first-child {
-  font-weight: 700; color: var(--navy);
-  font-family: 'Barlow Condensed', sans-serif; font-size: 13px;
-  text-align: left; position: sticky; left: 0; z-index: 1;
-  background: white; border-right: 1px solid var(--gray-100);
-  width: 1%; white-space: nowrap; padding-right: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  text-align: left;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: white;
+  border-right: 1px solid var(--gray-100);
+  width: 1%;
+  white-space: nowrap;
+  padding-right: 18px;
 }
 .compare-table tr:nth-child(even) td:first-child { background: #FAFBFC; }
 .compare-table tr:hover td:first-child { background: #EFF6FF; }
 .compare-table tr.ctr-section td {
-  background: #F4F6F9!important; font-size: 9px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .8px; color: var(--gray-400);
-  padding: 3px 10px; border-bottom: 1px solid var(--gray-200);
+  background: #F4F6F9;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: var(--gray-400);
+  padding: 3px 10px;
+  border-bottom: 1px solid var(--gray-200);
 }
-.compare-table tr.ctr-section td:first-child { background: #F4F6F9!important; }
+.compare-table tr.ctr-section td:first-child { background: #F4F6F9; }
 .compare-table tr.ctr-depth { display: none; }
 .compare-table.depth-open tr.ctr-depth { display: table-row; }
 .ctr-section.ctr-toggle { cursor: pointer; user-select: none; }
 .ctr-section.ctr-toggle td:first-child::after { content: ' ▸'; font-size: 8px; opacity: .5; }
 .compare-table.depth-open .ctr-section.ctr-toggle td:first-child::after { content: ' ▾'; }
+
 .ctd-val {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 15px; font-weight: 800; color: var(--navy); display: block; line-height: 1;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--navy);
+  display: block;
+  line-height: 1;
 }
 .ctd-delta { font-size: 9px; font-weight: 700; display: block; margin-top: 1px; letter-spacing: .15px; }
-.ctd-delta.pos { color: #16A34A; } .ctd-delta.neg { color: #DC2626; }
+.ctd-delta.pos { color: #16A34A; }
+.ctd-delta.neg { color: #DC2626; }
 .compare-best .ctd-val { color: #15803D; }
-.compare-table tr.ctr-maxgap td { background: #FFFBEB!important; }
-.compare-table tr.ctr-maxgap td:first-child { background: #FFFBEB!important; color: #92400E; }
+
+.compare-table tr.ctr-maxgap td { background: #FFFBEB; }
+.compare-table tr.ctr-maxgap td:first-child { background: #FFFBEB; color: #92400E; }
 .compare-table tr.ctr-maxgap td:first-child::before { content: '↕ '; font-size: 9px; opacity: .7; }
-.compare-quick-row { background: var(--navy)!important; }
-.compare-quick-row td { background: var(--navy)!important; padding: 5px 10px!important; border-bottom: 2px solid rgba(255,255,255,.1)!important; }
-.compare-quick-row td:first-child { background: var(--navy)!important; color: rgba(255,255,255,.5)!important; font-size: 9px!important; font-weight: 700!important; letter-spacing: .6px; }
-.cqr-score { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 900; color: white; display: block; line-height: 1; }
-.cqr-wins { font-size: 9px; font-weight: 600; color: rgba(255,255,255,.45); display: block; margin-top: 1px; }
+
+/* Quick-score row (navy header inside table) */
+.compare-quick-row { background: var(--navy); }
+.compare-quick-row td { background: var(--navy); padding: 6px 10px; border-bottom: 2px solid rgba(255,255,255,.1); }
+.compare-quick-row td:first-child { background: var(--navy); color: rgba(255,255,255,.5); font-size: 9px; font-weight: 700; letter-spacing: .6px; }
+.cqr-score { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 900; color: white; display: block; line-height: 1; }
+.cqr-wins  { font-size: 9px; font-weight: 600; color: rgba(255,255,255,.45); display: block; margin-top: 1px; }
 .cqr-score.cqr-lead { color: #F0C94A; }
-.compare-table tr.compare-gap-row td { padding: 0 10px 3px; border-bottom: none; }
-.compare-table tr.compare-gap-row td:first-child { border-right: 1px solid var(--gray-100); background: white!important; }
-.cgap-track { height: 2px; background: var(--gray-100); border-radius: 1px; overflow: hidden; }
-.cgap-fill { height: 100%; border-radius: 1px; opacity: .55; }
 
-/* ── Empty ────────────────────────────────────────────────────────── */
+.compare-table tr.compare-gap-row td { padding: 0 10px 4px; border-bottom: none; }
+.compare-table tr.compare-gap-row td:first-child { border-right: 1px solid var(--gray-100); background: white; }
+.cgap-track { height: 3px; background: var(--gray-100); border-radius: 2px; overflow: hidden; }
+.cgap-fill  { height: 100%; border-radius: 2px; opacity: .6; }
+
+/* ── Empty state ──────────────────────────────────────────────────── */
 .compare-empty {
-  background: white; border: 1px dashed var(--gray-200); border-radius: 10px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 52px 20px; gap: 8px;
+  background: white;
+  border: 1.5px dashed var(--gray-200);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 10px;
+  text-align: center;
 }
-.compare-empty-icon { font-size: 28px; opacity: .2; }
-.compare-empty-text { font-size: 14px; font-weight: 600; color: var(--gray-500); }
+.compare-empty-icon { font-size: 36px; opacity: .15; }
+.compare-empty-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--gray-400);
+}
+.compare-empty-sub { font-size: 13px; color: var(--gray-400); max-width: 300px; line-height: 1.5; }
 
-/* ── Responsive ──────────────────────────────────────────────────── */
+/* Global add-to-compare button */
+.hw-add-compare {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(37,99,235,.2);
+  background: rgba(37,99,235,.07);
+  color: #1D4ED8;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: .3px;
+  transition: all .12s;
+  white-space: nowrap;
+}
+.hw-add-compare:hover { background: rgba(37,99,235,.14); border-color: rgba(37,99,235,.3); }
+
+/* ── Responsive ────────────────────────────────────────────────────── */
+
+/* ── Compare controls bar labels ─────────────────────────────────── */
+.compare-ctrl-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  white-space: nowrap;
+}
+.compare-player-select { min-width: 200px; }
+.compare-error-msg {
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+/* Empty state — updated for new layout */
+.compare-empty-icon { font-size: 36px; opacity: .15; }
+.compare-empty-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--gray-400);
+  margin: 0;
+}
+.compare-empty-sub { font-size: 13px; color: var(--gray-400); max-width: 300px; line-height: 1.5; margin: 0; }
+
 @media (max-width: 760px) {
-  .compare-hero { flex-direction: column; }
-  .compare-cards-col { width: 100%; flex-direction: row; flex-wrap: wrap; gap: 7px; }
-  .compare-card { min-width: 0; flex: 1 1 calc(50% - 4px); }
-  .compare-radar-wrap { width: 100%; }
-  #compareRadar { min-height: 280px; }
+  /* ── Compare tab: mobile layout ────────────────────────────────── */
+  /* Radar canvas: shorter on tablet/mobile — still prominent */
+  .compare-radar-canvas-wrap { min-height: 320px; }
+  #compareRadar { min-height: 320px; }
+  /* Cards strip: 2-per-row on tablet */
+  .compare-cards-strip { grid-template-columns: repeat(2, 1fr); }
+  .compare-card { border-right: none; border-bottom: 1px solid var(--gray-100); }
+  .compare-card:nth-child(odd) { border-right: 1px solid var(--gray-100); }
 }
-@media (max-width: 480px) {
-  .compare-cards-col { flex-direction: column; }
-  .compare-card { flex: none; width: 100%; }
-  #compareRadar { min-height: 240px; }
+@media (max-width: 640px) {
+  /* Mobile: radar shorter, cards single column */
+  .compare-radar-canvas-wrap { min-height: 260px; }
+  #compareRadar { min-height: 260px; }
+  .compare-radar-section { padding: 14px 14px 10px; }
+  .compare-cards-strip { grid-template-columns: 1fr 1fr; }
+  .compare-table-section { border-radius: 0 0 10px 10px; }
 }
+
 
 
 /* Add-to-compare button global: shared style */
@@ -3259,186 +3722,30 @@ body {
    ═══════════════════════════════════════════════════════════════════ */
 
 /* ── Methodology tab hero: override inline padding on mobile ── */
-@media (max-width: 640px) {
-  .mc-hero-outer {
-    padding: 20px 16px 18px !important;
-    border-radius: 10px !important;
-    margin-bottom: 16px !important;
-  }
-  .mc-content-wrap {
-    padding: 0 !important;
-  }
-  /* Flex items with min-width:260px → full width stack on mobile */
-  .mc-content-wrap [style*="min-width:260px"],
-  .mc-content-wrap [style*="min-width: 260px"] {
-    min-width: 0 !important;
-    width: 100% !important;
-  }
-  /* Stat boxes: allow wrapping to 2-col on small screens */
-  .mc-content-wrap [style*="min-width:90px"] {
-    min-width: 80px !important;
-    padding: 10px 12px !important;
-  }
-  /* Width:220px button-like elements → stretch to full */
-  .mc-content-wrap [style*="width:220px"] {
-    width: 100% !important;
-    max-width: 300px !important;
-  }
-  /* Inline flex containers in methodology → wrap */
-  .mc-content-wrap [style*="display:flex"] {
-    flex-wrap: wrap !important;
-  }
-}
+
 
 /* ── Mobile countdown strip in board tab ── */
-@media (max-width: 640px) {
-  #mobileCountdownStrip {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    background: var(--navy);
-    border-radius: 8px;
-    padding: 8px 14px;
-    margin-bottom: 10px;
-  }
-}
+
 @media (min-width: 641px) {
   #mobileCountdownStrip { display: none !important; }
 }
 
 /* ── Scatter plot: reduce point density on mobile ── */
-@media (max-width: 640px) {
-  .sc-canvas-wrap {
-    height: 300px;
-    border-radius: 8px;
-    overflow: hidden;
-    /* Prevent iOS scroll hijacking on the canvas area */
-    touch-action: none;
-  }
-  /* Top-5 panel: compact card format on mobile */
-  .sc-top5-row {
-    padding: 7px 10px;
-    gap: 8px;
-  }
-  .sc-top5-name { font-size: 12px; }
-  .sc-top5-school { font-size: 9px; }
-  .sc-top5-val { font-size: 13px; }
-  .sc-top5-idx { font-size: 11px; min-width: 14px; }
-  /* Stat bar: scroll horizontally on very small screens */
-  #scStatBar {
-    overflow-x: auto;
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
-  }
-  .sc-stat-chip { white-space: nowrap; }
-  /* Controls: 2 items per row looks good on 360px+ */
-  .sc-controls {
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    padding: 10px 12px;
-  }
-  .sc-ctrl-label { font-size: 9.5px; }
-}
+
 
 /* ── MDC (Mock Draft Creator) mobile ── */
-@media (max-width: 640px) {
-  /* Team select grid: 5-per-row at 360px+ */
-  #simTeamGrid {
-    display: flex !important;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
-  .sim-team-btn {
-    flex: 0 0 calc(20% - 4px);  /* 5-col grid */
-    min-width: 0;
-    min-height: 40px;
-    font-size: 10px;
-    padding: 3px 4px;
-    text-align: center;
-    touch-action: manipulation;
-  }
-  /* Pool drawer: ensure adequate height on landscape */
-  .mdc-pool {
-    height: min(65vh, 480px);
-  }
-  /* Pick rows: tap-friendly height */
-  .mdc-pick-row { min-height: 48px; }
-  .mdc-pool-item { min-height: 48px; }
-  /* FAB: nudge up from bottom safe area on iOS */
-  #mdcPoolFab {
-    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-  }
-  /* Simulator speed / rounds controls: stack cleanly */
-  #simSpeedSelect, #simRoundsSelect {
-    font-size: 13px;
-    padding: 7px 8px;
-    min-width: 0;
-    width: 100%;
-  }
-  /* Team tabs in results: horizontal scroll */
-  #simTeamTabBtns {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    display: flex;
-    gap: 6px;
-    padding-bottom: 6px;
-    scrollbar-width: none;
-  }
-  #simTeamTabBtns::-webkit-scrollbar { display: none; }
-}
+
 
 /* ── Compare tab: hero layout fix on mobile ── */
-@media (max-width: 640px) {
-  /* Cards strip: 2 columns at 360px, 1 column at 380px */
-  .compare-strip {
-    grid-template-columns: 1fr 1fr;
-    gap: 7px;
-  }
-  /* Stat mini-grid in card: reduce to 3 cols on very small screens */
-  @media (max-width: 380px) {
-    .ccard-stats { grid-template-columns: repeat(3, 1fr); }
-    .compare-strip { grid-template-columns: 1fr; }
-  }
-  /* Radar section */
-  #compareRadar { min-height: 240px; height: 240px !important; }
-}
+
 
 /* ── Modal / player profile: safe-area + scroll ── */
-@media (max-width: 640px) {
-  .modal-overlay {
-    /* Prevent rubber-band bounce exposing dark background */
-    overscroll-behavior: contain;
-  }
-  .modal {
-    /* Ensure modal content doesn't sit under iOS home indicator */
-    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-  }
-  /* Bio text: better line-height on mobile */
-  .modal-notes { font-size: 13px; line-height: 1.65; }
-}
+
 
 /* ── Freeform board: touch-friendly adjustments ── */
-@media (max-width: 640px) {
-  /* Cards must be large enough to tap */
-  .ff2-card { min-width: 72px; }
-  /* Density buttons: 44px touch target */
-  .ff2-density-btn {
-    min-width: 36px;
-    min-height: 36px;
-    font-size: 13px;
-  }
-  .ff2-reset-btn {
-    min-height: 36px;
-    padding: 4px 12px;
-  }
-}
+
 
 /* ── Global: ensure no horizontal overflow on any tab ── */
-.tab-panel.active {
-  overflow-x: hidden;
-}
 /* Exception: views that intentionally scroll horizontally */
 .bb-wrap,
 .table-wrap,
@@ -3450,16 +3757,7 @@ body {
 }
 
 /* ── Typography scale: prevent text from being too small on high-DPR ── */
-@media (max-width: 640px) {
-  /* iOS sets min font-size to 16px for inputs to prevent zoom — match it */
-  select, input[type="text"], input[type="search"], input[type="number"] {
-    font-size: 16px !important;  /* prevents iOS auto-zoom on focus */
-  }
-  /* But keep label/filter text small */
-  .filter-select {
-    font-size: 14px !important;
-  }
-}
+
 
 /* ═══════════════════════════════════════════════════════════════════
    MOBILE PRODUCTION REDESIGN — Decision Pass
@@ -3482,47 +3780,7 @@ body {
    On mobile, default to Big Board. Hide the Freeform option (complex
    spatial UI unusable without a mouse). Show only Board + Table.
    ───────────────────────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  /* Hide freeform on mobile — spatial drag requires precise pointer */
-  #viewFreeform { display: none !important; }
-  /* Cards view becomes the default; table as secondary. Freeform/BigBoard hidden. */
-  /* User gets: Cards | Table — both work perfectly on mobile */
 
-  /* View toggle: make full-width, even sizing */
-  .view-toggle {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 4px;
-    width: 100%;
-  }
-  .view-btn {
-    padding: 7px 4px;
-    font-size: 11px;
-    gap: 3px;
-    min-height: 40px;
-  }
-  .vb-badge { display: none; }
-  /* Count badge: inline after toggle */
-  .count-badge { font-size: 11px; }
-
-  /* Controls bar: 2-row layout on mobile */
-  .controls-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .search-wrap {
-    flex: 1 1 100%; /* full width on first row */
-    min-width: 0;
-  }
-  /* Filters: share second row */
-  #posFilter, #clsFilter {
-    flex: 1 1 calc(50% - 3px);
-    min-width: 0;
-  }
-  /* Tier customize button: icon-only on mobile */
-  .tier-customize-btn .tier-btn-label { display: none; }
-}
 
 /* ─────────────────────────────────────────────────────────────────
    PHASE 2A: BIG BOARD — Mobile scan-optimized
@@ -3533,35 +3791,7 @@ body {
    - Sort indicator pill: HIDDEN (sort still works, arrow on header)
    - Mobile legend: compact horizontal chips (already working)
    ───────────────────────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  /* Export controls: completely hidden. Exporting from a phone is edge case. */
-  .bb-screenshot-bar .bb-range-group { display: none !important; }
-  /* Hide twitter card button */
-  .bb-sub-btn[onclick*="twitter"],
-  .bb-sub-btn[onclick*="setBBSubMode"] {
-    /* Keep "Full Board (60)" — it's the mode selector. Only hide twitter. */
-    /* Selector: the twitter-specific button contains 'twitter' in onclick */
-  }
-  /* BB screenshot bar: just the mode buttons, no export */
-  .bb-screenshot-bar {
-    flex-wrap: nowrap;
-    gap: 6px;
-    margin-bottom: 8px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
-    scrollbar-width: none;
-  }
-  .bb-screenshot-bar::-webkit-scrollbar { display: none; }
 
-  /* Sort pill: hidden — active sort shown by arrow on column header */
-  /* The sort indicator div is not a class, so target by structure */
-  /* It's rendered as: div > span.sort-pill + button "reset..." */
-  /* We can hide the whole container if it has a "Sorted:" text node */
-
-  /* Active sort label: collapse to save space */
-  .bb-wrap + div[style*="Sorted"] { display: none !important; }
-}
 
 /* ─────────────────────────────────────────────────────────────────
    PHASE 2B: PLAYER CARDS — Mobile-first compact card
@@ -3572,42 +3802,7 @@ body {
    - Tweet button: REMOVED (desktop workflow)
    - Compare button (⊕): ENLARGED for tap speed
    ───────────────────────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  /* Hide secondary tags: age, height, weight */
-  .tag.age, .tag.ht, .tag.wt { display: none !important; }
-  /* Show: position + role + class only — 3 tags max */
 
-  /* Comp footer: removed */
-  .card-comp { display: none !important; }
-
-  /* Tweet button: removed */
-  .pc-tweet-btn { display: none !important; }
-
-  /* Compare button (⊕): larger tap target */
-  .hw-card-compare-btn {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 16px !important;
-    bottom: 6px !important;
-    right: 6px !important;
-    border-radius: 8px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    touch-action: manipulation !important;
-  }
-  /* Card: tighter vertical padding */
-  .player-card {
-    border-radius: 10px !important;
-  }
-  /* Stats: 3-col grid is correct; reduce cell padding */
-  .stat-cell {
-    padding: 4px 2px 3px !important;
-  }
-  .stat-val { font-size: 12px !important; }
-  .stat-bar { height: 2px !important; }
-  .stat-lbl { font-size: 8px !important; }
-}
 
 /* ─────────────────────────────────────────────────────────────────
    PHASE 2C: COMPARE — Mobile layout
@@ -3618,61 +3813,7 @@ body {
    - Physical & Profile: hidden by default (depth toggle exists)
    - Table padding: tighter on mobile
    ───────────────────────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  /* Remove 2027 option visual noise — keep functional */
-  /* Controls bar: stack year + player selectors vertically */
-  #tab-compare .controls-bar > div {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    width: 100%;
-  }
-  #compareYear, #compareSelect {
-    width: 100% !important;
-    min-width: 0 !important;
-    font-size: 14px !important;
-  }
-  #tab-compare .compare-add-btn {
-    width: 100% !important;
-    padding: 9px 14px !important;
-    font-size: 14px !important;
-    min-height: 44px !important;
-    touch-action: manipulation !important;
-  }
-  #tab-compare .compare-clear-btn {
-    font-size: 12px !important;
-    padding: 7px 12px !important;
-    min-height: 40px !important;
-    touch-action: manipulation !important;
-  }
 
-  /* Hero: vertical stack on mobile */
-  .compare-hero { flex-direction: column !important; gap: 10px !important; }
-  .compare-cards-col {
-    width: 100% !important;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
-    gap: 7px !important;
-  }
-  .compare-card { flex: 1 1 calc(50% - 4px) !important; min-width: 0 !important; }
-
-  /* Radar: full width on mobile, good height */
-  .compare-radar-wrap { width: 100% !important; }
-  #compareRadar { height: 260px !important; min-height: 260px !important; }
-
-  /* Stats table: tighter on mobile */
-  .compare-table td, .compare-table thead th {
-    padding: 4px 7px !important;
-    font-size: 11px !important;
-  }
-  .ctd-val { font-size: 13px !important; }
-  .ctd-delta { font-size: 8px !important; }
-
-  /* Mini stats grid in card: 5-col still works at 160px+ card */
-  .ccard-stats { grid-template-columns: repeat(5, 1fr) !important; }
-  .ccs-val { font-size: 12px !important; }
-  .ccs-lbl { font-size: 7px !important; }
-}
 
 /* ─────────────────────────────────────────────────────────────────
    PHASE 2D: SCATTER — Tap-to-focus model
@@ -3684,89 +3825,7 @@ body {
    - Canvas: 280px height (more room for axes and labels)
    - Tap bubble → persistent tooltip until next tap
    ───────────────────────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  /* Hide the 3rd and 4th control groups (color-by, position filter) */
-  .sc-controls .sc-ctrl-group:nth-child(3),
-  .sc-controls .sc-ctrl-group:nth-child(4),
-  .sc-controls .sc-ctrl-group:nth-child(5) {
-    display: none !important;
-  }
-  /* Only X + Y axis selectors remain — full width, clear */
-  .sc-controls {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 8px !important;
-    padding: 10px 12px !important;
-  }
-  .sc-ctrl-label {
-    font-size: 10px !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: .5px !important;
-  }
-  .sc-select {
-    font-size: 14px !important; /* prevent iOS zoom */
-    padding: 8px 8px !important;
-    min-height: 40px !important;
-    touch-action: manipulation !important;
-  }
 
-  /* Canvas: taller for better axis readability */
-  .sc-canvas-wrap {
-    height: 280px !important;
-    touch-action: none !important; /* prevents page scroll competing with tap */
-  }
-
-  /* Top-5 panel: hidden on mobile — tap-to-focus is the discovery model */
-  .sc-top5-wrap { display: none !important; }
-  #scTop5, .sc-top5 { display: none !important; }
-
-  /* Mobile focus indicator: shown when a player is tapped */
-  #scMobileFocus {
-    display: none; /* shown via JS when bubble tapped */
-    background: white;
-    border: 1.5px solid var(--gray-200);
-    border-radius: 10px;
-    padding: 10px 12px;
-    margin-top: 8px;
-    font-family: 'DM Sans', sans-serif;
-  }
-  #scMobileFocus.visible { display: block; }
-  .sc-mf-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 17px; font-weight: 800; color: var(--navy);
-    line-height: 1.1; margin-bottom: 3px;
-  }
-  .sc-mf-school { font-size: 11px; color: var(--gray-400); margin-bottom: 8px; }
-  .sc-mf-stats {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-  .sc-mf-stat {
-    background: var(--gray-50); border-radius: 6px; padding: 5px 8px;
-  }
-  .sc-mf-val {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 16px; font-weight: 900; color: var(--navy);
-  }
-  .sc-mf-lbl { font-size: 9px; color: var(--gray-400); text-transform: uppercase; letter-spacing: .4px; }
-  .sc-mf-dismiss {
-    margin-top: 8px; width: 100%; padding: 8px;
-    background: none; border: 1px solid var(--gray-200); border-radius: 7px;
-    font-size: 12px; font-weight: 600; color: var(--gray-400);
-    cursor: pointer; touch-action: manipulation;
-  }
-  .sc-mf-dismiss:active { background: var(--gray-50); }
-
-  /* Instruction hint below canvas (dismisses on first tap) */
-  #scTapHint {
-    text-align: center;
-    font-size: 11px; color: var(--gray-400);
-    padding: 5px 0 2px;
-    font-style: italic;
-    transition: opacity .3s;
-  }
-  #scTapHint.hidden { opacity: 0; pointer-events: none; }
-}
 
 /* ─────────────────────────────────────────────────────────────────
    PHASE 2E: MOCK DRAFT — Tap-speed optimization
@@ -3776,55 +3835,7 @@ body {
    - Pool items: prominent tap targets
    - Board picks: clear active pick indicator
    ───────────────────────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  /* Archive mode: hidden on mobile */
-  #mockModeArchive { display: none !important; }
-  #mockPanelArchive { display: none !important; }
 
-  /* Mode toggle: 2 buttons instead of 3 */
-  .mock-mode-strip {
-    grid-template-columns: 1fr 1fr !important;
-  }
-  .mock-mode-btn {
-    padding: 10px 8px !important;
-    min-height: 56px !important;
-    touch-action: manipulation !important;
-  }
-  .mock-mode-sub { font-size: 9px !important; }
-
-  /* Build mock controls: simpler on mobile */
-  .mdc-board-header { padding: 10px 12px 8px !important; }
-  .mdc-board-title { font-size: 14px !important; }
-  /* Action buttons: touch-friendly */
-  .mdc-act-btn {
-    min-height: 36px !important;
-    padding: 5px 10px !important;
-    font-size: 11px !important;
-    touch-action: manipulation !important;
-  }
-
-  /* Pick rows: clear active state */
-  .mdc-pick-row.active {
-    border-left: 3px solid var(--amber) !important;
-    background: #FFFBEB !important;
-  }
-  /* Pool item: larger tap target */
-  .mdc-pool-item {
-    min-height: 48px !important;
-    padding: 8px 10px !important;
-    touch-action: manipulation !important;
-  }
-  /* Pool search: full-width, font-size prevents iOS zoom */
-  #mdcPoolSearch {
-    font-size: 16px !important;
-    padding: 9px 12px !important;
-  }
-  /* Sim speed/rounds: full width */
-  .sim-controls-row {
-    flex-direction: column !important;
-    gap: 8px !important;
-  }
-}
 
 /* ─────────────────────────────────────────────────────────────────
    PHASE 3: GLOBAL MOBILE SYSTEM
@@ -3833,29 +3844,7 @@ body {
    - No hover-dependent information on mobile
    - Tap = primary action, long-press not used
    ───────────────────────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  /* Universal touch-action for all interactive elements */
-  button, [onclick], .nav-tab, .view-btn, .filter-select,
-  .player-card, .bb-row, .board-table tr[data-rank] {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: rgba(0,0,0,0.06);
-  }
-  /* Active feedback for all tappable rows/cards */
-  .player-card:active { transform: scale(0.98); transition: transform 0.08s; }
-  .bb-row:active { background: #E8EEFA !important; transition: none; }
-  /* Nav tabs: ensure sticky works correctly on iOS */
-  .nav-tabs {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-  }
-  /* Modals: bottom sheet feels native */
-  .modal {
-    border-radius: 16px 16px 0 0 !important;
-    overscroll-behavior: contain !important;
-  }
-  /* Page-level overflow: no horizontal scroll on any tab */
-  .tab-panel.active { overflow-x: hidden; max-width: 100vw; }
-}
+
 
 /* ─────────────────────────────────────────────────────────────────
    PHASE 5: DIFFERENTIATORS
@@ -3865,22 +3854,7 @@ body {
    ───────────────────────────────────────────────────────────────── */
 
 /* 1. Quick-add button in Big Board rows: always visible on mobile */
-@media (max-width: 640px) {
-  .bb-compare-dot {
-    /* Normally opacity-less; on mobile always visible */
-    opacity: 1 !important;
-    width: 26px !important;
-    height: 26px !important;
-    border-radius: 6px !important;
-    font-size: 13px !important;
-    background: rgba(37,99,235,.08) !important;
-    color: var(--blue) !important;
-    border-color: rgba(37,99,235,.2) !important;
-    touch-action: manipulation !important;
-  }
-  /* Make the bb-compare-col visible again on mobile */
-  .bb-compare-col { display: flex !important; }
-}
+
 
 /* 2. Persistent compare tray: sticky bottom tray showing added players */
 #mobCompareTray {
@@ -4420,29 +4394,27 @@ body.mct-open .tab-panel.active {
 <!-- COMPARE -->
 <section class="tab-panel" id="tab-compare">
   <div class="print-header"><div class="print-header-title">HoopsWill NBA Draft Board — Player Compare</div><div class="print-header-sub">Analytics Model · 2019–2027 · hoopswill.com</div></div>
-  <div class="controls-bar" style="margin-bottom:12px;flex-wrap:wrap;gap:8px">
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-      <span style="font-size:12px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px">Draft Class</span>
-      <select id="compareYear" class="filter-select" onchange="populateCompareSelect()">
-        <option value="2026">2026 ★</option>
-        <option value="2027">2027 Watch</option>
-        <option value="2025">2025</option>
-        <option value="2024">2024</option>
-        <option value="2023">2023</option>
-        <option value="2022">2022</option>
-        <option value="2021">2021</option>
-        <option value="2020">2020</option>
-        <option value="2019">2019</option>
-      </select>
-      <span style="font-size:12px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px">Player</span>
-      <select id="compareSelect" class="filter-select" style="min-width:220px">
-        <option value="">Select a prospect…</option>
-      </select>
-      <button class="compare-add-btn" onclick="addToCompare()">+ Add</button>
-    </div>
+  <div class="compare-controls-row">
+    <label class="compare-ctrl-label">Class</label>
+    <select id="compareYear" class="filter-select" onchange="populateCompareSelect()">
+      <option value="2026">2026 ★</option>
+      <option value="2027">2027 Watch</option>
+      <option value="2025">2025</option>
+      <option value="2024">2024</option>
+      <option value="2023">2023</option>
+      <option value="2022">2022</option>
+      <option value="2021">2021</option>
+      <option value="2020">2020</option>
+      <option value="2019">2019</option>
+    </select>
+    <label class="compare-ctrl-label">Player</label>
+    <select id="compareSelect" class="filter-select compare-player-select">
+      <option value="">Select a prospect…</option>
+    </select>
+    <button class="compare-add-btn" onclick="addToCompare()">+ Add</button>
     <button class="compare-clear-btn" onclick="clearCompare()">✕ Clear All</button>
   </div>
-  <div id="compareError" style="display:none;color:var(--red);font-size:13px;font-weight:600;margin-bottom:10px"></div>
+  <div id="compareError" class="compare-error-msg" style="display:none"></div>
   <div id="compareContent"></div>
 </section>
 
@@ -5506,7 +5478,7 @@ function avatarHtml(playerName, position, size='52px', borderRadius='10px') {
   const loadChk  = "if(this.naturalWidth<=10){this.style.display='none';this.nextElementSibling.style.display='flex';}";
   const errChk   = "this.style.display='none';this.nextElementSibling.style.display='flex';";
   const imgTag   = url
-    ? `<img src="${url}" onload="${loadChk}" onerror="${errChk}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:top center">`
+    ? `<img src="${url}" onload="${loadChk}" onerror="${errChk}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center 18%">`
     : '';
   const fbDisplay = url ? 'none' : 'flex';
   return `<div style="width:${size};height:${size};border-radius:${borderRadius};overflow:hidden;flex-shrink:0;position:relative;background:${color}">
@@ -5981,39 +5953,25 @@ function buildPlayerCard(p, tierKey) {
   var name    = p.name   || '';
   var school  = p.school || '';
 
-  // ── Name font size: computed during string build — avoids post-render DOM read+write
-  // Each length tier maps to a readable size within the fixed card width (278px min).
-  var nameLen = name.length;
-  var nameFontSize = nameLen <= 9  ? '20px'
-                   : nameLen <= 12 ? '19px'
-                   : nameLen <= 14 ? '18px'
-                   : nameLen <= 17 ? '16px'
-                   : nameLen <= 20 ? '14px' : '13px';
+  // Metric — primary analytical signal
+  var gm          = gradStyle(p.metric, 'metric');
+  var mv          = p.metric ? Number(p.metric).toFixed(1) : '—';
+  var isElite     = p.metric > 140;
+  var metricClass = isElite ? 'card-metric elite' : 'card-metric';
 
-  // ── Metric display: gradStyle provides bg+colour tint from class percentile
-  var gm      = gradStyle(p.metric, 'metric');
-  var mv      = p.metric  ? Number(p.metric).toFixed(1) : '—';
-  var metricClass = (p.metric > 140) ? 'card-metric elite' : 'card-metric';
+  // School logo (small, above school name)
+  var logoHtml  = buildSchoolLogoHtml(school);
 
-  // ── School logo: uses new circular container instead of raw inline span
-  var logoHtml = buildSchoolLogoHtml(school);
-  var schoolRow = logoHtml
-    ? logoHtml + '<span>' + (school || '—') + '</span>'
-    : (school || '—');
-
-  // ── Tags: position, role, class, age, height, weight
-  // Ordered by visual importance — position first, raw measurements last
+  // Tags
   var tags = '';
-  if (p.position)    tags += '<span class="tag pos">'  + p.position                           + '</span>';
-  if (p.torvik_role) tags += '<span class="tag role">' + p.torvik_role                        + '</span>';
-  if (p.cls)         tags += '<span class="tag cls">'  + p.cls                                + '</span>';
-  if (p.age)         tags += '<span class="tag age">'  + parseFloat(p.age).toFixed(1) + ' yrs' + '</span>';
-  if (p.ht)          tags += '<span class="tag ht">'   + Math.floor(p.ht/12) + '\'' + (p.ht%12) + '"' + '</span>';
-  if (p.wt)          tags += '<span class="tag wt">'   + p.wt + ' lbs'                        + '</span>';
+  if (p.position)    tags += '<span class="tag pos">'  + p.position   + '</span>';
+  if (p.torvik_role) tags += '<span class="tag role">' + p.torvik_role + '</span>';
+  if (p.cls)         tags += '<span class="tag cls">'  + p.cls         + '</span>';
+  if (p.age)         tags += '<span class="tag age">'  + parseFloat(p.age).toFixed(1) + ' yrs</span>';
+  if (p.ht)          tags += '<span class="tag ht">'   + Math.floor(p.ht/12) + '\'' + (p.ht%12) + '"</span>';
+  if (p.wt)          tags += '<span class="tag wt">'   + p.wt + ' lbs</span>';
 
-  // ── Six stats in 2×3 grid.
-  // Each cell: gradStyle background, value, mini progress bar, label.
-  // The bar width mirrors the gradStyle ratio so colour and bar reinforce each other.
+  // Six stats
   var gs1 = gradStyle(p.ts_pct,  'ts_pct');
   var gs2 = gradStyle(p.pa2_usg, 'pa2_usg');
   var gs3 = gradStyle(p.stl_bl,  'stl_bl');
@@ -6053,44 +6011,59 @@ function buildPlayerCard(p, tierKey) {
       + '<div class="stat-lbl">A/TO</div>'
     + '</div>';
 
-  // ── Comp footer: split on / or , separators, join with dots for readability
+  // Comp footer
   var compHtml = '';
   if (p.comp || p.comp_tool) {
     var compStr = (p.comp || p.comp_tool).split(/[/,]/).map(function(s){ return s.trim(); }).filter(Boolean).join(' · ');
     compHtml = '<div class="card-comp">Comps: <strong>' + compStr + '</strong></div>';
   }
 
-  // ── Tweet-card button: styled via .pc-tweet-btn, hidden on mobile via CSS.
-  // event.stopPropagation() prevents bubbling to the card's openPlayerModal handler.
-  var tweetBtn = '<button class="pc-tweet-btn" onclick="event.stopPropagation();openTweetCard(' + p.rank + ')" title="Generate tweet card">&#128247;</button>';
+  // ── CARD STRUCTURE ─────────────────────────────────────────────────────────
+  // [TIER ACCENT BAR — 3px gradient]
+  // [#rank] [Photo 60px] [Identity: name + school-block] [Metric far-right]
+  //         school-block: small logo above school name text (stacked)
+  // [TAGS]
+  // [STATS GRID — 6 cells]
 
-  // ── Full card template — structure:
-  //   [accent bar]  ← tier identity strip at top edge
-  //   [header]      ← rank pip + circular avatar + name/school + metric + tweet btn
-  //   [tags]        ← position, role, class, age, measurables
-  //   [stats grid]  ← 2×3 stat cells with gradient fills and progress bars
-  //   [comp footer] ← NBA comparables (if present)
   return '<div class="player-card ' + tierKey + '" onclick="openPlayerModal(' + p.rank + ')" data-rank="' + p.rank + '">'
-    /* Tier accent: thin gradient bar — colour-codes tier without requiring text */
+
     + '<div class="pc-accent"></div>'
+
     + '<div class="card-header">'
-      + '<div class="hw-card-rank">#' + p.rank + '</div>'
-      + avatarHtml(p.name, p.position || '', '40px', '9px')
+
+      // Rank badge — large, pops immediately
+      + '<div class="card-rank-badge">#' + p.rank + '</div>'
+
+      // Player photo — 60px, prominent, identifiable
+      + avatarHtml(p.name, p.position || '', '60px', '10px')
+
+      // Identity: name + school stacked block
       + '<div class="card-identity">'
-        + '<div class="card-name" style="font-size:' + nameFontSize + '">' + name + getBadgeHtml(p.name) + '</div>'
-        + '<div class="card-school">' + schoolRow + '</div>'
+        + '<div class="card-name">' + name + getBadgeHtml(p.name) + '</div>'
+        + '<div class="card-school-block">'
+          + (logoHtml ? '<div class="card-school-logo">' + logoHtml + '</div>' : '')
+          + '<span class="card-school-name">' + (school || '—') + '</span>'
+        + '</div>'
       + '</div>'
-      + '<div class="card-rank-metric" style="' + gm + 'border-radius:8px;padding:5px 9px">'
+
+      // Metric chip — right edge, tier-coloured background
+      + '<div class="card-metric-chip" style="' + gm + '">'
         + '<div class="' + metricClass + '">' + mv + '</div>'
-        + '<div class="metric-lbl" style="color:inherit;opacity:.6">Metric</div>'
+        + '<div class="card-metric-label">METRIC</div>'
+        + (isElite ? '<div class="card-elite-pip">ELITE</div>' : '')
       + '</div>'
+
     + '</div>'
+
     + '<div class="card-tags">' + tags + '</div>'
     + '<div class="card-stats">' + statsHtml + '</div>'
     + compHtml
     + '<button class="hw-card-compare-btn" onclick="event.stopPropagation();addCardToCompare(' + p.rank + ')" title="Add to Compare">⊕</button>'
     + '</div>';
 }
+
+
+
 
 // ── renderBoardCards: orchestrates tier grouping → card building → DOM write.
 // Uses a single string concatenation pass and one innerHTML write for performance
@@ -7985,6 +7958,8 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     tab.classList.add('active');
+    // Dismiss mobile scatter focus card on tab switch (prevents stale state)
+    if (typeof scDismissMobileFocus === 'function') scDismissMobileFocus();
     // Scroll active tab into view on mobile (no-op on desktop)
     tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
@@ -9810,8 +9785,10 @@ function populateCompareSelect() {
   board.forEach(function(p) {
     var opt = document.createElement('option');
     opt.value = p.rank;
-    var base   = p.name.indexOf(' - ') > 0 ? p.name.slice(0, p.name.indexOf(' - ')) : p.name;
-    var school = p.name.indexOf(' - ') > 0 ? p.name.slice(p.name.indexOf(' - ') + 3) : '';
+    // p.name is pre-cleaned by DataService._name() — school suffix already stripped.
+    // p.school is pre-parsed by DataService._school(). No re-parsing needed.
+    var base   = p.name;
+    var school = p.school || '';
     opt.textContent = '#' + p.rank + ' ' + base + (school ? ' \u2014 ' + school : '');
     sel.appendChild(opt);
   });
@@ -9870,8 +9847,8 @@ function renderCompare() {
   if (!compareList.length) {
     el.innerHTML = '<div class="compare-empty">'
       + '<div class="compare-empty-icon">\u2696\uFE0F</div>'
-      + '<div class="compare-empty-text">Select 2\u20134 prospects to compare</div>'
-      + '<div style="font-size:12px;color:var(--gray-400)">Choose a draft class and player, then click\u00a0+\u00a0Add</div>'
+      + '<div class="compare-empty-title">Compare Prospects</div>'
+      + '<div class="compare-empty-sub">Select 2&ndash;4 players from any draft class and click&nbsp;+ Add</div>'
       + '</div>';
     return;
   }
@@ -9960,13 +9937,41 @@ function renderCompare() {
 
   var out = '';
 
-  // ╔════════════════════════════════════════════════════════╗
-  // ║  HERO: [cards column LEFT] + [radar RIGHT]             ║
-  // ╚════════════════════════════════════════════════════════╝
-  out += '<div class="compare-hero">';
+  // ╔═══════════════════════════════════════════════════════════════╗
+  // ║  NEW LAYOUT: Radar dominant → Cards strip → Stats table       ║
+  // ╚═══════════════════════════════════════════════════════════════╝
+  out += '<div class="compare-panel">';
 
-  // ── Cards column ─────────────────────────────────────────────────
-  out += '<div class="compare-cards-col">';
+  // ── 1. RADAR PANEL — full width, prominent ─────────────────────
+  out += '<div class="compare-radar-section">';
+  out += '<div class="compare-radar-topbar">';
+  out += '<div class="compare-radar-title">Percentile Radar'
+       + '<span style="font-size:10px;font-weight:500;color:var(--gray-400);margin-left:6px;text-transform:none">vs own draft class</span>'
+       + '</div>';
+
+  // Legend: one chip per player with color dot + win indicator
+  out += '<div class="compare-radar-legend">';
+  compareList.forEach(function(p,ci){
+    var isLdr = wins[ci]===maxWins && compareList.length>1;
+    out += '<div class="crl-item">'
+         + '<div class="crl-dot" style="background:'+COMPARE_COLORS[ci]+'"></div>'
+         + '<span style="font-weight:'+(isLdr?'800':'600')+';color:var(--navy)">'
+         + (isLdr ? '<span style="color:#B8860F;margin-right:2px">★</span>' : '')
+         + p.name
+         + '</span>'
+         + '<span style="font-size:9px;color:var(--gray-400);font-weight:500">\''+((p._year||'2026').slice(2))+'</span>'
+         + '</div>';
+  });
+  out += '</div></div>'; // legend + topbar
+
+  // Radar canvas
+  out += '<div class="compare-radar-canvas-wrap"><canvas id="compareRadar"></canvas></div>';
+  out += '</div>'; // compare-radar-section
+
+  // ── 2. PLAYER CARDS STRIP ─────────────────────────────────────
+  out += '<div class="compare-cards-section">';
+  out += '<div class="compare-cards-strip">';
+
   compareList.forEach(function(p, ci) {
     var yr     = p._year || '2026';
     var base   = p.name;
@@ -9978,28 +9983,27 @@ function renderCompare() {
                : tier.key==='late1'     ? 'var(--blue)'
                : tier.key==='second'    ? 'var(--cyan)'
                : 'var(--teal)';
-    var gm    = crossGradStyle(p.metric,'metric',yr);
-    var logo  = schoolLogoHtml(school, '14px', '3px');
-    var isLdr = wins[ci]===maxWins && compareList.length>1;
+    var gm     = crossGradStyle(p.metric,'metric',yr);
+    var logo   = schoolLogoHtml(school, '14px', '3px');
+    var isLdr  = wins[ci]===maxWins && compareList.length>1;
 
     out += '<div class="compare-card" data-ci="'+ci+'">';
     out += '<div class="compare-card-accent" style="background:'+color+'"></div>';
     out += '<button class="compare-card-remove" onclick="removeFromCompare('+p.rank+',\''+yr+'\')" title="Remove">\u2715</button>';
 
-    // Header: rank badge + avatar + name/school
     out += '<div class="compare-card-header">';
     out += '<div class="compare-card-rank" style="background:'+tierBg+'">'
          + '<div class="rn">'+p.rank+'</div><div class="rl">rank</div></div>';
-    out += avatarHtml(p.name, p.position||'', '38px', '6px');
+    out += avatarHtml(p.name, p.position||'', '40px', '7px');
     out += '<div class="compare-card-info">'
          + '<div class="cn">'+base+'</div>'
          + '<div class="cs">'+(logo||'')
-         + '<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px">'+(school||'\u2014')+'</span>'
+         + '<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px">'+(school||'\u2014')+'</span>'
          + '<span style="flex-shrink:0;background:rgba(37,99,235,.1);color:var(--blue);font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px">'+yr+'</span>'
          + '</div></div>';
     out += '</div>'; // card-header
 
-    // Metric / tier / win-count
+    // Metric chip with gradient
     out += '<div class="compare-metric-row" style="'+gm+'">'
          + '<div>'
          + '<div class="compare-metric-val" style="color:inherit">'+(p.metric?Number(p.metric).toFixed(1):'\u2014')+'</div>'
@@ -10007,124 +10011,138 @@ function renderCompare() {
          + '</div>'
          + '<div style="text-align:right">'
          + '<div style="font-size:11px;font-weight:700;color:inherit;opacity:.85">'+tier.label+'</div>'
-         + '<div style="font-size:9px;color:inherit;opacity:'+(isLdr?'.9':'.5')+';font-weight:'+(isLdr?'800':'600')+'">'
-         + (isLdr?'\u2605 ':'')+wins[ci]+'/'+totalStats+' leads'
-         + '</div></div>'
+         + (isLdr ? '<div class="compare-card-leader-badge">\u2605 Leader</div>' : '<div style="font-size:9px;color:inherit;opacity:.5;font-weight:600">'+wins[ci]+'/'+totalStats+' leads</div>')
+         + '</div>'
          + '</div>';
 
-    // ── 5-stat mini-grid ─────────────────────────────────────────
+    // 5-stat mini-grid
     out += '<div class="ccard-stats">';
     CARD_STATS.forEach(function(cs) {
-      var v = p[cs.k];
-      var isBest = (typeof v==='number' && compareList.length>1 && v===cardBests[cs.k]);
-      var gs = (v!=null && v!==0) ? crossGradStyle(v, cs.k, yr) : '';
-      out += '<div class="ccs-cell'+(isBest?' ccs-lead':'')+'" style="'+gs+'">';
-      out += '<span class="ccs-val" style="'+(gs?'color:inherit':'')+'">'+cs.fmt(v)+'</span>';
-      out += '<span class="ccs-lbl" style="'+(gs?'color:inherit;opacity:.55':'')+'">'+cs.l+'</span>';
-      out += '</div>';
+      var v     = p[cs.k];
+      var disp  = cs.fmt(v);
+      var peers = compareList.map(function(pp){ return pp[cs.k]; });
+      var maxV  = peers.reduce(function(a,b){ return (b!=null && !isNaN(b) && Number(b)>Number(a)) ? b : a; }, -Infinity);
+      var isLead= cs.hb && v!=null && !isNaN(v) && Number(v)===Number(maxV) && compareList.length>1;
+      out += '<div class="ccs-cell'+(isLead?' ccs-lead':'')+'">'
+           + '<span class="ccs-val">'+disp+'</span>'
+           + '<span class="ccs-lbl">'+cs.l+'</span>'
+           + '</div>';
     });
     out += '</div>'; // ccard-stats
 
     out += '</div>'; // compare-card
   });
-  out += '</div>'; // compare-cards-col
 
-  // ── Radar — right column ──────────────────────────────────────────
-  if (compareList.length >= 2) {
-    out += '<div class="compare-radar-wrap">';
-    out += '<div class="compare-radar-top">';
-    out += '<div class="compare-radar-title">Percentile Radar'
-         + '<span style="font-size:9px;font-weight:500;color:var(--gray-400);margin-left:5px">vs own draft class</span>'
-         + '</div>';
-    out += '<div class="compare-radar-legend">';
-    compareList.forEach(function(p,ci){
-      var isLdr = wins[ci]===maxWins && compareList.length>1;
-      out += '<div style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:'+(isLdr?'800':'600')+';color:var(--navy)">'
-           + '<span style="width:10px;height:10px;border-radius:50%;background:'+COMPARE_COLORS[ci]+';flex-shrink:0"></span>'
-           + p.name
-           + (isLdr?'<span style="font-size:8px;color:#B8860F;margin-left:2px">\u2605</span>':'')
-           + '<span style="font-size:9px;color:var(--gray-400);font-weight:500;margin-left:4px">\''+(p._year||'2026').slice(2)+'</span>'
-           + '</div>';
-    });
-    out += '</div></div>'; // legend + radar-top
-    out += '<div class="compare-radar-canvas-wrap"><canvas id="compareRadar"></canvas></div>';
-    out += '</div>'; // radar-wrap
-  } else if (compareList.length === 1) {
-    // Single player — show a placeholder prompt instead of empty space
-    out += '<div class="compare-radar-wrap" style="align-items:center;justify-content:center">';
-    out += '<div style="text-align:center;padding:40px 20px;color:var(--gray-300)">';
-    out += '<div style="font-size:32px;opacity:.3;margin-bottom:10px">\u25ca</div>';
-    out += '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:14px;font-weight:700">Add a 2nd player</div>';
-    out += '<div style="font-size:11px;margin-top:4px">to see the radar comparison</div>';
-    out += '</div></div>';
-  }
+  out += '</div>'; // compare-cards-strip
+  out += '</div>'; // compare-cards-section
 
-  out += '</div>'; // compare-hero
-
-  // ╔════════════════════════════════════════════════════════╗
-  // ║  STATS TABLE — full width below hero                   ║
-  // ╚════════════════════════════════════════════════════════╝
-  out += '<div class="compare-panel"><div class="compare-table-wrap">';
+  // ── 3. STATS TABLE — collapsible ─────────────────────────────
+  out += '<div class="compare-table-section" id="compareTableSection">';
+  out += '<div class="compare-table-header" onclick="var s=document.getElementById(\'compareTableSection\');s.classList.toggle(\'expanded\');">';
   out += '<div class="compare-table-title">'
-       + 'Stat Comparison'
-       + '<span style="font-size:10px;font-weight:500;color:var(--gray-400)">\u2605\u00a0leader\u2003\u00b1\u00a0delta</span>'
-       + '<button onclick="var t=this.closest(\'.compare-table-wrap\').querySelector(\'.compare-table\');t.classList.toggle(\'depth-open\');this.textContent=t.classList.contains(\'depth-open\')?\'\u2212 Depth\':\'+ Depth\';" '
-       + 'style="margin-left:auto;font-size:10px;font-weight:700;font-family:\'Barlow Condensed\',sans-serif;background:none;border:1.5px solid var(--gray-200);border-radius:5px;padding:2px 9px;cursor:pointer;color:var(--gray-500);transition:all .12s" '
-       + 'onmouseover="this.style.borderColor=\'var(--blue)\';this.style.color=\'var(--blue)\'" '
-       + 'onmouseout="this.style.borderColor=\'var(--gray-200)\';this.style.color=\'var(--gray-500)\'">+ Depth</button>'
+       + '<span>Stat Comparison</span>'
+       + '<span style="font-size:10px;font-weight:500;color:var(--gray-400);text-transform:none">\u2605\u00a0leader\u2003\u00b1\u00a0delta</span>'
        + '</div>';
+  out += '<span class="compare-table-toggle">\u25be</span>';
+  out += '</div>'; // compare-table-header
 
-  out += '<div class="compare-table"><table><thead><tr><th>Stat</th>';
-  compareList.forEach(function(p,ci){
-    out += '<th class="cth" title="'+p.name+'" style="border-top:3px solid '+COMPARE_COLORS[ci]+';color:'+COMPARE_COLORS[ci]+'">'
-         + p.name.split(' ').pop()
-         + '<br><span style="font-size:9px;font-weight:600;opacity:.65">'+(p._year||'2026')+'</span>'
-         + '</th>';
-  });
-  out += '</tr></thead><tbody>';
+  out += '<div class="compare-table-body">';
+  out += '<div style="padding:0 6px 6px">';
 
-  out += '<tr class="compare-quick-row"><td>OVERALL</td>';
+  // ── Table header ─────────────────────────────────────────────
+  var tableHtml = '<div class="compare-table"><table><thead><tr>'
+    + '<th style="background:#F8FAFC;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gray-400);padding:8px 10px">Stat</th>';
+
   compareList.forEach(function(p,ci){
     var isLdr = wins[ci]===maxWins && compareList.length>1;
-    out += '<td><span class="cqr-score'+(isLdr?' cqr-lead':'')+'">'+wins[ci]+(isLdr?'\u2605':'')+'</span>'
-         + '<span class="cqr-wins">'+wins[ci]+'\u00a0of\u00a0'+totalStats+'\u00a0leads</span></td>';
+    var color = COMPARE_COLORS[ci];
+    tableHtml += '<th class="cth" style="border-top:3px solid '+color+'">'
+              + '<div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0">'
+              + avatarHtml(p.name,p.position||'','28px','5px')
+              + '<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:13px;font-weight:800;color:var(--navy);white-space:nowrap">'
+              + (isLdr ? '\u2605 ' : '') + p.name + '</span>'
+              + '<span style="font-size:9px;color:var(--gray-400)">'+(p._year||'2026')+'</span>'
+              + '</div></th>';
   });
-  out += '</tr>';
+  tableHtml += '</tr></thead><tbody>';
 
-  SECTIONS.forEach(function(section){
-    var dc=section.depth?' ctr-depth':'', tc=section.depth?' ctr-toggle':'';
-    out += '<tr class="ctr-section'+dc+tc+'"><td colspan="'+(compareList.length+1)+'">'+section.label+'</td></tr>';
-    section.stats.forEach(function(def){
-      var vals=compareList.map(function(p){ var v=p[def.k]; return (v!=null&&v!=='') ? v:null; });
-      var numV=vals.filter(function(v){ return typeof v==='number'; });
-      var best=null;
-      if(numV.length>1&&def.hb!==null) best=def.hb?Math.max.apply(null,numV):Math.min.apply(null,numV);
-      var rowCls=(section.depth?' ctr-depth':'')+(def.k===biggestGapKey?' ctr-maxgap':'');
-      out += '<tr data-stat="'+def.k+'"'+(rowCls?' class="'+rowCls.trim()+'"':'')+'>';
-      out += '<td>'+def.l+'</td>';
+  // ── Quick-score row ─────────────────────────────────────────
+  tableHtml += '<tr class="compare-quick-row"><td style="font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase">Overall Wins</td>';
+  compareList.forEach(function(p,ci){
+    var isLdr = wins[ci]===maxWins && compareList.length>1;
+    tableHtml += '<td><span class="cqr-score'+(isLdr?' cqr-lead':'')+'">'+wins[ci]+'</span>'
+              + '<span class="cqr-wins">of '+totalStats+' stats</span></td>';
+  });
+  tableHtml += '</tr>';
+
+  // ── Data sections ────────────────────────────────────────────
+  SECTIONS.forEach(function(sec){
+    tableHtml += '<tr class="ctr-section'+(sec.depth?' ctr-toggle':'')+'" data-sec="'+sec.label+'">'
+              + '<td colspan="'+(compareList.length+1)+'" style="background:#F4F6F9;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gray-400);padding:3px 10px;border-bottom:1px solid var(--gray-200)">'+sec.label+'</td></tr>';
+
+    sec.stats.forEach(function(st){
+      var vals = compareList.map(function(p){ return p[st.k]; });
+      var maxV = vals.reduce(function(a,b){ return (b!=null&&!isNaN(b)&&Number(b)>Number(a))?b:a; },-Infinity);
+      var rowClass = 'ctr-row'+(sec.depth?' ctr-depth':'');
+
+      // gap bar: max delta as fraction of range for visualization
+      var numericVals = vals.filter(function(v){ return v!=null&&!isNaN(v); }).map(Number);
+      var rangeMin = Math.min.apply(null,numericVals);
+      var rangeMax = Math.max.apply(null,numericVals);
+      var rangeSpan = rangeMax - rangeMin;
+
+      tableHtml += '<tr class="'+rowClass+'">';
+      tableHtml += '<td style="font-family:\'Barlow Condensed\',sans-serif;font-size:13px;font-weight:700;color:var(--navy);position:sticky;left:0;background:white;border-right:1px solid var(--gray-100);padding:5px 18px 5px 10px">'+st.l+'</td>';
+
       compareList.forEach(function(p,ci){
-        var v=vals[ci], isBest=(v!==null&&v===best);
-        var d=(!isBest&&best!==null)?delta(def,v,best):null;
-        out += '<td class="'+(isBest?'compare-best':'')+'"><span class="ctd-val">'+def.fmt(v)+'</span>';
-        if(d) out += '<span class="ctd-delta '+d.cls+'">'+d.text+'</span>';
-        out += '</td>';
-      });
-      out += '</tr>';
-      if(numV.length>=2&&def.hb!==null){
-        var mn=Math.min.apply(null,numV),mx=Math.max.apply(null,numV);
-        if(mx>mn){
-          out += '<tr class="compare-gap-row'+(section.depth?' ctr-depth':'')+'"><td></td>';
-          compareList.forEach(function(p,ci){
-            var v=vals[ci], pct=v!==null?Math.round((v-mn)/(mx-mn)*100):0;
-            out += '<td><div class="cgap-track"><div class="cgap-fill" style="width:'+pct+'%;background:'+COMPARE_COLORS[ci]+'"></div></div></td>';
-          });
-          out += '</tr>';
+        var v = p[st.k];
+        var disp = st.fmt(v);
+        var isBest = st.hb && v!=null && !isNaN(v) && Number(v)===Number(maxV) && compareList.length>1;
+
+        var delta='';
+        if(compareList.length>1 && ci>0 && v!=null && !isNaN(v) && vals[0]!=null && !isNaN(vals[0])){
+          var d = Number(v)-Number(vals[0]);
+          if(Math.abs(d)>0.001){
+            var sign = d>0?'+':'';
+            delta = '<span class="ctd-delta '+(d>0?'pos':'neg')+'">'+sign+st.fmt(d)+'</span>';
+          }
         }
+
+        tableHtml += '<td class="'+(isBest?'compare-best':'')+'">'
+                  + '<span class="ctd-val">'+disp+'</span>'
+                  + delta
+                  + '</td>';
+      });
+      tableHtml += '</tr>';
+
+      // Gap visualization row
+      if(rangeSpan>0 && numericVals.length===compareList.length){
+        tableHtml += '<tr class="compare-gap-row"><td style="position:sticky;left:0;background:white;border-right:1px solid var(--gray-100)"></td>';
+        compareList.forEach(function(p,ci){
+          var v = Number(p[st.k]);
+          var fillPct = rangeSpan>0 ? ((v-rangeMin)/rangeSpan*100).toFixed(1) : 0;
+          tableHtml += '<td><div class="cgap-track"><div class="cgap-fill" style="width:'+fillPct+'%;background:'+COMPARE_COLORS[ci]+'"></div></div></td>';
+        });
+        tableHtml += '</tr>';
       }
     });
   });
 
-  out += '</tbody></table></div></div></div>'; // table + table-wrap + compare-panel
+  tableHtml += '</tbody></table></div>';
+  out += tableHtml;
+  out += '</div></div>'; // compare-table-body + padding
+
+  // Depth toggle button
+  out += '<div style="padding:8px 16px;border-top:1px solid var(--gray-100);display:flex;justify-content:center">'
+       + '<button onclick="var s=document.getElementById(\'compareTableSection\');s.classList.toggle(\'expanded\');" '
+       + 'style="font-size:11px;font-weight:700;font-family:\'Barlow Condensed\',sans-serif;background:none;border:1.5px solid var(--gray-200);border-radius:5px;padding:4px 14px;cursor:pointer;color:var(--gray-500);letter-spacing:.3px;text-transform:uppercase;transition:all .12s" '
+       + 'onmouseover="this.style.borderColor=\'var(--blue)\';this.style.color=\'var(--blue)\'" '
+       + 'onmouseout="this.style.borderColor=\'\';this.style.color=\'\'">'
+       + '\u25be Expand Stats</button>'
+       + '</div>';
+
+  out += '</div>'; // compare-table-section
+  out += '</div>'; // compare-panel
 
   el.innerHTML = out;
 
@@ -10197,8 +10215,9 @@ function renderCompare() {
       el.querySelectorAll('.compare-card.crd-hover').forEach(function(c){ c.classList.remove('crd-hover'); });
     });
   }
+  // Sync mobile compare tray — direct call, replaces function patching
+  if (typeof updateMobileTray === 'function') updateMobileTray();
 }
-
 
 
 
@@ -10957,6 +10976,8 @@ function scRenderDebounced() {
     var isAll = document.getElementById('scYear') && document.getElementById('scYear').value === 'all';
     warn.style.display = (isMobile && isAll) ? 'block' : 'none';
   }
+  // Dismiss mobile focus card on axis/year change — stale state on fresh chart
+  if (typeof scDismissMobileFocus === 'function') scDismissMobileFocus();
   clearTimeout(_scRenderTimer);
   _scRenderTimer = setTimeout(scRender, 150);
 }
@@ -15545,7 +15566,10 @@ window.hwRollForward = (function() {
     var hint = document.getElementById('scTapHint');
     if (hint && !_tapHintDismissed) hint.style.display = 'block';
 
-    canvas.addEventListener('touchend', function(e) {
+    // Use assignment (not addEventListener) to prevent listener accumulation.
+    // scRender() is called on every axis change — addEventListener would stack
+    // a new handler each time on the same canvas element. Assignment replaces.
+    canvas._scMobileTapHandler = function(e) {
       e.preventDefault();
       if (!chart || !allPts.length) return;
 
@@ -15564,8 +15588,7 @@ window.hwRollForward = (function() {
       try {
         var xScale = chart.scales.x;
         var yScale = chart.scales.y;
-        // Generous tap radius: 20px (mobile finger width / 2)
-        var TAP_R = 20;
+        var TAP_R  = 20;
         var nearest = null, nearestDist = Infinity;
         allPts.forEach(function(pt) {
           var px = xScale.getPixelForValue(pt.x);
@@ -15578,7 +15601,6 @@ window.hwRollForward = (function() {
         });
 
         if (nearest) {
-          // Tapping same player dismisses focus
           if (_scFocusedPlayer && _scFocusedPlayer._p.rank === nearest._p.rank) {
             scDismissMobileFocus();
           } else {
@@ -15586,11 +15608,13 @@ window.hwRollForward = (function() {
             scShowMobileFocus(nearest, xM, yM);
           }
         } else {
-          // Tapping empty space dismisses
           scDismissMobileFocus();
         }
       } catch(err) {}
-    }, { passive: false });
+    };
+    // Remove any previous listener before adding, as belt-and-suspenders safety
+    canvas.removeEventListener('touchend', canvas._scMobileTapHandler);
+    canvas.addEventListener('touchend', canvas._scMobileTapHandler, { passive: false });
   };
 
   window.scShowMobileFocus = function(pt, xM, yM) {
@@ -15643,92 +15667,63 @@ window.hwRollForward = (function() {
     if (el) el.classList.remove('visible');
   };
 
-  // Clear focus when scatter re-renders (axis change, year change)
-  var _origScRenderDebounced = window.scRenderDebounced;
-  if (typeof _origScRenderDebounced === 'function') {
-    window.scRenderDebounced = function() {
-      scDismissMobileFocus();
-      _origScRenderDebounced.apply(this, arguments);
-    };
-  }
+  // scDismissMobileFocus is called directly inside scRenderDebounced() — no patch needed.
 })();
 
 // ── Mobile Compare Tray ────────────────────────────────────────────
 // Persistent bottom tray: shows added players + "Compare →" button.
 // Updates after every addToCompare / removeFromCompare call.
-(function() {
-  var COLORS = ['#2563EB','#7C3AED','#059669','#D97706'];
 
-  function updateTray() {
-    if (window.innerWidth > 640) return;
-    var tray  = document.getElementById('mobCompareTray');
-    var chips = document.getElementById('mctPlayers');
-    if (!tray || !chips) return;
+// ── Mobile Compare Tray ─────────────────────────────────────────────────────
+// updateMobileTray() is a plain global function. No function patching.
+// Driven by: 1) AppState.subscribe on COMPARE_* actions  2) renderCompare() direct call
 
-    var list = (typeof compareList !== 'undefined') ? compareList : [];
+var TRAY_COLORS = ['#2563EB', '#7C3AED', '#059669', '#D97706'];
 
-    if (!list.length) {
-      tray.classList.remove('visible');
-      document.body.classList.remove('mct-open');
-      return;
-    }
+function updateMobileTray() {
+  if (window.innerWidth > 640) return;
+  var tray  = document.getElementById('mobCompareTray');
+  var chips = document.getElementById('mctPlayers');
+  if (!tray || !chips) return;
 
-    tray.classList.add('visible');
-    document.body.classList.add('mct-open');
+  var list = (typeof compareList !== 'undefined') ? compareList : [];
 
-    chips.innerHTML = list.map(function(p, ci) {
-      var yr   = p._year || '2026';
-      var name = p.name || '';
-      var last = name.split(' ').pop();
-      var col  = COLORS[ci] || '#2563EB';
-      return '<div class="mct-chip">'
-        + '<span style="width:7px;height:7px;border-radius:50%;background:' + col + ';flex-shrink:0"></span>'
-        + '<span class="mct-chip-name">' + last + '</span>'
-        + '<span style="font-size:9px;color:rgba(255,255,255,.4)">\''+yr.slice(2)+'</span>'
-        + '<button class="mct-chip-remove" onclick="removeFromCompare(' + p.rank + ',\'' + yr + '\')" '
-        + '  aria-label="Remove">×</button>'
-        + '</div>';
-    }).join('');
+  if (!list.length) {
+    tray.classList.remove('visible');
+    document.body.classList.remove('mct-open');
+    return;
   }
 
-  window.mobTrayGoCompare = function() {
-    // Switch to compare tab
-    var tab = document.querySelector('.nav-tab[data-tab="compare"]');
-    if (tab) tab.click();
-  };
+  tray.classList.add('visible');
+  document.body.classList.add('mct-open');
 
-  // Patch renderCompare to also update the tray
-  var _origRenderCompare = window.renderCompare;
-  window.renderCompare = function() {
-    if (typeof _origRenderCompare === 'function') _origRenderCompare.apply(this, arguments);
-    updateTray();
-  };
+  chips.innerHTML = list.map(function(p, ci) {
+    var yr   = p._year || '2026';
+    var name = p.name  || '';
+    var last = name.split(' ').pop();
+    var col  = TRAY_COLORS[ci] || '#2563EB';
+    return '<div class="mct-chip">'
+      + '<span style="width:7px;height:7px;border-radius:50%;background:' + col + ';flex-shrink:0"></span>'
+      + '<span class="mct-chip-name">' + last + '</span>'
+      + '<span style="font-size:9px;color:rgba(255,255,255,.4)">\''+yr.slice(2)+'</span>'
+      + '<button class="mct-chip-remove" onclick="removeFromCompare('+p.rank+',\''+yr+'\');"'
+      + '  aria-label="Remove">×</button>'
+      + '</div>';
+  }).join('');
+}
 
-  // Patch addToCompare and removeFromCompare
-  var _origAdd = window.addToCompare;
-  window.addToCompare = function() {
-    if (typeof _origAdd === 'function') _origAdd.apply(this, arguments);
-    updateTray();
-  };
-  var _origRemove = window.removeFromCompare;
-  window.removeFromCompare = function() {
-    if (typeof _origRemove === 'function') _origRemove.apply(this, arguments);
-    updateTray();
-  };
-  var _origClear = window.clearCompare;
-  window.clearCompare = function() {
-    if (typeof _origClear === 'function') _origClear.apply(this, arguments);
-    updateTray();
-  };
-  var _origAddCard = window.addCardToCompare;
-  window.addCardToCompare = function() {
-    if (typeof _origAddCard === 'function') _origAddCard.apply(this, arguments);
-    updateTray();
-  };
+window.mobTrayGoCompare = function() {
+  var tab = document.querySelector('.nav-tab[data-tab="compare"]');
+  if (tab) tab.click();
+};
 
-  // Initial render
-  document.addEventListener('DOMContentLoaded', updateTray);
-})();
+// Subscribe once — AppState drives tray on every compare state change
+AppState.subscribe(function(state, prev, action) {
+  if (action && /^COMPARE_/.test(action.type)) updateMobileTray();
+});
+
+// Initial sync — handles URL-restored state on page load
+document.addEventListener('DOMContentLoaded', updateMobileTray);
 
 </script>
 
