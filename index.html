@@ -127,143 +127,33 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
     0 4px 14px rgba(10,22,40,.06);
   transition:
     transform 220ms cubic-bezier(.22,1,.36,1),
-    box-shadow 220ms cubic-bezier(.22,1,.36,1),
-    background 220ms ease;
+    box-shadow 220ms cubic-bezier(.22,1,.36,1);
   overflow:hidden;
   display:flex;
   flex-direction:column;
   will-change:transform
 }
 
-/* ── Tier-aware card depth ─────────────────────────────────────────── */
-/* Franchise: warm gold shimmer — most distinguished card on the board */
-.player-card.franchise{
-  background:
-    linear-gradient(160deg,
-      rgba(255,251,235,.96) 0%,
-      rgba(255,247,220,.92) 40%,
-      rgba(255,253,242,.97) 100%);
-  box-shadow:
-    0 0 0 1px rgba(180,115,9,.14),
-    0 1px 3px rgba(180,115,9,.06),
-    0 4px 18px rgba(180,115,9,.10),
-    0 0 0 0 rgba(217,119,6,0);
-}
-.player-card.franchise:hover{
-  background:
-    linear-gradient(160deg,
-      rgba(255,251,235,.99) 0%,
-      rgba(255,243,200,.95) 40%,
-      rgba(255,253,242,1) 100%);
-  box-shadow:
-    0 0 0 1.5px rgba(180,115,9,.22),
-    0 4px 12px rgba(180,115,9,.10),
-    0 16px 40px rgba(180,115,9,.14);
-  transform:translateY(-5px) scale(1.015);
-}
+
 
 /* Lottery: soft purple whisper */
-.player-card.lottery{
-  background:
-    linear-gradient(160deg,
-      rgba(250,245,255,.97) 0%,
-      rgba(245,240,255,.93) 40%,
-      rgba(252,248,255,.98) 100%);
-  box-shadow:
-    0 0 0 1px rgba(124,58,237,.11),
-    0 1px 3px rgba(124,58,237,.05),
-    0 4px 16px rgba(124,58,237,.08);
-}
-.player-card.lottery:hover{
-  background:
-    linear-gradient(160deg,
-      rgba(250,245,255,.99) 0%,
-      rgba(242,234,255,.97) 40%,
-      rgba(252,248,255,1) 100%);
-  box-shadow:
-    0 0 0 1.5px rgba(124,58,237,.18),
-    0 4px 12px rgba(124,58,237,.09),
-    0 16px 40px rgba(124,58,237,.11);
-  transform:translateY(-5px) scale(1.015);
-}
+
+
 
 /* Late 1st: cool blue tint */
-.player-card.late1{
-  background:
-    linear-gradient(160deg,
-      rgba(239,246,255,.97) 0%,
-      rgba(234,242,255,.93) 40%,
-      rgba(242,248,255,.98) 100%);
-  box-shadow:
-    0 0 0 1px rgba(37,99,235,.09),
-    0 1px 3px rgba(37,99,235,.04),
-    0 4px 14px rgba(37,99,235,.07);
-}
-.player-card.late1:hover{
-  background:
-    linear-gradient(160deg,
-      rgba(239,246,255,.99) 0%,
-      rgba(225,238,255,.97) 40%,
-      rgba(242,248,255,1) 100%);
-  box-shadow:
-    0 0 0 1.5px rgba(37,99,235,.15),
-    0 4px 12px rgba(37,99,235,.08),
-    0 16px 40px rgba(37,99,235,.10);
-  transform:translateY(-5px) scale(1.015);
-}
+
+
 
 /* 2nd round: subtle cyan */
-.player-card.second{
-  background:
-    linear-gradient(160deg,
-      rgba(240,249,255,.97) 0%,
-      rgba(236,248,255,.93) 40%,
-      rgba(242,250,255,.98) 100%);
-  box-shadow:
-    0 0 0 1px rgba(8,145,178,.08),
-    0 1px 3px rgba(8,145,178,.04),
-    0 4px 14px rgba(8,145,178,.06);
-}
-.player-card.second:hover{
-  background:
-    linear-gradient(160deg,
-      rgba(240,249,255,.99) 0%,
-      rgba(224,245,255,.97) 40%,
-      rgba(242,250,255,1) 100%);
-  box-shadow:
-    0 0 0 1.5px rgba(8,145,178,.13),
-    0 4px 12px rgba(8,145,178,.07),
-    0 16px 40px rgba(8,145,178,.09);
-  transform:translateY(-5px) scale(1.015);
-}
+
+
 
 /* UDFA: green tint, lightest effect */
-.player-card.udfa{
-  background:
-    linear-gradient(160deg,
-      rgba(240,253,244,.97) 0%,
-      rgba(236,252,241,.93) 40%,
-      rgba(242,253,246,.98) 100%);
-  box-shadow:
-    0 0 0 1px rgba(5,150,105,.07),
-    0 1px 3px rgba(5,150,105,.03),
-    0 4px 14px rgba(5,150,105,.05);
-}
-.player-card.udfa:hover{
-  background:
-    linear-gradient(160deg,
-      rgba(240,253,244,.99) 0%,
-      rgba(220,252,231,.97) 40%,
-      rgba(242,253,246,1) 100%);
-  box-shadow:
-    0 0 0 1.5px rgba(5,150,105,.12),
-    0 4px 12px rgba(5,150,105,.06),
-    0 16px 40px rgba(5,150,105,.08);
-  transform:translateY(-5px) scale(1.015);
-}
+
+
 /* Hover: lift + gentle scale + deeper directional shadow */
-/* Fallback hover for any tier class not explicitly covered above */
-.player-card:not(.franchise):not(.lottery):not(.late1):not(.second):not(.udfa):hover{
+/* Card hover — universal lift, no tier tinting */
+.player-card:hover{
   transform:translateY(-5px) scale(1.015);
   box-shadow:
     0 0 0 1px rgba(10,22,40,.09),
@@ -294,6 +184,69 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
   gap:11px;
   padding:13px 12px 10px;
 }
+/* ── Feature 4: Player photo spotlight hover ─────────────────────────────
+   .card-avatar-wrap  — the avatar container when spotlight=true is passed
+   to avatarHtml(). overflow:visible lets the glow ring escape the container.
+   The img and fallback are clipped to the container shape via border-radius
+   inheritance + clip-path so the photo itself stays perfectly rounded.     */
+
+.card-avatar-wrap {
+  /* Switch overflow from hidden to visible so the glow ring can bloom out */
+  overflow: visible !important;
+  /* Clip content to shape without hiding the box-shadow */
+  isolation: isolate;
+  transition:
+    box-shadow 280ms cubic-bezier(.22,1,.36,1),
+    transform  220ms cubic-bezier(.22,1,.36,1);
+}
+
+/* Clip the actual image to the container shape */
+.card-avatar-img {
+  border-radius: inherit;
+  display: block;
+  transition: transform 320ms cubic-bezier(.22,1,.36,1);
+  transform-origin: 50% 40%;   /* keep face roughly centered during scale */
+}
+
+/* Initials fallback also clips to shape */
+.card-avatar-wrap .avatar-fallback {
+  border-radius: inherit;
+  transition: transform 320ms cubic-bezier(.22,1,.36,1);
+}
+
+/* On card hover: zoom the photo and glow the ring */
+.player-card:hover .card-avatar-wrap {
+  box-shadow:
+    0 0 0 2.5px rgba(var(--tier-glow), .28),
+    0 0 14px 4px  rgba(var(--tier-glow), .16),
+    0 0 28px 8px  rgba(var(--tier-glow), .06);
+}
+
+.player-card:hover .card-avatar-img,
+.player-card:hover .card-avatar-wrap .avatar-fallback {
+  transform: scale(1.08);
+}
+
+/* Active (tap) state: glow intensifies, scale pulls back slightly */
+.player-card:active .card-avatar-wrap {
+  box-shadow:
+    0 0 0 2px rgba(var(--tier-glow), .22),
+    0 0 10px 3px rgba(var(--tier-glow), .12);
+}
+.player-card:active .card-avatar-img,
+.player-card:active .card-avatar-wrap .avatar-fallback {
+  transform: scale(1.02);
+  transition-duration: 80ms;
+}
+
+/* Pointer-coarse (touch devices): slightly reduced zoom — still feels great */
+@media(pointer:coarse){
+  .player-card:hover .card-avatar-img,
+  .player-card:hover .card-avatar-wrap .avatar-fallback {
+    transform: scale(1.05);
+  }
+}
+
 
 /* ── Rank badge — pops immediately, large Barlow Condensed ─────── */
 .card-rank-badge{
@@ -419,17 +372,95 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
   white-space:nowrap;
 }
 
-.card-tags{display:flex;flex-wrap:wrap;gap:4px;padding:0 12px 8px}
-.tag{
-  font-size:10.5px;font-weight:600;
-  padding:2px 8px;border-radius:20px;
-  background:var(--gray-100);color:var(--gray-600)
+/* ── Player card tag section — 2-row layout ─────────────────────────
+   Row 1: identity (position + role)
+   Row 2: measurables (class · age · height · weight)           */
+
+.card-tags{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  padding:0 11px 10px;
 }
-/* Colour tokens: lower-saturation tints instead of flat fills */
-.tag.pos{background:rgba(37,99,235,.1);color:#1D4ED8}
-.tag.role{background:rgba(21,128,61,.1);color:#166534}
-.tag.cls{background:rgba(180,83,9,.1);color:#B45309}
-.tag.age{background:rgba(124,58,237,.1);color:#7C3AED}
+
+/* ── Row containers ── */
+.tag-row{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:4px;
+}
+
+/* ── Base chip shared styles ── */
+.tag{
+  display:inline-flex;
+  align-items:center;
+  font-family:'DM Sans',sans-serif;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  padding:3px 7px;
+  border-radius:5px;
+  letter-spacing:.01em;
+  white-space:nowrap;
+}
+
+/* ── Row 1: Identity chips — outlined, position-colored ── */
+.tag.pos{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+  background:transparent;
+  border:1.5px solid currentColor;
+}
+/* Position color tokens */
+.tag.pos.guard   { color:#2563EB }
+.tag.pos.forward { color:#7C3AED }
+.tag.pos.center  { color:#0891B2 }
+
+.tag.role{
+  font-size:9.5px;
+  font-weight:600;
+  background:rgba(15,23,42,.05);
+  color:var(--text-muted,#64748B);
+  border:1px solid rgba(15,23,42,.09);
+  letter-spacing:.01em;
+}
+
+/* ── Row 2: Measurables — compact, data-driven ── */
+.tag.cls{
+  font-size:9px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  background:rgba(15,23,42,.07);
+  color:var(--text-secondary,#334155);
+  border:none;
+  padding:3px 6px;
+}
+
+/* Age + height: inline style injected via JS gradStyle — no static color */
+.tag.age,
+.tag.ht{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:-.1px;
+  border-radius:5px;
+  padding:2px 6px;
+  /* color/bg come from inline gradStyle() */
+}
+
+.tag.wt{
+  font-size:9px;
+  font-weight:500;
+  color:rgba(15,23,42,.38);
+  background:transparent;
+  border:none;
+  padding:2px 4px;
+  letter-spacing:.01em;
+}
 
 /* ── Stats grid: 2×3 with mini progress bars ── */
 /* Divider uses rgba instead of hard gray-100 — matches the off-white card bg */
@@ -842,8 +873,10 @@ tr:hover td{background:var(--gray-50)}
   .card-school{font-size:9px;gap:3px;margin-top:1px}
 
   /* C-04: Tags — tight but legible */
-  .card-tags{padding:3px 8px 5px;gap:3px}
+  .card-tags{padding:0 8px 8px;gap:4px}
   .tag{font-size:9px;padding:2px 5px}
+  .tag.age,.tag.ht{font-size:10px;padding:2px 5px}
+  .tag-row{gap:3px}
 
   /* C-04: Stats — compress for small cards, keep 3-col */
   .card-stats{gap:3px;padding:0 6px 7px;padding-top:7px}
@@ -2031,7 +2064,7 @@ nt-size: 14px;
   .metric-box .rank-ctx{font-size:8.5px}
   .modal-name{font-size:24px}
   .modal-meta{font-size:11px}
-  .modal-avatar{width:56px;height:56px;border-radius:10px}
+  /* .modal-avatar mobile size removed — global 96px works on all screens */
   .modal-header{padding:12px 14px}
   /* Modal tab bar: compact */
   .modal-tab-bar{padding:3px;gap:0;margin-bottom:12px}
@@ -2902,8 +2935,7 @@ nt-size: 14px;
 .ctd-missing{color:var(--gray-300);font-size:11px;text-align:center}
 .prospect-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
   color:var(--blue);background:#DBEAFE;border-radius:3px;padding:1px 5px;display:inline-block}
-.tag.ht{background:#F0F9FF;color:#0369A1;border-color:#BAE6FD}
-.tag.wt{background:#FFF7ED;color:#9A3412;border-color:#FED7AA}
+/* .tag.ht and .tag.wt: now gradient-driven inline via JS */
 
 /* ── TIER EDITOR ─────────────────────────────────────────────────────────── */
 .tier-customize-btn{background:rgba(10,22,40,.07);color:var(--gray-600);
@@ -5560,7 +5592,7 @@ const ESPN_IDS = {
   'Kwame Evans':4683769,
   'Kylan Boswell':4684269,
   'Kyle Filipowski':4432593,
-  'Labaron Philon':5105561,
+  'Labaron Philon':4873090,
   'Mackenzie Mgbako':4683779,
   'Magoon Gwath':5176240,
   'Malachi Moreno':5101849,
@@ -5637,6 +5669,13 @@ const ESPN_IDS = {
   'Ziaire Williams':4431769,
   'Zuby Ejiofor':5106262,
   'Zvonimir Ivisic':5174665,
+  'Allen Graves':5149115,
+  'Chase Ross':5105598,
+  'Duke Miles':4702049,
+  'Jaron Pierre':4703115,
+  'Malik Dia':4712862,
+  'Ryan Conwell':5107157,
+  'Tre White':5105643,
 };
 
 const NBA_TEAM_IDS = {
@@ -5719,18 +5758,22 @@ function getPhotoUrl(playerName) {
   return null;
 }
 
-function avatarHtml(playerName, position, size='52px', borderRadius='10px') {
+function avatarHtml(playerName, position, size='52px', borderRadius='10px', spotlight=false) {
   const color    = posColor(position);
   const initials = getInitials(playerName).toUpperCase();
   const url      = getPhotoUrl(playerName);
   // onload: if ESPN returns a silent placeholder (naturalWidth <= 10) show initials instead
   const loadChk  = "if(this.naturalWidth<=10){this.style.display='none';this.nextElementSibling.style.display='flex';}";
   const errChk   = "this.style.display='none';this.nextElementSibling.style.display='flex';";
+  // spotlight=true: add card-avatar-wrap class + card-avatar-img class so CSS hover
+  // can scale the image and add a tier-colored glow pulse without JS.
+  const wrapClass = spotlight ? ' class="card-avatar-wrap"' : '';
+  const imgClass  = spotlight ? ' class="card-avatar-img"' : '';
   const imgTag   = url
-    ? `<img src="${url}" onload="${loadChk}" onerror="${errChk}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:50% 12%">`
+    ? `<img${imgClass} src="${url}" onload="${loadChk}" onerror="${errChk}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:50% 12%">`
     : '';
   const fbDisplay = url ? 'none' : 'flex';
-  return `<div style="width:${size};height:${size};border-radius:${borderRadius};overflow:hidden;flex-shrink:0;position:relative;background:${color}">
+  return `<div${wrapClass} style="width:${size};height:${size};border-radius:${borderRadius};overflow:hidden;flex-shrink:0;position:relative;background:${color}">
     ${imgTag}
     <div class="avatar-fallback" style="display:${fbDisplay};background:${color};width:100%;height:100%;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:${parseInt(size)*0.4}px;color:white;position:${url?'absolute':'relative'};inset:0">${initials}</div>
   </div>`;
@@ -6243,14 +6286,69 @@ function buildPlayerCard(p, tierKey) {
   // School logo (small, above school name)
   var logoHtml  = buildSchoolLogoHtml(school);
 
-  // Tags
+  // ── Tags — 2-row layout ──────────────────────────────────────────────
+  // Row 1: identity (position + role)
+  // Row 2: measurables (class · age w/gradient · height w/gradient · weight)
+
+  // Position class suffix for color token
+  var posClassMap = { 'Guard':'guard', 'Forward':'forward', 'Center':'center' };
+  var posCls      = posClassMap[p.position] || 'forward';
+
+  // Class abbreviation
+  var clsAbbr = '';
+  if (p.cls) {
+    var clsLow = p.cls.toLowerCase();
+    if      (clsLow === 'freshman' || clsLow === 'fresh') clsAbbr = 'Fr';
+    else if (clsLow === 'sophomore')                       clsAbbr = 'So';
+    else if (clsLow === 'junior')                          clsAbbr = 'Jr';
+    else if (clsLow === 'senior')                          clsAbbr = 'Sr';
+    else                                                   clsAbbr = p.cls.slice(0,3); // Int'l
+  }
+
+  // Age gradient — INVERTED: younger = greener (18.6 best, 24.9 worst)
+  var ageSty = '';
+  if (p.age) {
+    var ageVal = parseFloat(p.age);
+    var AGE_MIN = 18.5, AGE_MAX = 25.0;
+    var ageRatio = Math.max(0, Math.min(1, 1 - (ageVal - AGE_MIN) / (AGE_MAX - AGE_MIN)));
+    var ageHue   = Math.round(ageRatio * 120);
+    var ageBgL   = Math.round(94 - ageRatio * 8);
+    var ageFgL   = Math.round(34 - ageRatio * 12);
+    ageSty = 'background:hsl(' + ageHue + ',68%,' + ageBgL + '%);color:hsl(' + ageHue + ',60%,' + ageFgL + '%);';
+  }
+
+  // Height gradient — taller = greener (72" worst, 87" best)
+  var htSty = '';
+  if (p.ht) {
+    var htVal = parseInt(p.ht);
+    var HT_MIN = 72, HT_MAX = 87;
+    var htRatio = Math.max(0, Math.min(1, (htVal - HT_MIN) / (HT_MAX - HT_MIN)));
+    var htHue   = Math.round(htRatio * 120);
+    var htBgL   = Math.round(94 - htRatio * 8);
+    var htFgL   = Math.round(34 - htRatio * 12);
+    htSty = 'background:hsl(' + htHue + ',68%,' + htBgL + '%);color:hsl(' + htHue + ',60%,' + htFgL + '%);';
+  }
+
+  // Height display: ft'in"
+  var htDisplay = p.ht ? (Math.floor(p.ht/12) + '\'' + (p.ht%12) + '"') : '';
+
+  // Age display: just the number (no "yrs" — label is context-obvious)
+  var ageDisplay = p.age ? parseFloat(p.age).toFixed(1) : '';
+
+  // Assemble rows
+  var tagRow1 = '';
+  if (p.position) tagRow1 += '<span class="tag pos ' + posCls + '">' + p.position + '</span>';
+  if (p.torvik_role) tagRow1 += '<span class="tag role">' + p.torvik_role + '</span>';
+
+  var tagRow2 = '';
+  if (clsAbbr)  tagRow2 += '<span class="tag cls">'                      + clsAbbr     + '</span>';
+  if (ageSty)   tagRow2 += '<span class="tag age" style="' + ageSty + '">' + ageDisplay + '</span>';
+  if (htDisplay) tagRow2 += '<span class="tag ht"  style="' + htSty  + '">' + htDisplay  + '</span>';
+  if (p.wt)     tagRow2 += '<span class="tag wt">'                       + p.wt + ' lb' + '</span>';
+
   var tags = '';
-  if (p.position)    tags += '<span class="tag pos">'  + p.position   + '</span>';
-  if (p.torvik_role) tags += '<span class="tag role">' + p.torvik_role + '</span>';
-  if (p.cls)         tags += '<span class="tag cls">'  + p.cls         + '</span>';
-  if (p.age)         tags += '<span class="tag age">'  + parseFloat(p.age).toFixed(1) + ' yrs</span>';
-  if (p.ht)          tags += '<span class="tag ht">'   + Math.floor(p.ht/12) + '\'' + (p.ht%12) + '"</span>';
-  if (p.wt)          tags += '<span class="tag wt">'   + p.wt + ' lbs</span>';
+  if (tagRow1) tags += '<div class="tag-row">' + tagRow1 + '</div>';
+  if (tagRow2) tags += '<div class="tag-row">' + tagRow2 + '</div>';
 
   // Six stats
   var gs1 = gradStyle(p.ts_pct,  'ts_pct');
@@ -6312,7 +6410,14 @@ function buildPlayerCard(p, tierKey) {
   // [TAGS]
   // [STATS GRID — 6 cells]
 
-  return '<div class="player-card ' + tierKey + '" onclick="openPlayerModal(' + p.rank + ')" data-rank="' + p.rank + '">'
+  var _tierGlow = tierKey==='franchise' ? '245,158,11'
+                : tierKey==='lottery'   ? '139,92,246'
+                : tierKey==='late1'     ? '59,130,246'
+                : tierKey==='second'    ? '8,145,178'
+                : tierKey==='udfa'      ? '5,150,105'
+                : '10,22,40';
+  return '<div class="player-card ' + tierKey + '" onclick="openPlayerModal(' + p.rank + ')" data-rank="' + p.rank + '"'
+    + ' style="--tier-glow:' + _tierGlow + ';">'
 
     + '<div class="pc-accent"></div>'
 
@@ -6322,7 +6427,7 @@ function buildPlayerCard(p, tierKey) {
       + '<div class="card-rank-badge">#' + p.rank + '</div>'
 
       // Player photo — 60px, prominent, identifiable
-      + avatarHtml(p.name, p.position || '', '60px', '10px')
+      + avatarHtml(p.name, p.position || '', '60px', '10px', true)
 
       // Identity: name + school stacked block
       + '<div class="card-identity">'
@@ -6797,7 +6902,7 @@ function openPlayerModal(rank, year) {
   document.getElementById('modalRankLabel').textContent = `#${player.rank} · ${tier.label}`;
   document.getElementById('modalName').textContent = name;
   document.getElementById('modalMeta').textContent = [school, cls, torvik_role, position].filter(Boolean).join(' · ');
-  document.getElementById('modalAvatar').innerHTML = avatarHtml(player.name, player.position, '96px', '14px');
+  document.getElementById('modalAvatar').innerHTML = avatarHtml(player.name, player.position, '100%', '12px');
 
   // Pre-compute gradient styles for each stat
   const mgMet = gradStyle(player.metric,  'metric');
