@@ -121,22 +121,149 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
   border-radius:14px;
   padding:0;
   cursor:pointer;
-  /* Resting elevation: ambient layer + subtle ring outline as "border replacement" */
   box-shadow:
     0 0 0 1px rgba(10,22,40,.07),
     0 1px 3px rgba(10,22,40,.04),
     0 4px 14px rgba(10,22,40,.06);
-  /* Transition only composited properties — skip "all" for perf */
   transition:
     transform 220ms cubic-bezier(.22,1,.36,1),
-    box-shadow 220ms cubic-bezier(.22,1,.36,1);
+    box-shadow 220ms cubic-bezier(.22,1,.36,1),
+    background 220ms ease;
   overflow:hidden;
   display:flex;
   flex-direction:column;
   will-change:transform
 }
+
+/* ── Tier-aware card depth ─────────────────────────────────────────── */
+/* Franchise: warm gold shimmer — most distinguished card on the board */
+.player-card.franchise{
+  background:
+    linear-gradient(160deg,
+      rgba(255,251,235,.96) 0%,
+      rgba(255,247,220,.92) 40%,
+      rgba(255,253,242,.97) 100%);
+  box-shadow:
+    0 0 0 1px rgba(180,115,9,.14),
+    0 1px 3px rgba(180,115,9,.06),
+    0 4px 18px rgba(180,115,9,.10),
+    0 0 0 0 rgba(217,119,6,0);
+}
+.player-card.franchise:hover{
+  background:
+    linear-gradient(160deg,
+      rgba(255,251,235,.99) 0%,
+      rgba(255,243,200,.95) 40%,
+      rgba(255,253,242,1) 100%);
+  box-shadow:
+    0 0 0 1.5px rgba(180,115,9,.22),
+    0 4px 12px rgba(180,115,9,.10),
+    0 16px 40px rgba(180,115,9,.14);
+  transform:translateY(-5px) scale(1.015);
+}
+
+/* Lottery: soft purple whisper */
+.player-card.lottery{
+  background:
+    linear-gradient(160deg,
+      rgba(250,245,255,.97) 0%,
+      rgba(245,240,255,.93) 40%,
+      rgba(252,248,255,.98) 100%);
+  box-shadow:
+    0 0 0 1px rgba(124,58,237,.11),
+    0 1px 3px rgba(124,58,237,.05),
+    0 4px 16px rgba(124,58,237,.08);
+}
+.player-card.lottery:hover{
+  background:
+    linear-gradient(160deg,
+      rgba(250,245,255,.99) 0%,
+      rgba(242,234,255,.97) 40%,
+      rgba(252,248,255,1) 100%);
+  box-shadow:
+    0 0 0 1.5px rgba(124,58,237,.18),
+    0 4px 12px rgba(124,58,237,.09),
+    0 16px 40px rgba(124,58,237,.11);
+  transform:translateY(-5px) scale(1.015);
+}
+
+/* Late 1st: cool blue tint */
+.player-card.late1{
+  background:
+    linear-gradient(160deg,
+      rgba(239,246,255,.97) 0%,
+      rgba(234,242,255,.93) 40%,
+      rgba(242,248,255,.98) 100%);
+  box-shadow:
+    0 0 0 1px rgba(37,99,235,.09),
+    0 1px 3px rgba(37,99,235,.04),
+    0 4px 14px rgba(37,99,235,.07);
+}
+.player-card.late1:hover{
+  background:
+    linear-gradient(160deg,
+      rgba(239,246,255,.99) 0%,
+      rgba(225,238,255,.97) 40%,
+      rgba(242,248,255,1) 100%);
+  box-shadow:
+    0 0 0 1.5px rgba(37,99,235,.15),
+    0 4px 12px rgba(37,99,235,.08),
+    0 16px 40px rgba(37,99,235,.10);
+  transform:translateY(-5px) scale(1.015);
+}
+
+/* 2nd round: subtle cyan */
+.player-card.second{
+  background:
+    linear-gradient(160deg,
+      rgba(240,249,255,.97) 0%,
+      rgba(236,248,255,.93) 40%,
+      rgba(242,250,255,.98) 100%);
+  box-shadow:
+    0 0 0 1px rgba(8,145,178,.08),
+    0 1px 3px rgba(8,145,178,.04),
+    0 4px 14px rgba(8,145,178,.06);
+}
+.player-card.second:hover{
+  background:
+    linear-gradient(160deg,
+      rgba(240,249,255,.99) 0%,
+      rgba(224,245,255,.97) 40%,
+      rgba(242,250,255,1) 100%);
+  box-shadow:
+    0 0 0 1.5px rgba(8,145,178,.13),
+    0 4px 12px rgba(8,145,178,.07),
+    0 16px 40px rgba(8,145,178,.09);
+  transform:translateY(-5px) scale(1.015);
+}
+
+/* UDFA: green tint, lightest effect */
+.player-card.udfa{
+  background:
+    linear-gradient(160deg,
+      rgba(240,253,244,.97) 0%,
+      rgba(236,252,241,.93) 40%,
+      rgba(242,253,246,.98) 100%);
+  box-shadow:
+    0 0 0 1px rgba(5,150,105,.07),
+    0 1px 3px rgba(5,150,105,.03),
+    0 4px 14px rgba(5,150,105,.05);
+}
+.player-card.udfa:hover{
+  background:
+    linear-gradient(160deg,
+      rgba(240,253,244,.99) 0%,
+      rgba(220,252,231,.97) 40%,
+      rgba(242,253,246,1) 100%);
+  box-shadow:
+    0 0 0 1.5px rgba(5,150,105,.12),
+    0 4px 12px rgba(5,150,105,.06),
+    0 16px 40px rgba(5,150,105,.08);
+  transform:translateY(-5px) scale(1.015);
+}
 /* Hover: lift + gentle scale + deeper directional shadow */
-.player-card:hover{
+/* Fallback hover for any tier class not explicitly covered above */
+.player-card:not(.franchise):not(.lottery):not(.late1):not(.second):not(.udfa):hover{
   transform:translateY(-5px) scale(1.015);
   box-shadow:
     0 0 0 1px rgba(10,22,40,.09),
@@ -314,7 +441,34 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
   margin-top:2px;padding-top:10px
 }
 /* Stat cells: neutral base; gradStyle from JS overrides bg+color for hot/cold */
-.stat-cell{text-align:center;background:rgba(10,22,40,.03);border-radius:7px;padding:7px 3px 5px}
+.stat-cell{
+  position:relative;
+  text-align:center;
+  background:rgba(10,22,40,.03);
+  border-radius:7px;
+  padding:7px 3px 5px
+}
+/* Positional percentile ring — SVG arc in top-right corner of each stat cell */
+.pos-ring{
+  position:absolute;
+  top:3px;
+  right:3px;
+  width:13px;
+  height:13px;
+  pointer-events:none;
+  flex-shrink:0
+}
+.pos-ring circle{
+  fill:none;
+  stroke-width:2;
+  stroke-linecap:round
+}
+.pos-ring .ring-track{
+  stroke:rgba(10,22,40,.08)
+}
+.pos-ring .ring-fill{
+  transition:stroke-dashoffset 400ms cubic-bezier(.22,1,.36,1)
+}
 /* Value: 1px larger, tighter line-height */
 .stat-val{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:inherit;line-height:1}
 /* Mini progress bar: visualises stat rank in class at a glance */
@@ -450,18 +604,18 @@ tr:hover td{background:var(--gray-50)}
 .modal-overlay.open{opacity:1;pointer-events:all}
 .modal{background:white;border-radius:16px 16px 0 0;width:100%;max-width:100%;max-height:88vh;box-shadow:var(--shadow-xl);transform:translateY(40px);transition:transform .2s;margin:0;display:flex;flex-direction:column;overflow:hidden}
 .modal-overlay.open .modal{transform:translateY(0)}
-.modal-header{background:var(--navy);color:white;padding:14px 14px 10px;border-radius:16px 16px 0 0;position:relative;display:flex;gap:18px;align-items:center;flex-shrink:0}
+.modal-header{background:var(--navy);color:white;padding:20px 20px 16px;border-radius:16px 16px 0 0;position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;flex-shrink:0}
 .modal-close{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.1);border:none;color:white;width:44px;height:44px;min-width:44px;min-height:44px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
 .modal-close:hover{background:rgba(255,255,255,.2)}
 /* Mobile close bar — sticky at bottom of sheet, easier thumb reach */
 .modal-close-bar{display:none}
-.modal-avatar{width:72px;height:72px;border-radius:12px;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,.15)}
-.modal-avatar img{width:100%;height:100%;object-fit:cover;object-position:top}
+.modal-avatar{width:96px;height:96px;border-radius:14px;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,.2);box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.modal-avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 15%}
 .modal-avatar-fb{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;color:white}
-.modal-player-info{}
-.modal-rank-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.55;margin-bottom:3px}
-.modal-name{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;letter-spacing:.3px;line-height:1.1}
-.modal-meta{font-size:12px;opacity:.65;margin-top:4px}
+.modal-player-info{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;width:100%}
+.modal-rank-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.55;margin-bottom:2px;text-align:center}
+.modal-name{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;letter-spacing:.3px;line-height:1.1;text-align:center}
+.modal-meta{font-size:12px;opacity:.65;margin-top:4px;text-align:center}
 .modal-body{padding:22px 26px}
 .modal-metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px;margin-bottom:18px}
 .metric-box{background:var(--gray-50);border:1px solid var(--gray-100);border-radius:10px;padding:11px 14px;text-align:center;transition:background .2s}
@@ -777,7 +931,7 @@ tr:hover td{background:var(--gray-50)}
   .bb-ch.left{justify-content:flex-start;padding-left:8px}
   .bb-col-hdr{min-height:40px;padding-right:2px}
   /* BB-MOB: board width determined by visible columns (no fixed min-width) */
-  .bb-board{min-width:0 !important}
+  .bb-board{min-width:420px}
   /* Hide columns that do not fit a phone screen.
      NOTE: .bb-compare-col is re-shown below (see bb-compare-dot section) */
   .bb-cht,.bb-ctag,.bb-cftar,.bb-ctpar{display:none !important}
@@ -815,7 +969,7 @@ tr:hover td{background:var(--gray-50)}
   
 
   /* BB-04: Stat cells — tighter margin, preserve color coding */
-  .bb-stat-cell{margin:1px 0;border-radius:3px;padding:0 1px}
+  .bb-stat-cell{margin:2px 1px;border-radius:3px;padding:0 2px;min-height:36px}
 
   /* BB-04: Tags — single max-width; truncate cleanly */
   .bb-tags{max-width:68px;overflow:hidden}
@@ -1963,15 +2117,16 @@ nt-size: 14px;
   }
   .modal{
     border-radius:16px;
-    max-width:780px;
+    max-width:720px;
     max-height:none;
     transform:translateY(16px);
     margin:auto;
-    display:block;
-    overflow:visible;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
   }
   .modal-header{
-    padding:22px 26px;
+    padding:24px 28px 20px;
     border-radius:16px 16px 0 0;
     flex-shrink:unset;
   }
@@ -2003,15 +2158,25 @@ nt-size: 14px;
     touch-action:auto;
   }
 
-  /* ── Big Board column widths ─────────────────────────────────────────── */
-  .bb-cr{width:36px;}
-  .bb-cav{width:32px;}
-  .bb-cid{flex:1.55;min-width:100px;max-width:unset;}
-  .bb-cmet{flex:0.95;min-width:64px;max-width:unset;}
-  .bb-cts{flex:0.70;min-width:46px;}
-  .bb-cpa{flex:0.76;min-width:50px;}
-  .bb-csb{flex:0.70;min-width:46px;}
-  .bb-cato{flex:0.66;min-width:44px;}
+  /* ── Big Board column widths — desktop readable values ──────────────── */
+  .bb-cr{width:40px;}
+  .bb-cav{width:36px;}
+  .bb-cid{flex:1.8;min-width:140px;max-width:none;}
+  .bb-cht{flex:0.65;min-width:56px;}
+  .bb-ctag{flex:1.1;min-width:88px;}
+  .bb-cmet{flex:0;flex-basis:72px;min-width:72px;max-width:72px;}
+  .bb-cts{flex:0;flex-basis:58px;min-width:58px;}
+  .bb-cpa{flex:0;flex-basis:62px;min-width:62px;}
+  .bb-csb{flex:0;flex-basis:56px;min-width:56px;}
+  .bb-cato{flex:0;flex-basis:54px;min-width:54px;}
+  .bb-cftar{flex:0;flex-basis:54px;min-width:54px;}
+  .bb-ctpar{flex:0;flex-basis:52px;min-width:52px;}
+  .bb-row{height:52px;}
+  .bb-met-val{font-size:18px;min-width:56px;padding:3px 6px;}
+  .bb-sv{font-size:13px;font-weight:800;}
+  .bb-sl{font-size:8px;}
+  .bb-name{font-size:14px;}
+  .bb-col-hdr{height:40px;}
 }
 
 @media print{
@@ -2085,8 +2250,8 @@ nt-size: 14px;
 .gs-no-results{text-align:center;padding:40px 20px;color:#94A3B8;font-size:14px}
 
 /* ── BIG BOARD INLINE VIEW ───────────────────────────────────── */
-.bb-wrap{display:flex;justify-content:center;padding:0 0 24px}
-.bb-board{width:100%;background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 24px rgba(10,22,40,.10)}
+.bb-wrap{display:flex;justify-content:center;padding:0 0 24px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.bb-board{width:100%;min-width:760px;background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 24px rgba(10,22,40,.10)}
 .bb-screenshot-bar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
 .bb-range-group{display:flex;align-items:center;gap:6px;background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:7px;padding:4px 10px}
 .bb-range-lbl{font-size:10px;font-weight:700;color:var(--gray-400);letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
@@ -2146,20 +2311,20 @@ nt-size: 14px;
 .bb-cid{flex:1.8;min-width:80px;max-width:none}
 .bb-cht{flex:0.62;min-width:48px;text-align:center;flex-shrink:0}
 .bb-ctag{flex:1.25;min-width:88px}
-.bb-cmet{flex:0 0 44px;min-width:44px;max-width:44px;text-align:center}
-.bb-cts{flex:1;min-width:30px;text-align:center}
-.bb-cpa{flex:1;min-width:30px;text-align:center}
-.bb-csb{flex:1;min-width:28px;text-align:center}
-.bb-cato{flex:1;min-width:28px;text-align:center}
-.bb-cftar{flex:0.66;min-width:44px;text-align:center}
-.bb-ctpar{flex:0.66;min-width:44px;text-align:center}
+.bb-cmet{flex:0;flex-basis:44px;min-width:44px;max-width:44px;text-align:center}
+.bb-cts{flex:1;min-width:44px;text-align:center}
+.bb-cpa{flex:1;min-width:44px;text-align:center}
+.bb-csb{flex:1;min-width:44px;text-align:center}
+.bb-cato{flex:1;min-width:44px;text-align:center}
+.bb-cftar{flex:0;flex-basis:44px;min-width:44px;text-align:center}
+.bb-ctpar{flex:0;flex-basis:44px;min-width:44px;text-align:center}
 /* Tier band */
 .bb-tier-band{display:flex;align-items:center;height:28px;padding:0 12px;gap:10px;overflow:hidden}
 .bb-tier-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:900;color:white;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap}
 .bb-tier-sub{font-size:10px;color:rgba(255,255,255,.45);font-weight:600;letter-spacing:.3px;white-space:nowrap}
 .bb-tier-picks{margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:rgba(255,255,255,.38);letter-spacing:.4px;flex-shrink:0}
 /* Player row — tighter height, cleaner separator, clickable for modal */
-.bb-row{display:flex;align-items:center;height:48px;padding-right:6px;border-bottom:1px solid rgba(203,213,225,.5);transition:background .1s;overflow:hidden;cursor:pointer}
+.bb-row{display:flex;align-items:center;height:52px;padding-right:6px;border-bottom:1px solid rgba(203,213,225,.45);transition:background .1s;overflow:hidden;cursor:pointer}
 .bb-row:hover{background:#F0F4FF}
 /* Touch feedback — :active fires on tap where :hover does not */
 .bb-row:active{background:#E8EEFA}
@@ -2186,7 +2351,7 @@ nt-size: 14px;
 .bb-met-cell{flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .bb-met-val{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:900;line-height:1;border-radius:5px;padding:3px 6px;min-width:52px;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums}
 
-.bb-stat-cell{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border-radius:5px;margin:2px 1px}
+.bb-stat-cell{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border-radius:5px;margin:2px 2px;padding:0 3px;min-height:40px}
 .bb-sv{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--navy);line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
 .bb-sl{font-size:7.5px;color:var(--gray-300);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;font-weight:700;white-space:nowrap}
 
@@ -2225,7 +2390,7 @@ nt-size: 14px;
 #board2026Content .bb-board.bb-tw .bb-cht{flex:0.55;min-width:42px}
 #board2026Content .bb-board.bb-tw .bb-ctag{flex:1.1;min-width:76px}
 #board2026Content .bb-board.bb-tw .bb-cmet{flex:0.82;min-width:52px}
-#board2026Content .bb-board.bb-tw .bb-met-val{font-size:16px;min-width:40px;padding:3px 5px}
+#board2026Content .bb-board.bb-tw /* bb-met-val Twitter size: handled by scoped bb-tw rules */
 #board2026Content .bb-board.bb-tw .bb-cts,
 #board2026Content .bb-board.bb-tw .bb-cpa,
 #board2026Content .bb-board.bb-tw .bb-csb,
@@ -4810,6 +4975,33 @@ const STAT_RANGES = {};
   });
 })();
 
+// ── Positional stat ranges — for percentile rings in card stat cells ─────
+// Built once at startup. Keyed: POS_STAT_RANGES[position][statKey] = {mn, mx, med}
+// position values match DATA.board2026[i].position: 'Guard', 'Forward', 'Center'
+const POS_STAT_RANGES = {};
+(function() {
+  var POSITIONS = ['Guard', 'Forward', 'Center'];
+  var RING_KEYS = ['ts_pct','pa2_usg','stl_bl','ato','ftar','tpar'];
+  POSITIONS.forEach(function(pos) {
+    POS_STAT_RANGES[pos] = {};
+    RING_KEYS.forEach(function(k) {
+      var vals = DATA.board2026
+        .filter(function(p) { return p.position === pos; })
+        .map(function(p) { return p[k]; })
+        .filter(function(v) { return v !== null && v !== undefined && v !== 0 && v !== ''; })
+        .map(Number)
+        .sort(function(a,b){ return a-b; });
+      if (vals.length >= 3) {
+        POS_STAT_RANGES[pos][k] = {
+          mn:  vals[0],
+          mx:  vals[vals.length - 1],
+          med: vals[Math.floor(vals.length / 2)]
+        };
+      }
+    });
+  });
+})();
+
 // NOTE: buildRankCtxMap() is NOT called here — DataService is not yet initialized
 // at this point in script execution. The initial build is triggered from the
 // Bootstrap IIFE at the bottom of the file, after all modules are initialized.
@@ -5535,7 +5727,7 @@ function avatarHtml(playerName, position, size='52px', borderRadius='10px') {
   const loadChk  = "if(this.naturalWidth<=10){this.style.display='none';this.nextElementSibling.style.display='flex';}";
   const errChk   = "this.style.display='none';this.nextElementSibling.style.display='flex';";
   const imgTag   = url
-    ? `<img src="${url}" onload="${loadChk}" onerror="${errChk}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center 18%">`
+    ? `<img src="${url}" onload="${loadChk}" onerror="${errChk}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:50% 12%">`
     : '';
   const fbDisplay = url ? 'none' : 'flex';
   return `<div style="width:${size};height:${size};border-radius:${borderRadius};overflow:hidden;flex-shrink:0;position:relative;background:${color}">
@@ -5950,6 +6142,38 @@ function statBarHtml(value, statKey) {
   return '<div class="stat-bar" style="width:' + width + '%;background:currentColor"></div>';
 }
 
+// ── posRingHtml: positional percentile arc ────────────────────────────────
+// Returns an 18×18 SVG showing how this value ranks within the player's
+// position group (Guard / Forward / Center).
+// pctile = 0 → empty arc; pctile = 1 → full circle.
+// Color: green >66th percentile, amber 33–66th, muted <33rd.
+function posRingHtml(value, statKey, position) {
+  if (!value || !position || !POS_STAT_RANGES) return '';
+  var posRng = POS_STAT_RANGES[position];
+  if (!posRng || !posRng[statKey]) return '';
+  var rng = posRng[statKey];
+  if (rng.mx === rng.mn) return '';
+
+  var pctile = Math.max(0, Math.min(1, (value - rng.mn) / (rng.mx - rng.mn)));
+  // Circumference of circle with r=5.5: 2π×5.5 ≈ 34.558
+  var C      = 34.558;
+  var offset = (C * (1 - pctile)).toFixed(3);
+  // Color by percentile tier
+  var color  = pctile > 0.66 ? '#22c55e'
+             : pctile > 0.33 ? '#f59e0b'
+             : 'rgba(10,22,40,.22)';
+
+  return '<svg class="pos-ring" viewBox="0 0 13 13" aria-hidden="true">'
+    + '<circle class="ring-track" cx="6.5" cy="6.5" r="5.5" stroke-dasharray="' + C + '" stroke-dashoffset="0"/>'
+    + '<circle class="ring-fill" cx="6.5" cy="6.5" r="5.5"'
+    + ' stroke="' + color + '"'
+    + ' stroke-dasharray="' + C + '"'
+    + ' stroke-dashoffset="' + offset + '"'
+    + ' transform="rotate(-90 6.5 6.5)"/>'
+    + '</svg>';
+}
+
+
 // ── buildSchoolLogoHtml: renders school logo in a circular crisp container.
 // Wrapping in .card-logo-ring prevents the logo from ever stretching and keeps
 // alignment identical across every card regardless of logo dimensions.
@@ -6041,31 +6265,37 @@ function buildPlayerCard(p, tierKey) {
       + '<div class="stat-val">' + (p.ts_pct  ? (p.ts_pct*100).toFixed(1)+'%' : '—') + '</div>'
       + statBarHtml(p.ts_pct, 'ts_pct')
       + '<div class="stat-lbl">TS%</div>'
+      + posRingHtml(p.ts_pct,  'ts_pct',  p.position)
     + '</div>'
     + '<div class="stat-cell" style="' + gs2 + '">'
       + '<div class="stat-val">' + (p.pa2_usg ? Math.round(p.pa2_usg)          : '—') + '</div>'
       + statBarHtml(p.pa2_usg, 'pa2_usg')
       + '<div class="stat-lbl">P+A/USG</div>'
+      + posRingHtml(p.pa2_usg, 'pa2_usg', p.position)
     + '</div>'
     + '<div class="stat-cell" style="' + gs3 + '">'
       + '<div class="stat-val">' + (p.stl_bl  ? parseFloat(p.stl_bl).toFixed(1): '—') + '</div>'
       + statBarHtml(p.stl_bl, 'stl_bl')
       + '<div class="stat-lbl">Stl+Bl</div>'
+      + posRingHtml(p.stl_bl,  'stl_bl',  p.position)
     + '</div>'
     + '<div class="stat-cell" style="' + gs4 + '">'
       + '<div class="stat-val">' + (p.ftar    ? parseFloat(p.ftar).toFixed(3)  : '—') + '</div>'
       + statBarHtml(p.ftar, 'ftar')
       + '<div class="stat-lbl">FTAr</div>'
+      + posRingHtml(p.ftar,    'ftar',    p.position)
     + '</div>'
     + '<div class="stat-cell" style="' + gs5 + '">'
       + '<div class="stat-val">' + (p.tpar    ? parseFloat(p.tpar).toFixed(3)  : '—') + '</div>'
       + statBarHtml(p.tpar, 'tpar')
       + '<div class="stat-lbl">3PAr</div>'
+      + posRingHtml(p.tpar,    'tpar',    p.position)
     + '</div>'
     + '<div class="stat-cell" style="' + gs6 + '">'
       + '<div class="stat-val">' + (p.ato     ? parseFloat(p.ato).toFixed(2)   : '—') + '</div>'
       + statBarHtml(p.ato, 'ato')
       + '<div class="stat-lbl">A/TO</div>'
+      + posRingHtml(p.ato,     'ato',     p.position)
     + '</div>';
 
   // Comp footer
@@ -6567,7 +6797,7 @@ function openPlayerModal(rank, year) {
   document.getElementById('modalRankLabel').textContent = `#${player.rank} · ${tier.label}`;
   document.getElementById('modalName').textContent = name;
   document.getElementById('modalMeta').textContent = [school, cls, torvik_role, position].filter(Boolean).join(' · ');
-  document.getElementById('modalAvatar').innerHTML = avatarHtml(player.name, player.position, '72px', '12px');
+  document.getElementById('modalAvatar').innerHTML = avatarHtml(player.name, player.position, '96px', '14px');
 
   // Pre-compute gradient styles for each stat
   const mgMet = gradStyle(player.metric,  'metric');
@@ -6811,17 +7041,11 @@ document.addEventListener('keydown', e => { if (e.key==='Escape') { closeModal('
 // pageshow fires on back-forward cache restore; visibilitychange fires on app resume.
 document.addEventListener('visibilitychange', function() {
   if (document.visibilityState === 'visible') {
+    // Restore body overflow (modal may have locked it)
     var anyOpen = document.querySelectorAll('.modal-overlay.open').length > 0;
     if (!anyOpen) document.body.style.overflow = '';
-  }
-});
-window.addEventListener('pageshow', function(e) {
-  // persisted=true means this is a back-forward cache restore
-  if (e.persisted) {
-    document.querySelectorAll('.modal-overlay.open').forEach(function(m) {
-      m.classList.remove('open');
-    });
-    document.body.style.overflow = '';
+    // Restart countdown timers (killed when page is backgrounded on iOS/Android)
+    if (window.CountdownModule) CountdownModule.restart();
   }
 });
 
@@ -8009,58 +8233,117 @@ function escHtml(s) {
   if (!s) return "";
   return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
-// ── TAB SWITCHING ─────────────────────────────────────────
-document.querySelectorAll('.nav-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    tab.classList.add('active');
-    // Dismiss mobile scatter focus card on tab switch (prevents stale state)
-    if (typeof scDismissMobileFocus === 'function') scDismissMobileFocus();
-    // Scroll active tab into view on mobile (no-op on desktop)
-    tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
-    urlSetState({tab: tab.dataset.tab});
-    if (tab.dataset.tab==='analytics') renderAnalytics();
-    if (tab.dataset.tab==='history') renderHistory();
-    if (tab.dataset.tab==='future') renderFuture();
-    if (tab.dataset.tab==='mocks') renderMocks();
-    if (tab.dataset.tab==='resources') renderResources();
-    if (tab.dataset.tab==='compare') { populateCompareSelect(); renderCompare(); }
-    if (tab.dataset.tab==='mocks') { if(_currentMockMode==='build') mdcInit(); else if(_currentMockMode==='archive') renderMocks(); else if(_currentMockMode==='sim') simPopulateTeams(); }
-    if (tab.dataset.tab==='methodology') mcInit();
-    if (tab.dataset.tab==='scatter') scRender();
-  });
-});
-
-// ── INIT ──────────────────────────────────────────────────
-// Debounce text input — only re-render after 200ms of idle
-var _searchDebounce = null;
-document.getElementById('search2026').addEventListener('input', function() {
-  clearTimeout(_searchDebounce);
-  _searchDebounce = setTimeout(renderBoard2026, 200);
-});
-document.getElementById('posFilter').addEventListener('change', function() {
-  urlSetState({pos: document.getElementById('posFilter').value}); renderBoard2026();
-});
-document.getElementById('clsFilter').addEventListener('change', function() {
-  urlSetState({cls: document.getElementById('clsFilter').value}); renderBoard2026();
-});
-
-renderBoard2026();
-populateCompSelect();
-populateCompareSelect();
-// Initialise roll-forward engine — caches originals and restores any persisted year-advance state
-if (window.hwRollForward) hwRollForward.init();
-// Populate tier input values from current TIER_CUTS
+// ── TAB SWITCHING ─────────────────────────────────────────────────────────
+// Tab click handlers wired once via _hwTabWired guard. Delegates to
+// hwRenderTab() so bfcache restore and tab clicks share the same paths.
 (function() {
-  var m = {cutFranchise:'franchise',cutLottery:'lottery',cutLateFirst:'lateFirst',cutSecond:'second'};
-  Object.keys(m).forEach(function(id){
-    var el = document.getElementById(id);
-    if (el) el.value = TIER_CUTS[m[id]];
-  });
+  'use strict';
+  function wireTabClicks() {
+    document.querySelectorAll('.nav-tab').forEach(function(tab) {
+      if (tab._hwTabWired) return;
+      tab._hwTabWired = true;
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+        document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+        tab.classList.add('active');
+        if (typeof scDismissMobileFocus === 'function') scDismissMobileFocus();
+        tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        var panelEl = document.getElementById('tab-' + tab.dataset.tab);
+        if (panelEl) panelEl.classList.add('active');
+        urlSetState({ tab: tab.dataset.tab });
+        hwRenderTab(tab.dataset.tab);
+      });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wireTabClicks);
+  } else {
+    wireTabClicks();
+  }
 })();
-urlRestoreState();
+
+// ── hwRenderTab: single render dispatch ────────────────────────────────────
+// Used by both tab click handlers and hwInit() (bfcache restore path).
+function hwRenderTab(tabName) {
+  if (tabName === 'analytics')   { renderAnalytics();  return; }
+  if (tabName === 'history')     { renderHistory();    return; }
+  if (tabName === 'future')      { renderFuture();     return; }
+  if (tabName === 'methodology') { mcInit();           return; }
+  if (tabName === 'scatter')     { scRender();         return; }
+  if (tabName === 'resources')   { renderResources();  return; }
+  if (tabName === 'compare')     { populateCompareSelect(); renderCompare(); return; }
+  if (tabName === 'mocks') {
+    if (typeof _currentMockMode !== 'undefined') {
+      if (_currentMockMode === 'build')   { mdcInit(); return; }
+      if (_currentMockMode === 'archive') { renderMocks(); return; }
+      if (_currentMockMode === 'sim')     { simPopulateTeams(); return; }
+    }
+    renderMocks();
+    return;
+  }
+  renderBoard2026();
+}
+
+// ── hwInit: guarded, re-entrant initialization ─────────────────────────────
+// Called on fresh page load AND on every bfcache restore.
+// One-time wiring (roll-forward, tier inputs) is guarded by _hwInitDone.
+// Render calls always re-run so the active tab's content is fresh.
+var _hwInitDone = false;
+
+function hwInit() {
+  // One-time setup ──────────────────────────────────────────────────────────
+  if (!_hwInitDone) {
+    _hwInitDone = true;
+
+    // Roll-forward engine: caches board originals, applies any persisted state
+    if (window.hwRollForward) hwRollForward.init();
+
+    // Restore tier cutoff inputs
+    var tierMap = {
+      cutFranchise: 'franchise',
+      cutLottery:   'lottery',
+      cutLateFirst: 'lateFirst',
+      cutSecond:    'second'
+    };
+    Object.keys(tierMap).forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.value = TIER_CUTS[tierMap[id]];
+    });
+    // Filter listeners owned by Bootstrap IIFE wireFilters() — no duplication here.
+  }
+
+  // Always run ──────────────────────────────────────────────────────────────
+  populateCompSelect();
+  populateCompareSelect();
+
+  // Restore tab/view/filter state from URL hash.
+  // urlRestoreState() calls the appropriate render function for the saved tab.
+  urlRestoreState();
+
+  // If no tab was encoded in the URL, ensure the default board is rendered.
+  var activeTab = document.querySelector('.nav-tab.active');
+  var tabName   = activeTab ? activeTab.dataset.tab : 'board2026';
+  if (!tabName || tabName === 'board2026') {
+    var p = urlGetState();
+    if (!p.tab) renderBoard2026();
+  }
+}
+
+// Run on fresh page load
+hwInit();
+
+// ── pageshow: bfcache restoration ──────────────────────────────────────────
+// 'pageshow' fires on every page display — fresh load and bfcache restore.
+// On bfcache restore (persisted=true): JS didn't re-run, timers are dead,
+// DOM is a frozen snapshot. We restart timers and re-run initialization.
+window.addEventListener('pageshow', function(e) {
+  if (!e.persisted) return;  // fresh load already handled by hwInit() above
+  // Restart countdown (setInterval killed by bfcache)
+  if (window.CountdownModule) CountdownModule.restart();
+  // Reset guard so one-time wiring re-fires on full restore
+  _hwInitDone = false;
+  hwInit();
+});
 
 // ── EXCEL UPLOAD & REFRESH ─────────────────────────────────────────────────
 // Uses SheetJS (XLSX) loaded from CDN to parse the workbook in-browser.
@@ -12513,7 +12796,28 @@ var FreeformInteraction = (function() {
   // ── Apply transform ───────────────────────────────────────────────────────
   // translate3d forces GPU layer — no layout reads/writes on each frame.
   function _apply() {
-    if (!_layer) return;
+    if (!_layer || !_vp) return;
+    var vpW = _vp.offsetWidth;
+
+    // SPREAD FIX: when zooming out (scale < 1), expand layer width so bubbles
+    // spread to fill the visible viewport instead of shrinking to a narrow band.
+    // After scale(s) the rendered width = naturalWidth * s.
+    // We want rendered width = vpW, so naturalWidth = vpW / s.
+    // When s >= 1 (zoomed in), let layout be natural width (overflow creates pan space).
+    if (_s < 1 && vpW > 0) {
+      var expandedW = Math.round(vpW / _s);
+      _layer.style.width = expandedW + 'px';
+      // Update tracked layerW so _clamp stays accurate
+      _layerW = expandedW;
+    } else {
+      _layer.style.width = '';
+      // Restore to natural width if previously expanded
+      if (_layerW !== (_vp ? _vp.offsetWidth : _layerW)) {
+        var r = _layer.getBoundingClientRect();
+        if (r.width > 0) _layerW = r.width;
+      }
+    }
+
     _layer.style.transform =
       'translate3d(' + _tx.toFixed(1) + 'px,' + _ty.toFixed(1) + 'px,0) scale(' + _s.toFixed(4) + ')';
   }
@@ -12703,6 +13007,12 @@ var FreeformInteraction = (function() {
     vpEl.addEventListener('touchstart', _onTouchStart, { passive: false });
     vpEl.addEventListener('touchmove',  _onTouchMove,  { passive: false });
     vpEl.addEventListener('touchend',   _onTouchEnd,   { passive: true  });
+    // Desktop: scroll-wheel zoom + drag-to-pan with mouse
+    vpEl.addEventListener('wheel',      _onWheel,      { passive: false });
+    vpEl.addEventListener('mousedown',  _onMouseDown,  { passive: true  });
+    vpEl.addEventListener('mousemove',  _onMouseMove,  { passive: true  });
+    vpEl.addEventListener('mouseup',    _onMouseUp,    { passive: true  });
+    vpEl.addEventListener('mouseleave', _onMouseUp,    { passive: true  });
   }
 
   // reset: animates back to home position. Called by density change + reset button.
@@ -12719,6 +13029,55 @@ var FreeformInteraction = (function() {
 
   // getScale: returns current user zoom level (density is separate)
   function getScale() { return _s; }
+
+  // ── Desktop wheel zoom ────────────────────────────────────────────────
+  function _onWheel(e) {
+    e.preventDefault();
+    var r     = _vp.getBoundingClientRect();
+    // Cursor position within the viewport (origin for zoom)
+    var mx    = e.clientX - r.left;
+    var my    = e.clientY - r.top;
+    // Normalize delta: trackpad sends small values, mouse wheel sends large ones
+    var delta = e.deltaMode === 1 ? e.deltaY * 20 : e.deltaY;
+    var ratio = Math.pow(0.999, delta);    // smooth: 0.999^small = near 1
+    var ns    = Math.max(S_MIN, Math.min(S_MAX, _s * ratio));
+    if (ns === _s) return;
+    // Keep cursor point stationary in viewport space during zoom
+    if (_s !== 0) {
+      _tx = mx - (mx - _tx) * (ns / _s);
+      _ty = my - (my - _ty) * (ns / _s);
+    }
+    _s = ns;
+    _clamp();
+    _apply();
+    _syncResetBtn();
+  }
+
+  // ── Desktop drag-to-pan ───────────────────────────────────────────────
+  var _mouseDown   = false;
+  var _mouseStart  = null;
+
+  function _onMouseDown(e) {
+    if (e.button !== 0) return;        // left-click only
+    if (e.target.closest('.ff2-card')) return;  // don't hijack card clicks
+    _mouseDown  = true;
+    _mouseStart = { tx: _tx, ty: _ty, cx: e.clientX, cy: e.clientY };
+  }
+
+  function _onMouseMove(e) {
+    if (!_mouseDown || !_mouseStart) return;
+    _tx = _mouseStart.tx + (e.clientX - _mouseStart.cx);
+    _ty = _mouseStart.ty + (e.clientY - _mouseStart.cy);
+    _clamp();
+    _apply();
+    _syncResetBtn();
+  }
+
+  function _onMouseUp() {
+    _mouseDown  = false;
+    _mouseStart = null;
+  }
+
 
   return { init: init, reset: reset, getScale: getScale };
 })();
@@ -13822,23 +14181,26 @@ function simReset() {
 }
 
 
-// ── DRAFT DAY COUNTDOWN ───────────────────────────────────────────────────────
-(function() {
-  // 2026 NBA Draft Lottery: ~May 12, 2026 at 8:00 PM ET (est. — second Tue of May)
+// ── DRAFT DAY COUNTDOWN ─────────────────────────────────────────────────────
+// Exposed as CountdownModule so the pageshow handler can restart the interval
+// after bfcache restoration kills it.
+var CountdownModule = (function() {
+  'use strict';
+
   var LOTTERY_TIME = new Date('2026-05-12T20:00:00-04:00').getTime();
-  // 2026 NBA Draft: June 25, 2026 at 8:00 PM Eastern Time (UTC-4 in June)
-  var DRAFT_TIME = new Date('2026-06-23T20:00:00-04:00').getTime();
+  var DRAFT_TIME   = new Date('2026-06-23T20:00:00-04:00').getTime();
+  var _intervalId  = null;
 
   function padZ(n) { return n < 10 ? '0' + n : '' + n; }
 
-  function updateCountdown() {
-    var el  = document.getElementById('cdDisplay');
-    var lbl = document.getElementById('cdLabel');
-    var lot = document.getElementById('lotDisplay');
+  function tick() {
+    var el     = document.getElementById('cdDisplay');
+    var lbl    = document.getElementById('cdLabel');
+    var lot    = document.getElementById('lotDisplay');
     var lotLbl = document.getElementById('lotLabel');
     if (!el) return;
 
-    // Lottery countdown
+    // ── Lottery countdown ──────────────────────────────────────────
     if (lot) {
       var now2  = Date.now();
       var diff2 = LOTTERY_TIME - now2;
@@ -13846,65 +14208,60 @@ function simReset() {
         lot.textContent = '🎱 LIVE';
         lot.style.color = '#4ADE80';
         if (lotLbl) lotLbl.textContent = 'Lottery Night';
-        // Hide lottery pill once draft has also passed
         var lotPill = document.getElementById('lotteryCountdown');
         if (lotPill && DRAFT_TIME <= Date.now()) lotPill.style.display = 'none';
       } else {
-        var days2  = Math.floor(diff2 / 86400000);
-        var hours2 = Math.floor((diff2 % 86400000) / 3600000);
-        var mins2  = Math.floor((diff2 % 3600000)  / 60000);
-        var secs2  = Math.floor((diff2 % 60000)    / 1000);
-        if (days2 > 99) {
-          lot.textContent = days2 + 'd ' + padZ(hours2) + 'h ' + padZ(mins2) + 'm';
-        } else if (days2 > 0) {
-          lot.textContent = days2 + 'd ' + padZ(hours2) + ':' + padZ(mins2) + ':' + padZ(secs2);
-        } else {
-          lot.textContent = padZ(hours2) + ':' + padZ(mins2) + ':' + padZ(secs2);
-          lot.style.color = '#F87171';
-          if (lotLbl) { lotLbl.textContent = 'LOTTERY TODAY'; lotLbl.style.color = '#F87171'; }
-        }
-      // Mirror to mobile strip
+        var d2 = Math.floor(diff2 / 86400000);
+        var h2 = Math.floor((diff2 % 86400000) / 3600000);
+        var m2 = Math.floor((diff2 % 3600000)  / 60000);
+        var s2 = Math.floor((diff2 % 60000)    / 1000);
+        lot.textContent = d2 > 99 ? d2+'d '+padZ(h2)+'h '+padZ(m2)+'m'
+                        : d2 > 0  ? d2+'d '+padZ(h2)+':'+padZ(m2)+':'+padZ(s2)
+                        : padZ(h2)+':'+padZ(m2)+':'+padZ(s2);
+        if (d2 === 0) { lot.style.color = '#F87171'; if (lotLbl) { lotLbl.textContent = 'LOTTERY TODAY'; lotLbl.style.color = '#F87171'; } }
+      }
       var mLot = document.getElementById('mLotDisplay');
       if (mLot) { mLot.textContent = lot.textContent; mLot.style.color = lot.style.color || 'var(--amber)'; }
-      }
     }
 
+    // ── Draft countdown ────────────────────────────────────────────
     var now  = Date.now();
     var diff = DRAFT_TIME - now;
-
     if (diff <= 0) {
-      // Draft is live or over
-      el.textContent  = '🏀 LIVE';
-      el.style.color  = '#4ADE80';
+      el.textContent = '🏀 LIVE'; el.style.color = '#4ADE80';
       if (lbl) lbl.textContent = 'Draft Night';
       var mCd2 = document.getElementById('mCdDisplay');
       if (mCd2) { mCd2.textContent = '🏀 LIVE'; mCd2.style.color = '#4ADE80'; }
       return;
     }
-
     var days  = Math.floor(diff / 86400000);
     var hours = Math.floor((diff % 86400000) / 3600000);
     var mins  = Math.floor((diff % 3600000)  / 60000);
     var secs  = Math.floor((diff % 60000)    / 1000);
-
-    if (days > 99) {
-      el.textContent = days + 'd ' + padZ(hours) + 'h ' + padZ(mins) + 'm';
-    } else if (days > 0) {
-      el.textContent = days + 'd ' + padZ(hours) + ':' + padZ(mins) + ':' + padZ(secs);
-    } else {
-      el.textContent = padZ(hours) + ':' + padZ(mins) + ':' + padZ(secs);
-      el.style.color = '#F87171';
-      if (lbl) { lbl.textContent = 'DRAFT TODAY'; lbl.style.color = '#F87171'; }
-    }
-    // Mirror to mobile countdown strip
+    el.textContent = days > 99 ? days+'d '+padZ(hours)+'h '+padZ(mins)+'m'
+                   : days > 0  ? days+'d '+padZ(hours)+':'+padZ(mins)+':'+padZ(secs)
+                   : padZ(hours)+':'+padZ(mins)+':'+padZ(secs);
+    if (days === 0) { el.style.color = '#F87171'; if (lbl) { lbl.textContent = 'DRAFT TODAY'; lbl.style.color = '#F87171'; } }
     var mCd = document.getElementById('mCdDisplay');
     if (mCd) { mCd.textContent = el.textContent; mCd.style.color = el.style.color || '#4ADE80'; }
   }
 
-  // Run immediately, then tick every second
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+  function start() {
+    // Clear any existing interval before starting (prevents duplicate ticks)
+    if (_intervalId !== null) { clearInterval(_intervalId); _intervalId = null; }
+    tick();  // immediate first tick so display isn't blank
+    _intervalId = setInterval(tick, 1000);
+  }
+
+  // Called by pageshow handler on bfcache restore
+  function restart() { start(); }
+
+  // Auto-start on module load
+  start();
+
+  return { restart: restart };
 })();
+
 
 
 // Show pool close button on mobile
