@@ -1310,7 +1310,7 @@ tr:hover td{background:var(--gray-50)}
   /* Mock modes */
   .mock-mode-btn{min-width:calc(50% - 5px);flex:none;padding:10px 14px}
   .mock-mode-icon{font-size:17px;margin-bottom:3px}
-  .mock-mode-label{font-size:14px}
+  .mock-mode-label{font-size:13px}
   .mock-mode-sub{display:none}
 
   /* Simulator */
@@ -2799,1116 +2799,618 @@ nt-size: 14px;
 .sim-pos-btn.active{background:rgba(255,255,255,.25);color:white}
 
 /* ── MOCK MODE STRIP ─────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════
+   MOCK DRAFT TAB — PREMIUM REDESIGN
+   ══════════════════════════════════════════════════════ */
+
+/* ── Mode selector ───────────────────────────────────── */
 .mock-mode-strip{
-  display:grid;grid-template-columns:1fr 1fr;gap:8px
+  display:flex;
+  gap:8px;
+  align-items:stretch;
+  margin-bottom:14px;
 }
 .mock-mode-btn{
-  display:flex;flex-direction:column;align-items:flex-start;
-  padding:10px 8px;border-radius:12px;cursor:pointer;
-  border:2px solid var(--gray-200);background:white;
-  transition:all .18s;text-align:left;min-width:0;flex:1;
-  box-shadow:0 1px 4px rgba(10,22,40,.06);
-  min-height:56px;touch-action:manipulation
+  flex:1;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:9px 13px;
+  border-radius:8px;
+  cursor:pointer;
+  border:1.5px solid var(--gray-200);
+  background:white;
+  transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;
+  position:relative;
+  overflow:hidden;
+  min-height:0;
+}
+.mock-mode-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(37,99,235,.04),transparent);
+  opacity:0;transition:opacity .15s;
 }
 .mock-mode-btn:hover{
-  border-color:var(--blue);box-shadow:0 3px 14px rgba(37,99,235,.12);
-  transform:translateY(-1px)
+  border-color:rgba(37,99,235,.35);
+  box-shadow:0 2px 12px rgba(37,99,235,.1);
+  transform:translateY(-1px);
 }
+.mock-mode-btn:hover::before{opacity:1}
 .mock-mode-btn.active{
-  border-color:var(--blue);background:linear-gradient(135deg,#EFF6FF 0%,#DBEAFE 100%);
-  box-shadow:0 4px 16px rgba(37,99,235,.16)
+  border-color:var(--blue);
+  background:linear-gradient(160deg,#F0F6FF 0%,#DBEAFE 100%);
+  box-shadow:0 1px 8px rgba(37,99,235,.12);
 }
-.mock-mode-icon{font-size:20px;margin-bottom:5px;line-height:1;display:block}
+.mock-mode-icon{font-size:15px;line-height:1;flex-shrink:0;opacity:.85}
+.mock-mode-text{display:flex;flex-direction:column;gap:1px;min-width:0}
 .mock-mode-label{
-  font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;
-  color:var(--navy);line-height:1;display:block
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;font-weight:900;
+  color:var(--navy);line-height:1;letter-spacing:.2px;
 }
 .mock-mode-btn.active .mock-mode-label{color:var(--blue)}
 .mock-mode-sub{
-  font-size:11px;color:var(--gray-400);font-weight:500;margin-top:3px;
-  display:block;line-height:1.3;white-space:nowrap
+  display:block !important;
+  font-size:9px;color:var(--gray-400);font-weight:500;
+  line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .mock-mode-btn.active .mock-mode-sub{color:#3B82F6}
 
-
-/* ── PRIOR PICKS SIDEBAR ─────────────────────────────────────────────────── */
-.prior-picks-sidebar{
-  width:0;overflow:hidden;flex-shrink:0;
-  background:#0f1e38;
-  border-right:1px solid rgba(255,255,255,.08);
-  transition:width .25s cubic-bezier(.4,0,.2,1);
-}
-
-/* ── SIMULATOR BOARD ROWS ──────────────────────────────────────────────── */
-#simPicksBoard [data-pick]:hover{background:#F8FAFC!important}
-
-/* ── SIM TEAM TABS ────────────────────────────────────────────────────────── */
-.sim-team-tab-btn{
-  display:inline-flex;align-items:center;padding:7px 14px;border-radius:9px;
-  border:1.5px solid var(--gray-200);background:white;color:var(--gray-600);
-  font-size:12px;font-weight:700;cursor:pointer;font-family:'Barlow Condensed',sans-serif;
-  transition:all .15s;gap:4px
-}
-.sim-team-tab-btn:hover{border-color:var(--blue);color:var(--blue)}
-.sim-team-tab-btn.active{
-  background:linear-gradient(135deg,#0A1628,#1a3060);color:white;
-  border-color:transparent;box-shadow:0 2px 10px rgba(10,22,40,.2)
-}
-
-/* ── SIMULATOR MOBILE LAYOUT ──────────────────────────────────────────────── */
-
-
-
-/* ── Intel v3: news ticker feed ──────────────────────────── */
-.intel-loading-row{display:flex;align-items:center;gap:10px;padding:18px;background:var(--gray-50);border-radius:10px;border:1px solid var(--gray-100)}
-.intel-spinner{width:16px;height:16px;border:2px solid var(--gray-200);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
-.intel-loading-text{font-size:12px;color:var(--gray-500)}
-@keyframes spin{to{transform:rotate(360deg)}}
-.intel-news-feed{display:flex;flex-direction:column}
-.intel-news-item{padding:11px 0;border-bottom:1px solid var(--gray-100)}
-.intel-news-item.first{padding-top:0}
-.intel-news-item:last-child{border-bottom:none}
-.intel-news-meta{display:flex;align-items:center;gap:7px;margin-bottom:5px;flex-wrap:wrap}
-.intel-news-cat-pill{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap;letter-spacing:.2px}
-.intel-news-source{font-size:10px;font-weight:600;color:var(--blue)}
-.intel-news-date{font-size:10px;color:var(--gray-400);margin-left:auto}
-.intel-news-text{font-size:13px;color:var(--gray-700);line-height:1.6}
-.intel-no-news{text-align:center;padding:24px 16px;background:var(--gray-50);border-radius:10px;border:1px dashed var(--gray-200)}
-.intel-no-news-icon{font-size:28px;margin-bottom:8px}
-.intel-no-news-text{font-size:13px;font-weight:700;color:var(--gray-600);margin-bottom:5px}
-.intel-no-news-sub{font-size:11px;color:var(--gray-400);line-height:1.5;margin-bottom:12px}
-.intel-links-block{margin-top:12px}
-.intel-links-row{display:flex;flex-wrap:wrap;gap:7px}
-.intel-link-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;transition:all .15s}
-.intel-link-btn.espn{background:#FFE4E1;color:#CC0000;border:1px solid rgba(204,0,0,.2)}
-.intel-link-btn.espn:hover{background:#FFD5D0}
-.intel-link-btn.gnews{background:#E8F0FE;color:#1A73E8;border:1px solid rgba(26,115,232,.2)}
-.intel-link-btn.gnews:hover{background:#D2E3FC}
-.intel-timestamp{font-size:10px;color:var(--gray-400);text-align:right;margin-top:8px;font-style:italic}
-/* ── Intel badge on board ───────────────────────────────── */
-.intel-badge{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#10B981;border:2px solid white;box-shadow:0 0 0 1px rgba(16,185,129,.3);animation:pulse-badge 2s ease-in-out infinite;pointer-events:none}
-@keyframes pulse-badge{0%,100%{box-shadow:0 0 0 1px rgba(16,185,129,.3)}50%{box-shadow:0 0 0 4px rgba(16,185,129,.12)}}
-/* ── Intel section wrapper ──────────────────────────────── */
-.intel-section{margin-top:22px}
-.intel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.intel-title{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:1.2px;display:flex;align-items:center;gap:6px}
-.intel-refresh-btn{font-size:10px;font-weight:700;color:var(--blue);background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:5px;padding:3px 10px;cursor:pointer;transition:all .15s}
-.intel-refresh-btn:hover{background:rgba(37,99,235,.16)}
-.intel-refresh-btn:disabled{opacity:.45;cursor:not-allowed}
-/* ── Video section ──────────────────────────────────────── */
-.video-section{margin-top:22px}
-.video-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.video-title{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:1.2px;display:flex;align-items:center;gap:6px}
-.video-grid{display:flex;flex-direction:column;gap:12px}
-.video-card{background:white;border:1px solid var(--gray-200);border-radius:10px;overflow:hidden}
-.video-card-header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--gray-50);border-bottom:1px solid var(--gray-100)}
-.video-card-meta{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
-.video-card-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.4px;background:#FEF3C7;color:#D97706;flex-shrink:0}
-.video-card-tag.scouting{background:#EDE9FE;color:#7C3AED}
-.video-card-tag.profile{background:#E0F2FE;color:#0284C7}
-.video-card-tag.gamefilm{background:#ECFDF5;color:#059669}
-.video-card-title{font-size:12px;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.video-remove-btn{font-size:13px;color:var(--gray-400);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:3px;transition:all .15s;flex-shrink:0;line-height:1}
-.video-remove-btn:hover{background:#FEE2E2;color:#DC2626}
-.video-embed-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}
-.video-embed-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
-/* Video placeholder cards */
-.video-placeholder-card{background:white;border:1px solid var(--gray-200);border-radius:10px;overflow:hidden}
-.video-ph-body{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;text-decoration:none;background:var(--gray-50);transition:background .15s;min-height:100px;cursor:pointer}
-.video-ph-body:hover{background:#EFF6FF}
-.video-ph-icon{font-size:28px;margin-bottom:8px}
-.video-ph-label{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:4px;text-align:center}
-.video-ph-cta{font-size:11px;color:var(--blue);font-weight:600}
-.video-api-note{font-size:10px;color:var(--gray-400);text-align:center;margin-top:8px;font-style:italic}
-
-/* ── 2027 Watch Board ───────────────────────────────────── */
-.future-view-bar{display:flex;gap:8px;margin-bottom:16px}
-.future-view-btn{padding:7px 18px;border-radius:7px;border:1.5px solid var(--gray-200);background:white;font-size:12px;font-weight:700;color:var(--gray-500);cursor:pointer;transition:all .15s;font-family:'Barlow Condensed',sans-serif;letter-spacing:.3px}
-.future-view-btn.active{background:var(--purple);border-color:var(--purple);color:white}
-.future-view-btn:hover:not(.active){border-color:var(--purple);color:var(--purple)}
-
-.future-cards-wrap{display:flex;flex-direction:column;gap:24px}
-.future-tier-section{}
-.future-tier-header{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--gray-100)}
-.future-tier-label{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--navy)}
-.future-tier-count{font-size:11px;color:var(--gray-400);font-weight:600}
-.future-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
-
-.future-card{background:white;border:1.5px solid var(--gray-200);border-radius:12px;padding:0;cursor:pointer;transition:all .18s;overflow:hidden}
-.future-card:hover{border-color:var(--purple);box-shadow:var(--shadow-md);transform:translateY(-2px)}
-
-.future-card-header{display:flex;align-items:center;gap:8px;padding:11px 12px 8px;background:linear-gradient(135deg,var(--navy),#1e3a5f)}
-.future-rank-badge{width:36px;height:36px;border-radius:7px;background:rgba(124,58,237,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
-.future-rank-badge .rn{font-family:'Barlow Condensed',sans-serif;font-weight:900;color:white;font-size:15px;line-height:1}
-.future-rank-badge .rl{font-size:7px;color:rgba(255,255,255,.65);font-weight:700;text-transform:uppercase;letter-spacing:.5px;line-height:1;margin-top:1px}
-
-.future-card-identity{flex:1;min-width:0}
-.future-card-name{font-family:'Barlow Condensed',sans-serif;font-weight:800;color:white;line-height:1.15;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.future-card-school{display:flex;align-items:center;gap:4px;margin-top:2px;font-size:11px;color:rgba(255,255,255,.65)}
-.future-uncommitted-tag{font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;background:rgba(124,58,237,.35);color:rgba(200,160,255,.9);text-transform:uppercase;letter-spacing:.4px}
-
-.future-card-tags{display:flex;flex-wrap:wrap;gap:4px;padding:8px 12px 5px}
-.future-card-notes{font-size:11px;color:var(--gray-600);line-height:1.55;padding:0 12px 8px;border-top:1px solid var(--gray-100);margin-top:4px;padding-top:7px}
-.future-card-comp{font-size:10px;color:var(--gray-400);padding:0 12px 9px;font-style:italic}
-
-.future-table thead th{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--gray-400);padding:8px 10px;background:var(--gray-50);border-bottom:1.5px solid var(--gray-200);font-weight:700}
-.future-table tbody tr:hover td{background:rgba(124,58,237,.04)}
-.future-table tbody td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:middle}
-.future-table .name{font-weight:700;color:var(--navy);font-size:13px}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   DESIGN SYSTEM UPGRADE — Phase 1/2/3
-   Applied as an additive override layer on top of existing styles.
-   Strategy: surgically override only what we're improving.
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* ── DESIGN TOKENS ───────────────────────────────────────────────────────── */
-:root {
-  /* Refined palette: fewer saturated colors, more deliberate use */
-  --surface:      #FAFBFC;
-  --surface-raised:#FFFFFF;
-  --surface-inset:#F2F4F7;
-  --border-light: rgba(15,23,42,.07);
-  --border-med:   rgba(15,23,42,.12);
-  --text-primary: #0D1B2E;
-  --text-secondary:#475569;
-  --text-muted:   #94A3B8;
-  --accent:       #C9971A;   /* amber, single accent color */
-  --accent-dim:   rgba(201,151,26,.12);
-  --rank-ink:     rgba(13,27,46,.20);  /* de-emphasized rank number */
-
-  /* Tier: one color per tier, used sparingly */
-  --tier-franchise: #D97706;
-  --tier-lottery:   #7C3AED;
-  --tier-late1:     #2563EB;
-  --tier-second:    #0891B2;
-
-  /* Spacing scale */
-  --sp-xs: 4px;
-  --sp-sm: 8px;
-  --sp-md: 14px;
-  --sp-lg: 20px;
-  --sp-xl: 28px;
-
-  /* Card radius */
-  --r-sm: 8px;
-  --r-md: 12px;
-  --r-lg: 16px;
-}
-
-/* ── GLOBAL BODY REFINEMENT ──────────────────────────────────────────────── */
-body {
-  background: var(--gray-50);
-  color: var(--text-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* ── HEADER — tight, dark, brand gold accent ─────────────────────────────── */
-.header {
-  background: linear-gradient(180deg, #0f1e38 0%, #0A1628 100%);
-  border-bottom: 2px solid rgba(201,151,26,.45);  /* gold accent — brand identity */
-  box-shadow: 0 2px 20px rgba(0,0,0,.45);
-  height: 60px;
-}
-
-/* ── NAV TABS — clean underline style ────────────────────────────────────── */
-.nav-tabs {
-  background: #FFFFFF;
-  border-bottom: 1px solid var(--border-light);
-  padding: 0 24px;
-  box-shadow: 0 1px 0 rgba(15,23,42,.04);
-  top: 60px;   /* matches header height */
-}
-.nav-tab {
-  padding: 0 16px;
-  height: 42px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: .01em;
-  gap: 5px;
-  transition: color .12s, border-color .12s;
-}
-.nav-tab:hover  { color: var(--text-secondary); }
-.nav-tab.active {
-  color: var(--text-primary);
-  border-bottom-color: var(--accent);
-  font-weight: 700;
-}
-
-/* ── MAIN CONTENT AREA ───────────────────────────────────────────────────── */
-.main { padding: 18px 24px; max-width: 1440px; }
-
-/* ── CONTROLS BAR — flat, inline, no card wrapper ───────────────────────── */
-/* The controls bar blends into the page background. The view-toggle is the   */
-/* primary visual anchor — it doesn't need a competing white card behind it.  */
-.controls-bar {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  margin-bottom: 14px;
-  box-shadow: none;
-  gap: 8px;
-}
-.search-input {
-  font-size: 13px;
-  border-radius: 8px;
-  border: 1.5px solid var(--gray-200);
-  padding: 7px 12px 7px 32px;
-  background: white;
-  color: var(--text-primary);
-  box-shadow: 0 1px 2px rgba(10,22,40,.04);
-  transition: border-color .15s, box-shadow .15s;
-}
-.search-input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(201,151,26,.12);
-  outline: none;
-}
-.filter-select {
-  font-size: 13px;
-  border-radius: 8px;
-  border: 1.5px solid var(--gray-200);
-  background: white;
-  color: var(--text-secondary);
-  padding: 6px 10px;
-  box-shadow: 0 1px 2px rgba(10,22,40,.04);
-  transition: border-color .15s;
-  cursor: pointer;
-}
-.filter-select:focus { border-color: var(--accent); outline: none; }
-
-/* ─────────────────────────────────────────────────────────────────────────
-   CARDS VIEW — major redesign
-   Key changes:
-   - Remove redundant rank pip (rank shown as text inside card)
-   - Promote role tag to primary identity
-   - Metric shown once, not twice
-   - Stats section cleaner with better density
-   ─────────────────────────────────────────────────────────────────────────*/
-
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
-  gap: 14px;
-}
-/* ══════════════════════════════════════════════════════════════════
-   COMPONENT EXTENSIONS — new selectors & improved variants
-   These extend the canonical rules above; no duplicate overrides.
-   ══════════════════════════════════════════════════════════════════ */
-
- */
-
-.hw-card-rank {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  font-weight: 900;
-  color: var(--navy);
-  letter-spacing: -.5px;
-  min-width: 24px;
-  text-align: center;
-  flex-shrink: 0;
-  line-height: 1;
-  opacity: .55;            /* subtle but present — hierarchy anchor */
-}
-
-/* Avatar circle — same size, cleaner */
-
-.hw-card-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-/* Identity block */
-
-/* Metric chip — right side of header, single authoritative number */
-
-/* Tags row — role promoted, others smaller */
-
-/* tag.ht, tag.wt hidden on mobile via 640px MQ — visible on desktop */
-
-/* Stats grid — tighter, cleaner */
-
-/* Comp footer */
-
-/* Add-to-compare button — subtle, on hover */
-
-
-.player-card:hover .hw-card-compare-btn { opacity: 1; }
-
-.hw-card-compare-btn:hover {
-  background: rgba(37,99,235,.12);
-  color: #1D4ED8;
-  border-color: rgba(37,99,235,.2);
-}
-
-/* ─────────────────────────────────────────────────────────────────────────
-   TABLE VIEW — improved scannability
-   ─────────────────────────────────────────────────────────────────────────*/
-
-.board-table thead th {
-  background: #F8FAFC;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .8px;
-  color: var(--text-muted);
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border-light);
-  white-space: nowrap;
-}
-
-.board-table thead th:first-child { padding-left: 16px; }
-
-.board-table thead th.sorted { color: var(--accent); }
-
-.board-table tbody tr:hover { background: #F0F4FF !important; }
-
-/* ─────────────────────────────────────────────────────────────────────────
-   BIG BOARD — refined
-   ─────────────────────────────────────────────────────────────────────────*/
-
-
-/* Header — reduce noise */
-
- /* remove the busy grid overlay */
-
-/* Pill strip — fewer pills */
-
-/* Row — subtle tier left-border only (not heavy color) */
-
-/* Rank number — quieter */
-
-/* Tier band — thinner */
-
-/* Column headers */
-
-/* ─────────────────────────────────────────────────────────────────────────
-   PLAYER MODAL — cleaner structure, better hierarchy
-   ─────────────────────────────────────────────────────────────────────────*/
-
-/* modal body padding is set in canonical CSS */
-
-/* Section titles — cleaner, smaller */
-
-/* Metric boxes */
-
-/* Measurables */
-
-/* Scouting report */
-
-/* BPM section label */
-
-/* Shot chart — visible immediately on click */
-
-#modalShotPanel {
-  animation: fadeIn .15s ease-out;
-}
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-
-/* ═══════════════════════════════════════════════════════════════════════
-   COMPARE TAB v5 — Radar-dominant layout
-   ─────────────────────────────────────────────────────────────────────
-   Philosophy: The radar IS the product. Everything else supports it.
-
-   Layout (desktop ≥761px):
-     ┌─────────────────────────────────────────────────────────┐
-     │  CONTROLS BAR                                           │
-     ├─────────────────────────────────────────────────────────┤
-     │  RADAR PANEL (large, prominent)                         │
-     │  ┌─ legend/title ──────────────────────────────────┐   │
-     │  │  [canvas — 480px min-height]                    │   │
-     │  └─────────────────────────────────────────────────┘   │
-     ├──────────────────────────────────────────────────────── │
-     │  PLAYER CARDS (horizontal strip, equal width)           │
-     │  [card1] [card2] [card3] [card4]                        │
-     ├─────────────────────────────────────────────────────────┤
-     │  STATS TABLE (full width, collapsible)                  │
-     └─────────────────────────────────────────────────────────┘
-
-   Mobile ≤760px: radar first, then cards vertically, then table.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-/* ── Compare controls bar ───────────────────────────────────────────── */
-.compare-controls-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
+/* ── Builder wrap ────────────────────────────────────── */
+.mdc-wrap{
+  display:flex;align-items:stretch;
+  background:#060D1A;
+  border-radius:14px;overflow:hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.06),
+    0 8px 40px rgba(0,0,0,.5),
+    0 0 60px rgba(59,130,246,.03);0 0 0 1px rgba(255,255,255,.05);
+  min-height:640px;
+}
+
+/* ── Pick board ──────────────────────────────────────── */
+.mdc-board{
+  flex:1;min-width:0;display:flex;flex-direction:column;
+  background:#0B1830;
+}
+.mdc-board-header{
+  padding:14px 18px 12px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  flex-shrink:0;
+  background:linear-gradient(180deg,#0f2040,#0B1830);
+}
+.mdc-board-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:17px;font-weight:900;
+  color:white;letter-spacing:.3px;
+  flex-shrink:0;
+}
+.mdc-progress{display:flex;align-items:center;gap:10px;flex:1;min-width:140px}
+.mdc-prog-bar{
+  flex:1;height:4px;
+  background:rgba(255,255,255,.1);
+  border-radius:2px;overflow:hidden;
+}
+.mdc-prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,#3B82F6,#D4A830);
+  border-radius:2px;transition:width .4s ease;
+}
+.mdc-prog-text{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:700;
+  color:rgba(255,255,255,.55);white-space:nowrap;
+}
+.mdc-actions{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.mdc-act-btn{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:6px;padding:4px 10px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.55);
+  cursor:pointer;transition:all .12s;white-space:nowrap;
+  letter-spacing:.2px;
+}
+.mdc-act-btn:hover{
+  background:rgba(255,255,255,.1);
+  color:rgba(255,255,255,.9);
+  border-color:rgba(255,255,255,.2);
+}
+.mdc-act-btn.gold{
+  color:rgba(212,168,48,.8);
+  border-color:rgba(212,168,48,.3);
+  background:rgba(212,168,48,.08);
+}
+.mdc-act-btn.gold:hover{
+  background:rgba(212,168,48,.15);
+  color:rgba(212,168,48,1);
+}
+
+/* ── Round header ────────────────────────────────────── */
+.mdc-picks-scroll{flex:1;overflow-y:auto;padding:0;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent}
+.mdc-round-hdr{
+  padding:5px 18px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px;font-weight:900;
+  text-transform:uppercase;letter-spacing:2.5px;
+  color:rgba(255,255,255,.22);
+  background:#080F1C;
+  border-top:1px solid rgba(255,255,255,.05);
+  border-bottom:1px solid rgba(255,255,255,.05);
+  position:sticky;top:0;z-index:5;
+}
+
+/* ── Pick rows ───────────────────────────────────────── */
+.mdc-pick-row{
+  display:flex;align-items:center;gap:0;
+  padding:0 12px 0 0;
+  border-bottom:1px solid rgba(255,255,255,.035);
+  cursor:pointer;
+  min-height:52px;
+  position:relative;
+  transition:background .12s;
+  min-height:48px;
+  position:relative;
+}
+/* Left tier accent line */
+.mdc-pick-row::before{
+  content:'';
+  position:absolute;left:0;top:15%;bottom:15%;
+  width:2px;border-radius:0 2px 2px 0;
+  background:transparent;transition:background .15s;
+}
+.mdc-pick-row:hover{background:rgba(255,255,255,.03)}
+.mdc-pick-row:hover::before{background:rgba(255,255,255,.15)}
+.mdc-pick-row.active{
+  background:rgba(212,168,48,.07);
+  box-shadow:inset 3px 0 0 rgba(212,168,48,.7);
+}
+.mdc-pick-row.active::before{background:var(--amber)}
+.mdc-pick-row.filled{background:rgba(255,255,255,.02)}
+.mdc-pick-row.filled::before{background:rgba(59,130,246,.3)}
+/* Lottery — subtle purple tint when filled */
+.mdc-pick-row.lotto-row.filled{background:rgba(139,92,246,.04)}
+.mdc-pick-row.lotto-row.filled::before{background:rgba(139,92,246,.4)}
+.mdc-pick-row.lotto-row.active{background:rgba(212,168,48,.07)}
+
+/* ── Pick number ─────────────────────────────────────── */
+.mdc-pick-num{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;font-weight:900;
+  color:rgba(255,255,255,.22);
+  min-width:44px;text-align:center;flex-shrink:0;
+  text-align:center;
+  padding-left:4px;
+}
+.mdc-pick-num.lotto{color:rgba(167,139,250,.45)}
+.mdc-pick-row.active .mdc-pick-num{color:rgba(212,168,48,.9)}
+.mdc-pick-row.lotto-row{background:rgba(124,58,237,.02)}
+
+/* ── Team logo in pick row ───────────────────────────── */
+.mdc-pick-team-logo{
+  width:28px;height:28px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.mdc-team-info{
+  display:flex;flex-direction:column;
+  min-width:0;flex-shrink:0;width:62px;
+  padding:0 6px;
+}
+.mdc-team-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;
+  color:rgba(255,255,255,.38);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  letter-spacing:.1px;
+}
+
+/* ── Selection area ──────────────────────────────────── */
+.mdc-selection{display:flex;align-items:center;flex:1;min-width:0;gap:0}
+.mdc-pick-av{flex-shrink:0}
+.mdc-pick-identity{
+  display:flex;flex-direction:column;gap:1px;
+  min-width:0;flex:1;padding:0 8px;
+}
+.mdc-picked-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;font-weight:900;
+  color:rgba(255,255,255,.92);
+  line-height:1.1;let
+  letter-spacing:.05px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.mdc-picked-meta{
+  font-family:'DM Sans',system-ui,sans-serif;
+  font-size:9px;color:rgba(255,255,255,.32);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  letter-spacing:.1px;
+}
+.mdc-empty-slot{
+  font-family:'DM Sans',system-ui,sans-serif;
+  font-size:11px;color:rgba(255,255,255,.18);
+  font-style:italic;padding-left:4px;
+}
+.mdc-pick-row.active .mdc-empty-slot{
+  color:rgba(212,168,48,.6);font-style:normal;
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;
+}
+.mdc-active-indicator{
+  font-size:10px;color:var(--amber);font-weight:700;
+  white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:3px;
+  opacity:.8;
+}
+
+/* ── Value badge (reach / value / fair) ──────────────── */
+.mdc-val-badge{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:8px;font-weight:900;
+  letter-spacing:.8px;text-transform:uppercase;
+  border-radius:3px;padding:1px 5px;
+  flex-shrink:0;margin-right:4px;white-space:nowrap;
+}
+.mdc-val-badge.value{
+  background:rgba(34,197,94,.12);color:rgba(34,197,94,.85);
+  border:1px solid rgba(34,197,94,.2);
+}
+.mdc-val-badge.fair{
+  background:rgba(59,130,246,.1);color:rgba(147,197,253,.85);
+  border:1px solid rgba(59,130,246,.2);
+}
+.mdc-val-badge.reach{
+  background:rgba(239,68,68,.1);color:rgba(252,165,165,.85);
+  border:1px solid rgba(239,68,68,.2);
+}
+
+/* ── Metric pill on pick row ─────────────────────────── */
+.mdc-row-metric{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:900;
+  border-radius:4px;padding:2px 7px;
+  flex-shrink:0;margin-right:4px;
+  /* color/bg from bbMetStyle() */
+}
+
+/* ── Unpick button ───────────────────────────────────── */
+.mdc-unpick-btn{
+  background:transparent;
+  border:1px solid rgba(239,68,68,.2);
+  border-radius:4px;padding:2px 7px;
+  font-size:10px;font-weight:700;
+  color:rgba(239,68,68,.45);
+  cursor:pointer;flex-shrink:0;
+  transition:all .12s;margin-left:4px;
+}
+.mdc-unpick-btn:hover{
+  background:rgba(239,68,68,.12);
+  color:#EF4444;border-color:rgba(239,68,68,.45);
+}
+
+/* ── Complete banner ─────────────────────────────────── */
+.mdc-complete-banner{
+  background:linear-gradient(135deg,rgba(212,168,48,.12),rgba(59,130,246,.08));
+  border-top:1px solid rgba(212,168,48,.25);
+  padding:12px 20px;
+  display:flex;align-items:center;gap:12px;
+  flex-shrink:0;
+}
+.mdc-complete-text{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:900;color:rgba(212,168,48,.9);
+  letter-spacing:.3px;
+}
+.mdc-complete-sub{
+  font-size:11px;color:rgba(255,255,255,.4);
+  font-weight:500;
+}
+
+/* ── Player pool (right panel) ───────────────────────── */
+.mdc-pool{
+  width:272px;flex-shrink:0;display:flex;flex-direction:column;
+  border-left:1px solid rgba(255,255,255,.06);
+  background:#060D1A;
+}
+.mdc-pool-header{
+  padding:12px 14px 10px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  flex-shrink:0;
+  background:#080F1C;
+}
+.mdc-pool-header-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:8px;
+}
+.mdc-pool-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:900;
+  color:rgba(255,255,255,.75);letter-spacing:.5px;
+  text-transform:uppercase;
+}
+.mdc-pool-count{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;color:rgba(255,255,255,.28);font-weight:600;
+}
+.mdc-pool-filters{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.mdc-pool-search{
+  flex:1;min-width:0;width:100%;
+  padding:6px 10px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:6px;
+  background:rgba(255,255,255,.05);
+  color:rgba(255,255,255,.85);
+  font-size:12px;font-family:'DM Sans',system-ui,sans-serif;
+  outline:none;transition:border-color .12s;
+  margin-bottom:6px;
+}
+.mdc-pool-search:focus{border-color:rgba(59,130,246,.5)}
+.mdc-pool-search::placeholder{color:rgba(255,255,255,.22)}
+.mdc-pos-btns{display:flex;gap:4px}
+.mdc-pos-filter{
+  padding:2px 8px;border-radius:4px;
+  border:1px solid rgba(255,255,255,.12);
+  background:transparent;
+  color:rgba(255,255,255,.38);
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;
+  cursor:pointer;transition:all .12s;letter-spacing:.3px;
+}
+.mdc-pos-filter.active{
+  background:rgba(255,255,255,.12);
+  color:rgba(255,255,255,.88);
+  border-color:rgba(255,255,255,.25);
+}
+.mdc-pool-list{
+  flex:1;overflow-y:auto;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,.08) transparent;
+}
+.mdc-pool-item{
+  display:flex;align-items:center;gap:8px;
+  padding:6px 12px;
+  border-bottom:1px solid rgba(255,255,255,.03);
+  cursor:pointer;transition:background .1s;
+}
+.mdc-pool-item:hover{background:rgba(255,255,255,.05)}
+.mdc-pool-rank{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:900;
+  color:rgba(255,255,255,.3);
+  min-width:20px;flex-shrink:0;text-align:right;
+}
+.mdc-pool-name{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.mdc-pool-pname{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:800;
+  color:rgba(255,255,255,.85);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.mdc-pool-school{
+  font-family:'DM Sans',system-ui,sans-serif;
+  font-size:8.5px;color:rgba(255,255,255,.32);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  letter-spacing:.1px;
+}
+.mdc-pool-met{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:900;
+  border-radius:3px;padding:1px 5px;
+  flex-shrink:0;
+}
+.mdc-select-btn{
+  background:rgba(212,168,48,.12);
+  color:rgba(212,168,48,.88);
+  border:1px solid rgba(212,168,48,.22);
+  border-radius:4px;padding:3px 9px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:900;
+  cursor:pointer;flex-shrink:0;
+  transition:all .12s;
+}
+.mdc-select-btn:hover{
+  background:rgba(212,168,48,.28);
+  color:white;
+  border-color:rgba(212,168,48,.5);
+}
+.mdc-pool-empty{
+  padding:24px;text-align:center;
+  color:rgba(255,255,255,.2);
+  font-size:12px;font-style:italic;
+  font-family:'DM Sans',system-ui,sans-serif;
+}
+
+/* ── Toast ───────────────────────────────────────────── */
+.mdc-save-toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:var(--navy);color:white;
+  padding:10px 20px;border-radius:8px;
+  font-size:13px;font-weight:700;
+  pointer-events:none;opacity:0;
+  transition:opacity .3s;z-index:9999;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
 }
-
-.compare-add-btn {
-  background: var(--amber);
-  color: white;
-  border: none;
-  border-radius: 7px;
-  padding: 8px 16px;
-  font-size: 12px;
-  font-weight: 700;
-  font-family: 'Barlow Condensed', sans-serif;
-  letter-spacing: .6px;
-  cursor: pointer;
-  transition: background .12s, transform .1s;
-  text-transform: uppercase;
-}
-.compare-add-btn:hover { background: #a8780f; }
-.compare-add-btn:active { transform: scale(.97); }
-
-.compare-clear-btn {
-  background: none;
-  color: var(--gray-400);
-  border: 1.5px solid var(--gray-200);
-  border-radius: 7px;
-  padding: 7px 12px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all .12s;
-  margin-left: auto;
-}
-.compare-clear-btn:hover { color: var(--red); border-color: rgba(239,68,68,.4); }
-
-/* ── Compare layout: top-down ─────────────────────────────────────── */
-.compare-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-/* ── 1. Radar Panel — DOMINANT, full-width ────────────────────────── */
-.compare-radar-section {
-  background: white;
-  border: 1.5px solid var(--gray-200);
-  border-radius: 14px 14px 0 0;
-  border-bottom: none;
-  padding: 20px 24px 16px;
-  position: relative;
-}
-
-.compare-radar-topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.compare-radar-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
-  font-weight: 900;
-  color: var(--navy);
-  letter-spacing: .3px;
-  text-transform: uppercase;
-}
-
-.compare-radar-legend {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.crl-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.crl-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.compare-radar-canvas-wrap {
-  position: relative;
-  width: 100%;
-  min-height: 460px;
-}
-
-#compareRadar {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-  min-height: 460px;
-}
-
-/* ── 2. Player Cards Strip — horizontal, compact ─────────────────── */
-.compare-cards-section {
-  background: white;
-  border: 1.5px solid var(--gray-200);
-  border-top: 1px solid var(--gray-100);
-  border-bottom: none;
-  padding: 0;
-}
-
-.compare-cards-strip {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 0;
-}
-
-/* Each compare card: compact horizontal layout */
-.compare-card {
-  background: white;
-  border-right: 1px solid var(--gray-100);
-  border-bottom: none;
-  position: relative;
-  transition: background .1s;
-  overflow: hidden;
-}
-.compare-card:last-child { border-right: none; }
-.compare-card:hover { background: #FAFBFF; }
-
-.compare-card-accent {
-  height: 4px;
-  width: 100%;
-  display: block;
-}
-
-.compare-card-header {
-  padding: 12px 14px 8px;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.compare-card-remove {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: 1px solid transparent;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--gray-300);
-  transition: all .12s;
-  opacity: 0;
-}
-.compare-card:hover .compare-card-remove { opacity: 1; }
-.compare-card-remove:hover {
-  background: rgba(220,38,38,.1);
-  color: #DC2626;
-  border-color: rgba(220,38,38,.2);
-}
-
-.compare-card-rank {
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 900;
-  color: white;
-  flex-shrink: 0;
-}
-.compare-card-rank .rn { font-size: 20px; line-height: 1; }
-.compare-card-rank .rl { font-size: 7px; opacity: .65; text-transform: uppercase; }
-
-.compare-card-info { min-width: 0; flex: 1; }
-.compare-card-info .cn {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--navy);
-  line-height: 1.1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.compare-card-info .cs {
-  font-size: 10px;
-  color: var(--gray-400);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 2px;
-}
-
-/* Metric row inside card */
-.compare-metric-row {
-  padding: 6px 14px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid var(--gray-100);
-  background: var(--gray-50);
-}
-.compare-metric-val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
-  font-weight: 900;
-}
-.compare-metric-lbl {
-  font-size: 9px;
-  color: var(--gray-400);
-  text-transform: uppercase;
-  letter-spacing: .4px;
-}
-
-/* "LEADER" badge on best card */
-.compare-card-leader-badge {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--amber);
-  background: rgba(201,151,26,.12);
-  border: 1px solid rgba(201,151,26,.25);
-  border-radius: 4px;
-  padding: 2px 6px;
-  display: inline-block;
-  margin-top: 2px;
-}
-
-/* Mini stat grid inside compare card */
-.ccard-stats {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1px;
-  background: var(--gray-100);
-  border-top: 1px solid var(--gray-100);
-}
-.ccs-cell {
-  background: white;
-  padding: 7px 3px;
-  text-align: center;
-}
-.ccs-val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  font-weight: 800;
-  display: block;
-  line-height: 1.1;
-  color: var(--navy);
-}
-.ccs-lbl {
-  font-size: 8px;
-  color: var(--gray-400);
-  text-transform: uppercase;
-  letter-spacing: .3px;
-  display: block;
-  margin-top: 1px;
-}
-.ccs-cell.ccs-lead .ccs-val { color: #15803D; }
-.ccs-cell.ccs-lead::after {
-  content: '★';
-  font-size: 7px;
-  color: #15803D;
-  display: block;
-  margin-top: 0;
-  opacity: .65;
-  text-align: center;
-}
-.compare-card.crd-hover { box-shadow: inset 0 0 0 2px var(--blue); }
-
-/* ── 3. Stats Table ───────────────────────────────────────────────── */
-.compare-table-section {
-  background: white;
-  border: 1.5px solid var(--gray-200);
-  border-radius: 0 0 14px 14px;
-  overflow: hidden;
-}
-
-.compare-table-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--gray-100);
-  cursor: pointer;
-  user-select: none;
-  transition: background .1s;
-}
-.compare-table-header:hover { background: var(--gray-50); }
-
-.compare-table-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--navy);
-  letter-spacing: .2px;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.compare-table-toggle {
-  font-size: 11px;
-  color: var(--gray-400);
-  font-weight: 600;
-  transition: transform .2s;
-}
-.compare-table-section.expanded .compare-table-toggle {
-  transform: rotate(180deg);
-}
-
-.compare-table-body {
-  overflow-x: auto;
-  max-height: 0;
-  overflow-y: hidden;
-  transition: max-height .3s cubic-bezier(.4,0,.2,1);
-}
-.compare-table-section.expanded .compare-table-body {
-  max-height: 1200px;
-}
-
-/* Table internals */
-.compare-table { overflow-x: auto; }
-.compare-table table { width: 100%; border-collapse: collapse; }
-
-.compare-table thead th {
-  background: var(--gray-50);
-  padding: 6px 10px;
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--gray-500);
-  text-transform: uppercase;
-  letter-spacing: .4px;
-  border-bottom: 1px solid var(--gray-100);
-  white-space: nowrap;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
-.compare-table thead th:first-child {
-  width: 1%;
-  white-space: nowrap;
-  text-align: left;
-  min-width: 100px;
-  position: sticky;
-  left: 0;
-  z-index: 3;
-  padding-right: 18px;
-}
-.compare-table th.cth {
-  text-align: center;
-  border-top: 3px solid transparent;
-  min-width: 120px;
-  max-width: 280px;
-}
-.compare-table td {
-  padding: 5px 10px;
-  font-size: 12px;
-  border-bottom: 1px solid var(--gray-100);
-  text-align: center;
-  vertical-align: middle;
-}
-.compare-table tr:last-child td { border-bottom: none; }
-.compare-table tr:nth-child(even) td { background: #FAFBFC; }
-.compare-table tr:hover td { background: #EFF6FF; transition: background .1s; }
-.compare-table td:first-child {
-  font-weight: 700;
-  color: var(--navy);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  text-align: left;
-  position: sticky;
-  left: 0;
-  z-index: 1;
-  background: white;
-  border-right: 1px solid var(--gray-100);
-  width: 1%;
-  white-space: nowrap;
-  padding-right: 18px;
-}
-.compare-table tr:nth-child(even) td:first-child { background: #FAFBFC; }
-.compare-table tr:hover td:first-child { background: #EFF6FF; }
-.compare-table tr.ctr-section td {
-  background: #F4F6F9;
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .8px;
-  color: var(--gray-400);
-  padding: 3px 10px;
-  border-bottom: 1px solid var(--gray-200);
-}
-.compare-table tr.ctr-section td:first-child { background: #F4F6F9; }
-.compare-table tr.ctr-depth { display: none; }
-.compare-table.depth-open tr.ctr-depth { display: table-row; }
-.ctr-section.ctr-toggle { cursor: pointer; user-select: none; }
-.ctr-section.ctr-toggle td:first-child::after { content: ' ▸'; font-size: 8px; opacity: .5; }
-.compare-table.depth-open .ctr-section.ctr-toggle td:first-child::after { content: ' ▾'; }
-
-.ctd-val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--navy);
-  display: block;
-  line-height: 1;
-}
-.ctd-delta { font-size: 9px; font-weight: 700; display: block; margin-top: 1px; letter-spacing: .15px; }
-.ctd-delta.pos { color: #16A34A; }
-.ctd-delta.neg { color: #DC2626; }
-.compare-best .ctd-val { color: #15803D; }
-
-.compare-table tr.ctr-maxgap td { background: #FFFBEB; }
-.compare-table tr.ctr-maxgap td:first-child { background: #FFFBEB; color: #92400E; }
-.compare-table tr.ctr-maxgap td:first-child::before { content: '↕ '; font-size: 9px; opacity: .7; }
-
-/* Quick-score row (navy header inside table) */
-.compare-quick-row { background: var(--navy); }
-.compare-quick-row td { background: var(--navy); padding: 6px 10px; border-bottom: 2px solid rgba(255,255,255,.1); }
-.compare-quick-row td:first-child { background: var(--navy); color: rgba(255,255,255,.5); font-size: 9px; font-weight: 700; letter-spacing: .6px; }
-.cqr-score { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 900; color: white; display: block; line-height: 1; }
-.cqr-wins  { font-size: 9px; font-weight: 600; color: rgba(255,255,255,.45); display: block; margin-top: 1px; }
-.cqr-score.cqr-lead { color: #F0C94A; }
-
-.compare-table tr.compare-gap-row td { padding: 0 10px 4px; border-bottom: none; }
-.compare-table tr.compare-gap-row td:first-child { border-right: 1px solid var(--gray-100); background: white; }
-.cgap-track { height: 3px; background: var(--gray-100); border-radius: 2px; overflow: hidden; }
-.cgap-fill  { height: 100%; border-radius: 2px; opacity: .6; }
-
-/* ── Empty state ──────────────────────────────────────────────────── */
-.compare-empty {
-  background: white;
-  border: 1.5px dashed var(--gray-200);
-  border-radius: 14px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 80px 20px;
-  gap: 10px;
-  text-align: center;
-}
-.compare-empty-icon { font-size: 36px; opacity: .15; }
-.compare-empty-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 22px;
-  font-weight: 900;
-  color: var(--gray-400);
-}
-.compare-empty-sub { font-size: 13px; color: var(--gray-400); max-width: 300px; line-height: 1.5; }
-
-/* Global add-to-compare button */
-.hw-add-compare {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  height: 26px;
-  padding: 0 10px;
-  border-radius: 5px;
-  border: 1px solid rgba(37,99,235,.2);
-  background: rgba(37,99,235,.07);
-  color: #1D4ED8;
-  font-size: 10px;
-  font-weight: 700;
-  cursor: pointer;
-  letter-spacing: .3px;
-  transition: all .12s;
-  white-space: nowrap;
-}
-.hw-add-compare:hover { background: rgba(37,99,235,.14); border-color: rgba(37,99,235,.3); }
-
-/* ── Responsive ────────────────────────────────────────────────────── */
-
-/* ── Compare controls bar labels ─────────────────────────────────── */
-.compare-ctrl-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--gray-500);
-  text-transform: uppercase;
-  letter-spacing: .5px;
-  white-space: nowrap;
-}
-.compare-player-select { min-width: 200px; }
-.compare-error-msg {
-  color: var(--red);
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-/* Empty state — updated for new layout */
-.compare-empty-icon { font-size: 36px; opacity: .15; }
-.compare-empty-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 22px;
-  font-weight: 900;
-  color: var(--gray-400);
-  margin: 0;
-}
-.compare-empty-sub { font-size: 13px; color: var(--gray-400); max-width: 300px; line-height: 1.5; margin: 0; }
-
-@media (max-width: 760px) {
-  /* ── Compare tab: mobile layout ────────────────────────────────── */
-  /* Radar canvas: shorter on tablet/mobile — still prominent */
-  .compare-radar-canvas-wrap { min-height: 320px; }
-  #compareRadar { min-height: 320px; }
-  /* Cards strip: 2-per-row on tablet */
-  .compare-cards-strip { grid-template-columns: repeat(2, 1fr); }
-  .compare-card { border-right: none; border-bottom: 1px solid var(--gray-100); }
-  .compare-card:nth-child(odd) { border-right: 1px solid var(--gray-100); }
-}
-@media (max-width: 640px) {
-  /* Mobile: radar shorter, cards single column */
-  .compare-radar-canvas-wrap { min-height: 260px; }
-  #compareRadar { min-height: 260px; }
-  .compare-radar-section { padding: 14px 14px 10px; }
-  .compare-cards-strip { grid-template-columns: 1fr 1fr; }
-  .compare-table-section { border-radius: 0 0 10px 10px; }
-}
-
-
-
-/* Add-to-compare button global: shared style */
-.hw-add-compare {
-  display: inline-flex; align-items: center; gap: 4px;
-  height: 26px; padding: 0 10px;
-  border-radius: 5px; border: 1px solid rgba(37,99,235,.2);
-  background: rgba(37,99,235,.07); color: #1D4ED8;
-  font-size: 10px; font-weight: 700; cursor: pointer;
-  letter-spacing: .3px; transition: all .12s; white-space: nowrap;
-}
-.hw-add-compare:hover { background: rgba(37,99,235,.14); border-color: rgba(37,99,235,.3); }
-
-
-/* ═══════════════════════════════════════════════════════════════════
-   MOBILE SYSTEM AUDIT — Targeted Fixes
-   Applied: Methodology, Scatter, Countdown, MDC, Cross-tab polish
-   ═══════════════════════════════════════════════════════════════════ */
-
-/* ── Methodology tab hero: override inline padding on mobile ── */
-
-
-/* ── Mobile countdown strip in board tab ── */
-
-@media (min-width: 641px) {
-  #mobileCountdownStrip { display: none !important; }
-}
-
-/* ── Scatter plot: reduce point density on mobile ── */
-
-
-/* ── MDC (Mock Draft Creator) mobile ── */
-
-
-/* ── Compare tab: hero layout fix on mobile ── */
-
-
-/* ── Modal / player profile: safe-area + scroll ── */
-
-
-/* ── Freeform board: touch-friendly adjustments ── */
-
 
-/* ── Global: ensure no horizontal overflow on any tab ── */
-/* Exception: views that intentionally scroll horizontally */
-.bb-wrap,
-.table-wrap,
-.compare-table,
 /* ── Scatter plot base CSS ───────────────────────────────────────────── */
 .sc-wrap{display:flex;flex-direction:column;gap:0;background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 20px rgba(10,22,40,.08)}
 .sc-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end;padding:12px 16px;background:var(--gray-50);border-bottom:1px solid var(--gray-100)}
 .sc-ctrl-group{display:flex;flex-direction:column;gap:4px;min-width:0}
 .sc-ctrl-label{font-size:11px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
-.sc-select{width:100%;padding:6px 8px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;font-family:'Barlow Condensed',sans-serif;font-weight:700;color:var(--navy);background:white;cursor:pointer;appearance:auto}
+.sc-select{width:100%;padding:6px 8px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;font-family:'Barlow Condensed',sans-serif;font-weight:700;color:var(--navy);background:white;cursor:pointer}
 .sc-body{display:flex;flex-direction:row;align-items:stretch;min-height:0}
 .sc-plot-wrap{flex:1;min-width:0;display:flex;flex-direction:column;padding:16px 18px 12px;gap:6px}
+.sc-plot-header{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .sc-plot-title{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:900;color:var(--navy);line-height:1}
 .sc-plot-meta{font-size:11px;color:var(--gray-400);font-weight:500}
 .sc-canvas-wrap{position:relative;width:100%;height:480px;min-height:320px}
+.sc-canvas{position:absolute;inset:0;width:100%;height:100%}
 .sc-warn{background:#FFFBEB;border:1px solid #FCD34D;border-radius:6px;padding:8px 12px;font-size:11px;color:#92400E;display:flex;align-items:center;gap:6px}
 .sc-top5-wrap{width:200px;flex-shrink:0;border-left:1px solid var(--gray-100);display:flex;flex-direction:column;max-height:600px;overflow-y:auto;scrollbar-width:thin}
-.sc-top5-hdr{padding:10px 14px 8px;border-bottom:1px solid var(--gray-100);background:var(--gray-50)}
+.sc-top5-hdr{padding:10px 14px 8px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);flex-shrink:0}
 .sc-top5-hdr-label{font-size:9px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px}
 .sc-top5-hdr-axis{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;color:var(--navy)}
+.sc-top5-empty{padding:12px 14px;font-size:11px;color:var(--gray-300);font-style:italic}
 .sc-top5-row{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--gray-50);cursor:pointer;transition:background .1s}
 .sc-top5-row:hover{background:var(--gray-50)}
-.sc-top5-row-selected{background:rgba(212,168,48,.1);border-bottom:2px solid var(--amber);border-left:3px solid var(--amber)}
-/* Bottom-5 section separator */
-.sc-bot5-hdr{border-top:2px solid var(--gray-100);margin-top:4px}
-.sc-bot5-label{color:#EF4444 !important}
-.sc-bot5-idx{color:rgba(239,68,68,.55) !important}
+.sc-top5-row-selected{background:rgba(212,168,48,.1) !important;border-left:3px solid var(--amber)}
+.sc-top5-row-active{background:rgba(212,168,48,.08) !important}
 .sc-top5-idx{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;color:var(--gray-400);min-width:16px;flex-shrink:0}
 .sc-top5-logo{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .sc-top5-info{display:flex;flex-direction:column;min-width:0;flex:1}
 .sc-top5-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
 .sc-top5-school{font-size:9.5px;color:var(--gray-400);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sc-top5-val{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;color:var(--amber);flex-shrink:0}
+.sc-bot5-hdr{border-top:2px solid var(--gray-100);margin-top:4px}
+.sc-bot5-label{color:#EF4444 !important}
+.sc-bot5-idx{color:rgba(239,68,68,.55) !important}
+.sc-bot5-row{}
 .sc-trend-btn{background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;font-family:'Barlow Condensed',sans-serif;color:var(--gray-500);cursor:pointer;transition:all .12s;white-space:nowrap}
 .sc-stat-chip{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid transparent}
+.sc-mf-wrap{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--gray-50);border-top:1px solid var(--gray-100)}
+.sc-mf-avatar{flex-shrink:0}
+.sc-mf-info{flex:1;min-width:0}
+.sc-mf-name{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:900;color:var(--navy);line-height:1}
+.sc-mf-school{font-size:11px;color:var(--gray-400);margin-bottom:6px}
+.sc-mf-stats{display:flex;flex-wrap:wrap;gap:6px}
+.sc-stat-bar{overflow-x:auto;-webkit-overflow-scrolling:touch}
+#scStatBar{overflow-x:auto}
 
-.sc-canvas-wrap,
-.sc-stat-bar,
-#scStatBar {
-  overflow-x: auto;
+/* ── 2027 Watch Board CSS — dark navy card theme ─────────────────────── */
+.future-view-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.future-view-btn{
+  background:rgba(10,22,40,.06);border:1.5px solid rgba(10,22,40,.15);
+  border-radius:7px;padding:5px 14px;font-size:12px;font-weight:700;
+  font-family:'Barlow Condensed',sans-serif;color:var(--gray-500);
+  cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:all .12s;
+}
+.future-view-btn.active{
+  background:var(--navy);color:white;border-color:var(--navy);
+  box-shadow:0 2px 8px rgba(10,22,40,.18);
+}
+.future-view-btn:hover:not(.active){background:rgba(10,22,40,.09);border-color:rgba(10,22,40,.22)}
+
+/* Tier sections */
+.future-cards-wrap{display:flex;flex-direction:column;gap:28px}
+.future-tier-section{display:flex;flex-direction:column;gap:14px}
+.future-tier-header{display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:2px solid rgba(10,22,40,.1)}
+.future-tier-label{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:var(--navy);letter-spacing:.2px}
+.future-tier-count{font-size:11px;color:var(--gray-400);font-weight:500;padding-left:2px}
+
+/* Grid */
+.future-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+
+/* Card shell — dark navy */
+.future-card{
+  background:#0B1830;
+  border-radius:12px;padding:0;
+  box-shadow:0 2px 12px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.06);
+  overflow:hidden;cursor:pointer;
+  display:flex;flex-direction:column;
+  transition:box-shadow .18s ease,transform .18s ease;
+}
+.future-card:hover{
+  box-shadow:0 6px 24px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.1);
+  transform:translateY(-3px);
 }
 
+/* Card header — rank + avatar + name/school */
+.future-card-header{
+  display:flex;align-items:center;gap:11px;
+  padding:14px 14px 10px;
+}
 
-/* ── Mock Draft Builder (mdc-) CSS ──────────────────────────────────── */
-.mdc-wrap{display:flex;align-items:stretch;gap:0;background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 20px rgba(10,22,40,.08);min-height:600px}
-.mdc-board{flex:1;min-width:0;display:flex;flex-direction:column;background:white}
-.mdc-board-header{padding:14px 18px 12px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;gap:12px;flex-wrap:wrap;flex-shrink:0}
-.mdc-board-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:var(--navy)}
-.mdc-progress{display:flex;align-items:center;gap:8px;flex:1;min-width:120px}
-.mdc-prog-bar{flex:1;height:6px;background:var(--gray-100);border-radius:3px;overflow:hidden}
-.mdc-prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--amber));border-radius:3px;transition:width .3s ease}
-.mdc-prog-text{font-size:11px;font-weight:600;color:var(--gray-400);white-space:nowrap}
-.mdc-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.mdc-act-btn{background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:6px;padding:5px 11px;font-size:11px;font-weight:700;font-family:'Barlow Condensed',sans-serif;color:var(--gray-600);cursor:pointer;transition:all .12s;white-space:nowrap}
-.mdc-act-btn:hover{background:var(--gray-100);border-color:var(--gray-300)}
-.mdc-act-btn.gold{color:#92400E;border-color:rgba(212,168,48,.4);background:rgba(212,168,48,.06)}
-.mdc-picks-scroll{flex:1;overflow-y:auto;padding:8px 0}
-.mdc-round-hdr{padding:6px 16px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;color:var(--gray-400);background:var(--gray-50);border-top:1px solid var(--gray-100);border-bottom:1px solid var(--gray-100);position:sticky;top:0;z-index:5}
-.mdc-pick-row{display:flex;align-items:center;gap:10px;padding:6px 14px;border-bottom:1px solid var(--gray-50);cursor:pointer;transition:background .1s;min-height:52px}
-.mdc-pick-row:hover{background:var(--gray-50)}
-.mdc-pick-row.active{background:#FFFBEB;border-left:3px solid var(--amber)}
-.mdc-pick-row.filled{background:rgba(239,246,255,.4)}
-.mdc-pick-num{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;color:rgba(10,22,40,.25);min-width:26px;flex-shrink:0}
-.mdc-pick-num.lotto{color:rgba(124,58,237,.4)}
-.mdc-team-info{display:flex;flex-direction:column;min-width:0;flex-shrink:0;width:72px}
-.mdc-team-name{font-size:10px;font-weight:600;color:var(--gray-400);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mdc-selection{display:flex;align-items:center;flex:1;min-width:0}
-.mdc-pick-av{flex-shrink:0}
-.mdc-picked-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--navy);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mdc-picked-meta{font-size:9.5px;color:var(--gray-400);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mdc-empty-slot{font-size:11px;color:var(--gray-300);font-style:italic}
-.mdc-active-indicator{font-size:10px;color:var(--amber);font-weight:700;white-space:nowrap;display:flex;align-items:center;gap:3px}
-.mdc-unpick-btn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:5px;padding:2px 7px;font-size:10px;font-weight:700;color:#EF4444;cursor:pointer;flex-shrink:0;transition:all .12s}
-.mdc-pool{width:280px;flex-shrink:0;display:flex;flex-direction:column;border-left:1px solid var(--gray-100);background:var(--navy)}
-.mdc-pool-header{padding:12px 14px 8px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
-.mdc-pool-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:900;color:white}
-.mdc-pool-filters{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px}
-.mdc-pool-search{flex:1;min-width:100px;padding:6px 9px;border:1px solid rgba(255,255,255,.15);border-radius:6px;background:rgba(255,255,255,.07);color:white;font-size:12px;font-family:'Barlow Condensed',sans-serif;outline:none}
-.mdc-pool-search::placeholder{color:rgba(255,255,255,.3)}
-.mdc-pos-filter{padding:2px 8px;border-radius:4px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.5);font-size:10px;font-weight:700;cursor:pointer;transition:all .12s}
-.mdc-pos-filter.active{background:rgba(255,255,255,.18);color:white;border-color:rgba(255,255,255,.35)}
-.mdc-pool-list{flex:1;overflow-y:auto;padding:4px 0;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}
-.mdc-pool-item{display:flex;align-items:center;gap:9px;padding:7px 14px;cursor:pointer;transition:background .1s;border-bottom:1px solid rgba(255,255,255,.04)}
-.mdc-pool-item:hover{background:rgba(255,255,255,.06)}
-.mdc-pool-rank{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;color:rgba(255,255,255,.3);min-width:22px;flex-shrink:0}
-.mdc-pool-name{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
-.mdc-pool-pname{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:rgba(255,255,255,.88);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mdc-pool-school{font-size:9px;color:rgba(255,255,255,.38);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mdc-pool-met{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:900;border-radius:3px;padding:1px 5px;flex-shrink:0}
-.mdc-select-btn{background:var(--amber);color:var(--navy);border:none;border-radius:5px;padding:3px 10px;font-size:10px;font-weight:900;cursor:pointer;flex-shrink:0}
-.mdc-pool-empty{padding:20px;text-align:center;color:rgba(255,255,255,.3);font-size:12px;font-style:italic}
-.mdc-save-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:white;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;pointer-events:none;opacity:0;transition:opacity .3s;z-index:9999}
+/* Rank badge: large number over small "RANK" label */
+.future-rank-badge{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex-shrink:0;width:42px;height:42px;
+  border-radius:9px;
+  /* background set inline per tier */
+}
+.future-rank-badge .rn{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:900;
+  color:white;line-height:1;
+}
+.future-rank-badge .rl{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:7.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:1.2px;
+  color:rgba(255,255,255,.55);
+}
+
+/* Identity: name + school */
+.future-card-identity{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;padding-left:4px}
+.future-card-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:17px;font-weight:900;
+  color:rgba(255,255,255,.94);
+  line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.future-card-school{
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;color:rgba(255,255,255,.45);
+  font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.future-uncommitted-tag{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px;font-weight:900;letter-spacing:1.2px;
+  text-transform:uppercase;
+  color:rgba(212,168,48,.85);
+  background:rgba(212,168,48,.1);
+  border:1px solid rgba(212,168,48,.25);
+  border-radius:3px;padding:1px 5px;
+}
+
+/* Tags row — light bg treatment inside white body */
+.future-card-tags{
+  display:flex;flex-wrap:wrap;align-items:center;
+  gap:5px;padding:8px 14px 10px;
+}
+/* Tags use standard light-bg colors in white body */
+.future-card .tag.pos{
+  background:transparent;
+  border:1.5px solid currentColor;
+  font-weight:800;font-size:9.5px;letter-spacing:.5px;
+  text-transform:uppercase;
+}
+.future-card .tag.pos.guard  {color:#2563EB}
+.future-card .tag.pos.forward{color:#7C3AED}
+.future-card .tag.pos.center {color:#0891B2}
+.future-card .tag{font-size:9.5px;padding:2px 6px}
+
+/* White body: tags + notes + comp */
+.future-card-body{
+  background:white;
+  border-top:1px solid rgba(255,255,255,.08);
+  flex:1;
+  min-height:0;
+}
+
+/* Notes preview */
+.future-card-notes{
+  padding:8px 14px;
+  font-size:11px;color:#475569;
+  line-height:1.55;
+  border-top:1px solid var(--gray-100);
+}
+
+/* Comp */
+.future-card-comp{
+  padding:4px 14px 11px;
+  font-size:10px;color:var(--gray-400);
+}
+.future-card-comp strong{
+  color:var(--blue);font-weight:700;
+}
+
+/* Table view */
+.future-table{width:100%;border-collapse:collapse;font-size:12px}
+.future-table th{
+  background:var(--navy);color:white;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;font-size:10px;
+  padding:8px 10px;text-align:left;white-space:nowrap;
+  position:sticky;top:0;z-index:5;
+}
+.future-table td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:middle}
+.future-table tr:hover td{background:var(--gray-50)}
 
 /* ── Mock Drafts table CSS ───────────────────────────────────────────── */
 .pick-th{text-align:center;width:48px !important;min-width:48px !important;position:sticky;left:0;z-index:20;background:var(--navy)}
@@ -4299,18 +3801,24 @@ body.mct-open .tab-panel.active {
     <div class="mock-mode-strip" id="mockModeToggle">
       <button class="mock-mode-btn active" id="mockModeBuild" onclick="setMockMode('build')">
         <span class="mock-mode-icon">🏗️</span>
-        <span class="mock-mode-label">Build Mock</span>
-        <span class="mock-mode-sub">Create your draft</span>
+        <span class="mock-mode-text">
+          <span class="mock-mode-label">Build Mock</span>
+          <span class="mock-mode-sub">Draft all 60 picks</span>
+        </span>
       </button>
       <button class="mock-mode-btn" id="mockModeSim" onclick="setMockMode('sim')">
         <span class="mock-mode-icon">🎮</span>
-        <span class="mock-mode-label">Draft Simulator</span>
-        <span class="mock-mode-sub">CPU drafts for every team</span>
+        <span class="mock-mode-text">
+          <span class="mock-mode-label">Simulator</span>
+          <span class="mock-mode-sub">CPU-powered draft day</span>
+        </span>
       </button>
       <button class="mock-mode-btn" id="mockModeArchive" onclick="setMockMode('archive')">
         <span class="mock-mode-icon">📅</span>
-        <span class="mock-mode-label">Archive</span>
-        <span class="mock-mode-sub">Past mock snapshots</span>
+        <span class="mock-mode-text">
+          <span class="mock-mode-label">Archive</span>
+          <span class="mock-mode-sub">Past snapshots</span>
+        </span>
       </button>
     </div>
   </div>
@@ -4343,7 +3851,7 @@ body.mct-open .tab-panel.active {
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div class="mdc-pool-title">Player Pool <span id="mdcPoolCount" style="font-weight:500;opacity:.5;font-size:12px"></span></div><button onclick="mdcClosePoolDrawer()" style="display:none;background:rgba(255,255,255,.1);border:none;border-radius:50%;width:26px;height:26px;color:white;font-size:14px;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0" id="mdcPoolCloseBtn">✕</button></div>
         <div id="mdcTeamInfo"></div>
         <div class="mdc-pool-filters">
-          <input class="mdc-pool-search" id="mdcSearch" type="text" placeholder="Search player…" oninput="mdcFilterPool(this.value)">
+          <input class="mdc-pool-search" id="mdcSearch" type="text" placeholder="Search player…" oninput="mdcDebouncedFilter(this.value)">
           <button class="mdc-pos-filter active" onclick="mdcSetPos('ALL',this)">All</button>
           <button class="mdc-pos-filter" onclick="mdcSetPos('Guard',this)">G</button>
           <button class="mdc-pos-filter" onclick="mdcSetPos('Forward',this)">F</button>
@@ -8010,10 +7518,15 @@ function _renderFuture2027Cards(players) {
       // Name length scaling
       var nameFontSize = name.length <= 12 ? '17px' : name.length <= 15 ? '15px' : '13px';
 
-      out += '<div class="future-card" onclick="openFutureModal('+p.rank+')">';
+      // Tier color for rank badge
+      var tierColor = tier.key==='top5'    ? '#7C3AED'
+                    : tier.key==='top15'   ? '#6D28D9'
+                    : tier.key==='top30'   ? '#2563EB'
+                    : '#0891B2';
+      out += '<div class="future-card future-card-'+tier.key+'" onclick="openFutureModal('+p.rank+')">';
       out += '<div class="future-card-header">';
-      // Rank badge
-      out += '<div class="future-rank-badge"><div class="rn">'+p.rank+'</div><div class="rl">rank</div></div>';
+      // Rank badge — tier-colored rounded square
+      out += '<div class="future-rank-badge" style="background:'+tierColor+'"><div class="rn">'+p.rank+'</div><div class="rl">rank</div></div>';
       out += av;
       out += '<div class="future-card-identity">';
       out += '<div class="future-card-name" style="font-size:'+nameFontSize+'">'+name+'</div>';
@@ -8026,9 +7539,13 @@ function _renderFuture2027Cards(players) {
       out += '</div></div>';
       out += '</div>'; // card-header
 
+      // White body section
+      out += '<div class="future-card-body">';
+
       // Tags row
+      var posCls = (p.position||'').toLowerCase();
       out += '<div class="future-card-tags">';
-      if (p.position) out += '<span class="tag pos">'+p.position+'</span>';
+      if (p.position) out += '<span class="tag pos '+posCls+'">'+p.position+'</span>';
       if (p.cls)      out += '<span class="tag cls">'+p.cls+'</span>';
       if (p.age)      out += '<span class="tag age">'+parseFloat(p.age).toFixed(1)+' yrs</span>';
       if (p.ht)       out += '<span class="tag ht">'+Math.floor(p.ht/12)+"'"+p.ht%12+'"'+'</span>';
@@ -8044,6 +7561,7 @@ function _renderFuture2027Cards(players) {
       if (p.comp) {
         out += '<div class="future-card-comp">Comp: <strong>'+escHtml(p.comp)+'</strong></div>';
       }
+      out += '</div>'; // future-card-body
       out += '</div>'; // future-card
     });
     out += '</div></div>'; // grid + tier-section
@@ -9707,6 +9225,9 @@ var mdcSelections  = {};   // pick# → player rank
 var mdcActivePick  = 1;    // currently highlighted pick slot
 var mdcPosFilter   = 'ALL';
 var mdcSearchTerm  = '';
+var mdcRankMap     = {};   // rank → player object (built once at init, O(1) lookup)
+var mdcDrafted     = new Set(); // set of drafted ranks (O(1) membership test)
+var _mdcSearchTimer = null; // debounce handle for pool search
 
 
 // ── MOCK DRAFT CREATOR ──────────────────────────────────────────────────────
@@ -9714,12 +9235,13 @@ var mdcSearchTerm  = '';
 var mdcHistory = [];  // stack of {pick, rank} for undo
 
 function mdcInit() {
+  // Build rank→player map once (O(1) lookups in render loops)
+  if (!Object.keys(mdcRankMap).length) {
+    (DATA.board2026||[]).forEach(function(p) { mdcRankMap[p.rank] = p; });
+  }
   // Show FAB only on mobile (touch devices)
   var fab = document.getElementById('mdcPoolFab');
-  if (fab) {
-    fab.style.display = (window.innerWidth <= 640) ? 'flex' : 'none';
-  }
-  // Show close button in pool header on mobile
+  if (fab) fab.style.display = (window.innerWidth <= 640) ? 'flex' : 'none';
   var closeBtn = document.getElementById('mdcPoolCloseBtn');
   if (closeBtn) closeBtn.style.display = (window.innerWidth <= 640) ? 'flex' : 'none';
   mdcRenderPicks();
@@ -9743,9 +9265,34 @@ function mdcRenderPicks() {
   var pt  = document.getElementById('mdcProgText');
   if (!el) return;
 
+  var totalSlots = DRAFT_ORDER_2026.length;
   var filled = Object.keys(mdcSelections).length;
-  if (pg) pg.style.width = Math.round(filled / 60 * 100) + '%';
-  if (pt) pt.textContent  = filled + ' / 60 picks';
+  if (pg) pg.style.width = Math.round(filled / totalSlots * 100) + '%';
+  if (pt) pt.textContent  = filled + ' / ' + totalSlots + ' picks';
+
+  // ── Value badge: compare pick# vs player HW rank ──────────────────────────
+  function valueBadge(pickNum, playerRank) {
+    if (!playerRank) return '';
+    var diff = playerRank - pickNum;  // positive = player ranked lower = good value
+    if (diff >= 5)  return '<span class="mdc-val-badge value">VALUE</span>';
+    if (diff <= -6) return '<span class="mdc-val-badge reach">REACH</span>';
+    return '<span class="mdc-val-badge fair">FAIR</span>';
+  }
+
+  // ── Team abbreviation ─────────────────────────────────────────────────────
+  var teamAbbrevs = {
+    'Indiana Pacers':'IND','Sacramento Kings':'SAC','Washington Wizards':'WAS',
+    'Brooklyn Nets':'BKN','Utah Jazz':'UTA','Dallas Mavericks':'DAL',
+    'Memphis Grizzlies':'MEM','Chicago Bulls':'CHI','Milwaukee Bucks':'MIL',
+    'Portland Trail Blazers':'POR','Golden State Warriors':'GSW',
+    'Charlotte Hornets':'CHA','Oklahoma City Thunder':'OKC','San Antonio Spurs':'SAS',
+    'Toronto Raptors':'TOR','Miami Heat':'MIA','Denver Nuggets':'DEN',
+    'Philadelphia 76ers':'PHI','LA Lakers':'LAL','New York Knicks':'NYK',
+    'Boston Celtics':'BOS','Cleveland Cavaliers':'CLE','Minnesota Timberwolves':'MIN',
+    'Houston Rockets':'HOU','Phoenix Suns':'PHX','Orlando Magic':'ORL',
+    'Detroit Pistons':'DET','Atlanta Hawks':'ATL','New Orleans Pelicans':'NOP',
+    'Los Angeles Clippers':'LAC'
+  };
 
   var html = '';
   var lastRound = 0;
@@ -9755,50 +9302,101 @@ function mdcRenderPicks() {
       html += '<div class="mdc-round-hdr">Round ' + round + '</div>';
       lastRound = round;
     }
-    var isActive = (slot.pick === mdcActivePick);
-    var pickData = mdcSelections[slot.pick];
-    var player   = pickData ? (DATA.board2026||[]).find(function(p){ return p.rank === pickData; }) : null;
-    var pickNum  = slot.pick < 10 ? '0'+slot.pick : ''+slot.pick;
-    var isLotto  = slot.pick <= 14;
-    var avHtml   = player ? avatarHtml(player.name, player.position||'', '26px', '4px')
-                              .replace('class="avatar-fallback"','class="avatar-fallback" style="font-size:10px"') : '';
-    var filledCls = player ? ' filled' : '';
-    var activeCls = isActive ? ' active' : '';
+    var isActive  = (slot.pick === mdcActivePick);
+    var pickData  = mdcSelections[slot.pick];
+    // O(1) lookup via pre-built rank map
+    var player    = pickData ? mdcRankMap[pickData] : null;
+    var pickNum   = slot.pick < 10 ? '0'+slot.pick : ''+slot.pick;
+    var isLotto   = slot.pick <= 14;
+    var avHtml    = player
+      ? avatarHtml(player.name, player.position||'', '32px', '5px')
+          .replace('class="avatar-fallback"','class="avatar-fallback" style="font-size:11px"')
+      : '';
+    var filledCls  = player ? ' filled' : '';
+    var activeCls  = isActive ? ' active' : '';
+    var lottoCls   = isLotto ? ' lotto-row' : '';
+    var shortName  = teamAbbrevs[slot.name] || slot.team;
 
-    html += '<div class="mdc-pick-row' + filledCls + activeCls + '" id="mdcRow' + slot.pick + '" onclick="mdcPickRowClick(' + slot.pick + ')">';
+    html += '<div class="mdc-pick-row' + filledCls + activeCls + lottoCls
+          + '" id="mdcRow' + slot.pick + '" onclick="mdcPickRowClick(' + slot.pick + ')">';
+
+    // Pick number
     html += '<span class="mdc-pick-num' + (isLotto?' lotto':'') + '">' + pickNum + '</span>';
-    html += mdcTeamLogoHtml(slot.team, '26px');
-    html += '<div class="mdc-team-info">';
-    html += '  <span class="mdc-team-name">' + slot.name.replace(/^(Indiana|Sacramento|Washington|Brooklyn|Utah|Dallas|Memphis|Chicago|Milwaukee|Portland|Golden State|Charlotte|Oklahoma City|San Antonio|Toronto|Miami|Denver|Philadelphia|LA Lakers|New York|Boston|Cleveland|Minnesota|Houston|Phoenix|Orlando|Detroit|Atlanta|New Orleans) /, '') + '</span>';
-    html += '</div>';
+
+    // Team logo
+    html += '<div class="mdc-pick-team-logo">' + mdcTeamLogoHtml(slot.team, '24px') + '</div>';
+
+    // Team name
+    html += '<div class="mdc-team-info"><span class="mdc-team-name">' + shortName + '</span></div>';
+
+    // Selection area
     html += '<div class="mdc-selection">';
     if (player) {
-      var pBase = player.name.indexOf(' - ')>0 ? player.name.slice(0,player.name.indexOf(' - ')) : player.name;
-      var pSchool= player.name.indexOf(' - ')>0 ? player.name.slice(player.name.indexOf(' - ')+3) : '';
-      var metSty = bbMetStyle(player.metric);
+      var pBase   = player.name.indexOf(' - ')>0 ? player.name.slice(0,player.name.indexOf(' - ')) : player.name;
+      var pSchool = player.name.indexOf(' - ')>0 ? player.name.slice(player.name.indexOf(' - ')+3) : '';
+      var metSty  = bbMetStyle(player.metric);
+      var metVal  = player.metric > 0 ? Number(player.metric).toFixed(1) : null;
       html += '<div class="mdc-pick-av">' + avHtml + '</div>';
-      html += '<div style="margin-left:8px;min-width:0;flex:1">';
+      html += '<div class="mdc-pick-identity">';
       html += '  <div class="mdc-picked-name">' + pBase + '</div>';
-      html += '  <div class="mdc-picked-meta">' + pSchool
+      html += '  <div class="mdc-picked-meta">' + (pSchool || '')
             + (player.position ? ' · ' + player.position : '')
             + (player.torvik_role ? ' · ' + player.torvik_role : '') + '</div>';
       html += '</div>';
-      if (player.metric > 0) {
-        html += '<div style="' + metSty + 'border-radius:4px;padding:2px 6px;margin-right:6px;font-family:Barlow Condensed,sans-serif;font-size:12px;font-weight:900;flex-shrink:0">' + Number(player.metric).toFixed(1) + '</div>';
+      // Value badge + metric pill
+      html += valueBadge(slot.pick, player.rank);
+      if (metVal) {
+        html += '<div class="mdc-row-metric" style="' + metSty + '">' + metVal + '</div>';
       }
     } else {
-      html += '<span class="mdc-empty-slot">' + (isActive ? '← Select a player from the pool' : 'Empty') + '</span>';
-      if (isActive) html += '<span class="mdc-active-indicator" style="margin-right:8px"></span>';
+      var emptyText = isActive ? '← Select from pool' : '';
+      html += '<span class="mdc-empty-slot">' + emptyText + '</span>';
     }
-    html += '</div>';
-    if (player) html += '<button class="mdc-unpick-btn" onclick="event.stopPropagation();mdcUnpick(' + slot.pick + ')" title="Remove pick">✕</button>';
-    html += '</div>';
+    html += '</div>'; // .mdc-selection
+
+    if (player) {
+      html += '<button class="mdc-unpick-btn" onclick="event.stopPropagation();mdcUnpick(' + slot.pick + ')" title="Remove">✕</button>';
+    }
+    html += '</div>'; // .mdc-pick-row
   });
+
+  // Complete banner when all picks are made
+  if (filled === totalSlots) {
+    html += '<div class="mdc-complete-banner">'
+          + '<span style="font-size:22px">🏆</span>'
+          + '<div>'
+          + '<div class="mdc-complete-text">Mock Draft Complete</div>'
+          + '<div class="mdc-complete-sub">Save your snapshot or share a screenshot</div>'
+          + '</div>'
+          + '</div>';
+  }
+
   el.innerHTML = html;
 
   // Scroll active row into view
   var activeRow = document.getElementById('mdcRow' + mdcActivePick);
   if (activeRow) activeRow.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// Update only the pool header (team needs) without rebuilding the full list
+function mdcRenderPoolHeader() {
+  if (!mdcActivePick) return;
+  var activeSlot = (DRAFT_ORDER_2026||[]).find(function(s){ return s.pick===mdcActivePick; });
+  var teamInfoEl = document.getElementById('mdcTeamInfo');
+  if (!activeSlot) { if (teamInfoEl) teamInfoEl.innerHTML = ''; hidePriorPicksSidebar('mdcPriorSidebar'); return; }
+  if (teamInfoEl) teamInfoEl.innerHTML = teamNeedsHtml(activeSlot.team, []);
+  var priorPicks = Object.keys(mdcSelections)
+    .filter(function(pk){ return parseInt(pk)!==mdcActivePick; })
+    .filter(function(pk){
+      var s2=(DRAFT_ORDER_2026||[]).find(function(s){return s.pick===parseInt(pk);});
+      return s2&&s2.team===activeSlot.team;
+    })
+    .sort(function(a,b){return a-b;})
+    .map(function(pk){
+      var p=(DATA.board2026||[]).find(function(x){return x.rank===mdcSelections[parseInt(pk)];});
+      return {pick:parseInt(pk),name:p?p.name:('Pick #'+pk),pos:p?p.position:'',rank:p?p.rank:0,metric:p?p.metric:0,stats:p||null};
+    });
+  showPriorPicksSidebar('mdcPriorSidebar', activeSlot.team, priorPicks, mdcActivePick);
 }
 
 function mdcRenderPool() {
@@ -9836,8 +9434,9 @@ function mdcRenderPool() {
     hidePriorPicksSidebar('mdcPriorSidebar');
   }
 
-  var drafted = Object.values(mdcSelections);
-  var players = (DATA.board2026||[]).filter(function(p) {
+  // O(1) availability check via mdcDrafted Set
+  var available = (DATA.board2026||[]).filter(function(p) {
+    if (mdcDrafted.has(p.rank)) return false;
     if (mdcPosFilter !== 'ALL' && p.position !== mdcPosFilter) return false;
     if (mdcSearchTerm) {
       var base = p.name.indexOf(' - ')>0 ? p.name.slice(0,p.name.indexOf(' - ')) : p.name;
@@ -9845,33 +9444,43 @@ function mdcRenderPool() {
     }
     return true;
   });
-
-  // Only show available (undrafted) players — hide drafted entirely
-  var available = players.filter(function(p){ return drafted.indexOf(p.rank) < 0; });
-  if (ct) ct.textContent = available.length + ' available';
+  if (ct) ct.textContent = available.length + ' left';
 
   if (!available.length) {
     el.innerHTML = '<div class="mdc-pool-empty">All players drafted!</div>';
     return;
   }
 
+  // Position color tokens for pool items
+  var posColors = { Guard:'rgba(59,130,246,.5)', Forward:'rgba(139,92,246,.5)', Center:'rgba(20,184,166,.5)' };
+
   var html = '';
   available.forEach(function(p) {
     var base   = p.name.indexOf(' - ')>0 ? p.name.slice(0,p.name.indexOf(' - ')) : p.name;
     var school = p.name.indexOf(' - ')>0 ? p.name.slice(p.name.indexOf(' - ')+3) : '';
     var metSty = bbMetStyle(p.metric);
-    var metVal = p.metric > 0 ? Number(p.metric).toFixed(1) : '—';
+    var metVal = p.metric > 0 ? Number(p.metric).toFixed(1) : null;
+    var posClr = posColors[p.position] || 'rgba(255,255,255,.2)';
     html += '<div class="mdc-pool-item" onclick="mdcPickPlayer(' + p.rank + ')">';
+    // Rank
     html += '<span class="mdc-pool-rank">' + p.rank + '</span>';
-    html += avatarHtml(p.name, p.position||'', '24px', '4px').replace('class="avatar-fallback"','class="avatar-fallback" style="font-size:9px"');
+    // Position dot
+    html += '<div style="width:6px;height:6px;border-radius:50%;background:' + posClr + ';flex-shrink:0"></div>';
+    // Avatar
+    html += avatarHtml(p.name, p.position||'', '26px', '4px')
+              .replace('class="avatar-fallback"','class="avatar-fallback" style="font-size:9px"');
+    // Name + school
     html += '<div class="mdc-pool-name">';
     html += '  <div class="mdc-pool-pname">' + base + '</div>';
-    html += '  <div class="mdc-pool-school">' + school + (p.torvik_role ? ' · '+p.torvik_role : '') + '</div>';
+    var meta = (school ? school : '') + (p.torvik_role ? (school ? ' · ' : '') + p.torvik_role : '');
+    html += '  <div class="mdc-pool-school">' + meta + '</div>';
     html += '</div>';
-    if (p.metric > 0) {
+    // Metric pill
+    if (metVal) {
       html += '<div class="mdc-pool-met" style="' + metSty + '">' + metVal + '</div>';
     }
-    html += '<button class="mdc-select-btn" onclick="event.stopPropagation();mdcPickPlayer(' + p.rank + ')">Pick</button>';
+    // Pick button
+    html += '<button class="mdc-select-btn" onclick="event.stopPropagation();mdcPickPlayer(' + p.rank + ')">Draft</button>';
     html += '</div>';
   });
   el.innerHTML = html;
@@ -9913,34 +9522,33 @@ function mdcClosePoolDrawer() {
 
 function mdcPickRowClick(pickNum) {
   if (mdcSelections[pickNum]) {
-    // Click filled slot → un-assign and return player to pool
-    delete mdcSelections[pickNum];
-    mdcActivePick = pickNum;
-    mdcRenderPicks();
-    mdcRenderPool();
+    // Click filled slot → open player profile modal
+    var rank = mdcSelections[pickNum];
+    var player = mdcRankMap[rank];
+    if (player && typeof openPlayerModal === 'function') {
+      openPlayerModal(rank, '2026');
+    }
     return;
   }
+  if (mdcActivePick === pickNum) return; // already active — no work
   mdcActivePick = pickNum;
-  mdcRenderPicks();
+  mdcRenderPicks();       // picks panel: only re-renders active indicator
+  mdcRenderPoolHeader();  // pool: update team info header only
 }
 
 function mdcPickPlayer(rank) {
-  // Assign player to active pick
   if (mdcSelections[mdcActivePick]) return; // already filled
-  if (Object.values(mdcSelections).indexOf(rank) >= 0) {
-    mdcShowToast('Player already drafted!'); return;
-  }
-  // Save to history for undo
+  if (mdcDrafted.has(rank)) { mdcShowToast('Already drafted!'); return; }
   mdcHistory.push({ pick: mdcActivePick, rank: rank });
   mdcSelections[mdcActivePick] = rank;
-  // Advance active pick to next empty slot
-  var next = mdcActivePick;
-  for (var i = 1; i <= 60; i++) {
+  mdcDrafted.add(rank);
+  // Advance to next empty slot
+  var total = DRAFT_ORDER_2026.length;
+  for (var i = 1; i <= total; i++) {
     var candidate = mdcActivePick + i;
-    if (candidate > 60) candidate -= 60;
-    if (!mdcSelections[candidate]) { next = candidate; break; }
+    if (candidate > total) candidate -= total;
+    if (!mdcSelections[candidate]) { mdcActivePick = candidate; break; }
   }
-  mdcActivePick = next;
   mdcRenderPicks();
   mdcRenderPool();
 }
@@ -9957,7 +9565,9 @@ function mdcUnpick(pickNum) {
 function mdcUndo() {
   if (!mdcHistory.length) { mdcShowToast('Nothing to undo'); return; }
   var last = mdcHistory.pop();
+  var rank = mdcSelections[last.pick];
   delete mdcSelections[last.pick];
+  if (rank) mdcDrafted.delete(rank);
   mdcActivePick = last.pick;
   mdcRenderPicks();
   mdcRenderPool();
@@ -9968,6 +9578,7 @@ function mdcReset() {
   if (!confirm('Reset your entire mock draft?')) return;
   mdcSelections = {};
   mdcHistory    = [];
+  mdcDrafted    = new Set();
   mdcActivePick = 1;
   mdcRenderPicks();
   mdcRenderPool();
@@ -9982,8 +9593,10 @@ function mdcSetPos(pos, btn) {
 
 function mdcFilterPool(val) {
   mdcSearchTerm = val.toLowerCase().trim();
-  mdcRenderPool();
+  if (_mdcSearchTimer) clearTimeout(_mdcSearchTimer);
+  _mdcSearchTimer = setTimeout(function() { mdcRenderPool(); }, 120);
 }
+function mdcDebouncedFilter(val) { mdcFilterPool(val); }
 
 function mdcSave() {
   var filled = Object.keys(mdcSelections).length;
