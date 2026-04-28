@@ -1448,7 +1448,7 @@ tr:hover td{background:var(--gray-50)}
   .ff2-rail{width:60px}
   .ff2-col-bar{grid-template-columns:60px 1fr}
   .ff2-rail-label{font-size:9.5px;letter-spacing:2px}
-  .ff2-col-hdr-name{font-size:11px;letter-spacing:1.8px}
+  .ff2-col-hdr-name{font-size:13px;letter-spacing:2px}
   .ff2-col-hdr-sub{font-size:8.5px}
 
   /* ──────────── [62128] ──────────── */
@@ -3451,23 +3451,27 @@ REEFORM BOARD — full base CSS ────────────────
 .ff2-col-bar{
   display:grid;
   grid-template-columns:76px 1fr;
-  border-bottom:1px solid rgba(255,255,255,.05);
-  background:rgba(0,0,0,.38);
+  background:#060D1A;
+  border-bottom:1px solid rgba(255,255,255,.07);
   flex-shrink:0;
 }
-.ff2-col-bar-spacer{/* rail spacer — width set by grid */}
+.ff2-col-bar-spacer{
+  /* Extends the tier rail's visual column into the header */
+  background:rgba(0,0,0,.3);
+  border-right:1px solid rgba(255,255,255,.055);
+}
 .ff2-col-bar-inner{display:flex;flex:1}
 .ff2-col-hdr{
   flex:1;text-align:center;
-  padding:11px 0 10px;
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  border-left:1px solid rgba(255,255,255,.05);
+  padding:10px 0 8px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  border-left:1px solid rgba(255,255,255,.06);
 }
 .ff2-col-hdr-name{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:white;
+  font-size:16px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:white;
 }
-.ff2-col-hdr-sub{font-size:10px;color:rgba(255,255,255,.55);font-weight:500;letter-spacing:.3px}
+.ff2-col-hdr-sub{font-size:10px;color:rgba(255,255,255,.45);font-weight:500;letter-spacing:.4px}
 
 /* Body: rail + canvas */
 .ff2-viewport{
@@ -3624,8 +3628,12 @@ REEFORM BOARD — full base CSS ────────────────
   background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
   border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;
   font-family:'Barlow Condensed',sans-serif;color:rgba(255,255,255,.5);
-  cursor:pointer;transition:all .12s;white-space:nowrap;
+  cursor:pointer;white-space:nowrap;
+  /* Hidden until board is panned/zoomed away from home */
+  opacity:0;pointer-events:none;
+  transition:opacity .18s,background .12s,color .12s;
 }
+.ff2-reset-btn.visible{opacity:1;pointer-events:auto}
 .ff2-reset-btn:hover{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
 
 /* Legend */
@@ -3633,8 +3641,9 @@ REEFORM BOARD — full base CSS ────────────────
 .ff2-leg-item{display:flex;align-items:center;gap:4px;cursor:pointer;opacity:.55;transition:opacity .15s}
 .ff2-leg-item:hover,.ff2-leg-active{opacity:1 !important}
 .ff2-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.ff2-pos-highlight .ff2-card{opacity:.18}
-.ff2-pos-highlight .ff2-card.ff2-dim-active{opacity:1}
+/* Dim all cards when filter is active; restore matching position */
+.ff2-dim-active .ff2-card{opacity:.15;transition:opacity .18s}
+.ff2-dim-active .ff2-card.ff2-pos-highlight{opacity:1;transition:opacity .18s}
 
 /* Unplaced chip strip */
 .ff2-unplaced{
@@ -12542,7 +12551,7 @@ var FREEFORM_CONFIG = {
   LAYOUT: {
     X_MIN_PCT:        8,
     X_MAX_PCT:        92,
-    Y_TOP_PCT:        4.5,
+    Y_TOP_PCT:        1.5,
     Y_BOT_PCT:        95.5,
     RANK_CURVE_EXP:   0.60,
     COLLISION_PASSES: 20,
@@ -12980,6 +12989,7 @@ var FreeformInteraction = (function() {
   // the caller explicitly passes resetView:true (used by density change only).
   var _s   = 1, _tx = 0, _ty = 0;   // persisted transform state
   var _layer = null, _vp = null;     // DOM references — refreshed on each init
+  var _resetBtn = null;              // reset button ref — cached once per render, avoids per-frame querySelector
   var _layerW = 0, _layerH = 0;     // natural (unscaled) layer dimensions
 
   // Single-finger drag state
@@ -13043,25 +13053,34 @@ var FreeformInteraction = (function() {
     // recompute against the expanded canvas, spreading bubbles proportionally.
     if (_s < 1 && vpW > 0) {
       var expandedW = Math.round(vpW / _s);
-      _layer.style.width = expandedW + 'px';
-      _layerW = expandedW;
+      // Guard: only touch the DOM if the value actually changed — avoids a
+      // redundant style write on every frame when zoom level is held steady.
+      if (_layerW !== expandedW) {
+        _layer.style.width = expandedW + 'px';
+        _layerW = expandedW;
+      }
     } else {
-      _layer.style.width = '';
-      // Reattach natural width after clearing
-      var r = _layer.getBoundingClientRect();
-      if (r.width > 0) _layerW = r.width;
+      // Guard: only clear the override if it was previously applied.
+      // _layerW is kept authoritative by ResizeObserver (_measureLayerDimensions).
+      // The former getBoundingClientRect read here forced a synchronous layout
+      // reflow on every wheel/touchmove/mousemove frame — eliminated by trusting
+      // the already-correct cached value instead.
+      if (_layer.style.width) {
+        _layer.style.width = '';
+      }
     }
 
     _layer.style.transform =
       'translate3d(' + _tx.toFixed(1) + 'px,' + _ty.toFixed(1) + 'px,0) scale(' + _s.toFixed(4) + ')';
   }
 
-  // Show/hide reset button based on whether we're at the home position
+  // Show/hide reset button based on whether we're at the home position.
+  // Uses _resetBtn cached by init() — avoids a live DOM query on every
+  // wheel tick, touchmove delta, and mousemove event.
   function _syncResetBtn() {
-    var btn = document.querySelector('.ff2-reset-btn');
-    if (!btn) return;
+    if (!_resetBtn) return;
     var away = (Math.abs(_tx) > 6 || Math.abs(_ty) > 6 || Math.abs(_s - 1) > 0.04);
-    btn.classList.toggle('visible', away);
+    _resetBtn.classList.toggle('visible', away);
   }
 
   // ── Touch handlers ────────────────────────────────────────────────────────
@@ -13220,8 +13239,9 @@ var FreeformInteraction = (function() {
   // resetView:true only when the user explicitly changes density (not on filter/tab).
   // Without resetView, the persisted _s/_tx/_ty are restored to the new DOM layer.
   function init(vpEl, layerEl, resetView) {
-    _vp    = vpEl;
-    _layer = layerEl;
+    _vp       = vpEl;
+    _layer    = layerEl;
+    _resetBtn = document.querySelector('.ff2-reset-btn');  // cache once per render cycle
     _pinchActive = false;
     _dragActive  = false;
     _dragMoved   = false;
