@@ -1104,7 +1104,15 @@ tr:hover td{background:var(--gray-50)}
 
   /* Mock Builder — pool becomes slide-up drawer */
   .mdc-wrap{flex-direction:column;height:auto;min-height:0;border:none;box-shadow:none;border-radius:0}
-  .mdc-board{height:calc(100vh - 160px);min-height:400px}
+  /* F2: Use dvh so iOS doesn't size against the expanded viewport (address bar hidden).
+     Offset = 94px sticky chrome + 77px content above board (main pad 14 + tab pad 4
+     + mode strip 37 + wrapper margin 22) = 171px measured + 5px buffer = 176px.
+     Previous calc(100vh - 160px) was 11px short, causing overflow on every device. */
+  .mdc-board{height:calc(100dvh - 176px);min-height:400px}
+  /* F1: Ensure the scroll container can clear the fixed FAB (approx 50px tall, anchored
+     20px from bottom = 70px occupied) plus iOS safe-area on devices with home indicator.
+     Without this padding the last 2-3 picks are permanently hidden under the FAB. */
+  .mdc-picks-scroll{padding-bottom:calc(88px + env(safe-area-inset-bottom, 0px))}
   .mdc-pool{
     /* FIX MDC-01: Use visibility+transform instead of display:none so the
        CSS transform transition fires correctly. display:none suppresses all
@@ -1112,7 +1120,7 @@ tr:hover td{background:var(--gray-50)}
     visibility:hidden;
     pointer-events:none;
     position:fixed;bottom:0;left:0;right:0;
-    width:100%;height:65vh;
+    width:100%;height:min(65vh,480px);
     border-left:none;border-top:1.5px solid var(--gray-200);
     border-radius:16px 16px 0 0;
     box-shadow:0 -8px 40px rgba(10,22,40,.25);
@@ -1450,6 +1458,19 @@ tr:hover td{background:var(--gray-50)}
   .ff2-rail-label{font-size:9.5px;letter-spacing:2px}
   .ff2-col-hdr-name{font-size:13px;letter-spacing:2px}
   .ff2-col-hdr-sub{font-size:8.5px}
+  /* L1: Compress ff2-head to a single row on mobile.
+     Desktop uses flex-wrap:wrap + 14px vertical padding, which causes
+     the title/meta group and controls to stack into 2-3 rows on 360-390px screens,
+     consuming 60-90px of board height with no corresponding viewport adjustment.
+     Strategy: enforce single row, remove wrap, reduce padding, hide meta line. */
+  .ff2-head{
+    flex-wrap:nowrap;
+    padding:8px 12px;
+    gap:8px;
+    align-items:center;
+  }
+  .ff2-meta{display:none}
+  .ff2-title{font-size:14px}
 
   /* ──────────── [62128] ──────────── */
   /* Handled via JS clamp logic — extra safety: */
@@ -1535,10 +1556,6 @@ tr:hover td{background:var(--gray-50)}
     text-align: center;
     touch-action: manipulation;
   }
-  /* Pool drawer: ensure adequate height on landscape */
-  .mdc-pool {
-    height: min(65vh, 480px);
-  }
   /* Pick rows: tap-friendly height */
   .mdc-pick-row { min-height: 48px; }
   .mdc-pool-item { min-height: 48px; }
@@ -1592,7 +1609,9 @@ tr:hover td{background:var(--gray-50)}
 
   /* ──────────── [173122] ──────────── */
   /* Cards must be large enough to tap */
-  .ff2-card { min-width: 72px; }
+  /* L3: 72px is too narrow for 11px Barlow names — raises truncation threshold
+     from ~7 chars to ~11 chars, covering most two-word NBA prospect names. */
+  .ff2-card { min-width: 88px; }
   /* Density buttons: 44px touch target */
   .ff2-density-btn {
     min-width: 36px;
@@ -1835,10 +1854,10 @@ nt-size: 14px;
   /* Archive mode: hidden on mobile */
   #mockModeArchive { display: none !important; }
   #mockPanelArchive { display: none !important; }
-
-  /* Mode toggle: 2 buttons instead of 3 */
-  
-  
+  /* S2: With archive hidden the strip has 3-button spacing against 2 visible buttons,
+     leaving ghost whitespace. Force each remaining button to fill 50% of the row. */
+  #mockModeToggle { gap: 8px; }
+  #mockModeToggle .mock-mode-btn { flex: 1 1 0; min-width: 0; }
   .mock-mode-sub { font-size: 9px; }
 
   /* Build mock controls: simpler on mobile */
@@ -1852,11 +1871,15 @@ nt-size: 14px;
     touch-action: manipulation !important;
   }
 
-  /* Pick rows: clear active state */
+  /* Pick rows: clear active state — neutralise desktop box-shadow:inset so
+     border-left is the sole left-edge indicator; prevents double decoration
+     and the 3px content-shift caused by both properties applying at once. */
   .mdc-pick-row.active {
     border-left: 3px solid var(--amber);
+    box-shadow: none;
     background: #FFFBEB;
   }
+  .mdc-pick-row.active::before { background: transparent; }
   /* Pool item: larger tap target */
   .mdc-pool-item {
     min-height: 48px;
@@ -2377,17 +2400,17 @@ nt-size: 14px;
 /* ── Wrapper ────────────────────────────────────────────────────────── */
 .bb-wrap{display:flex;justify-content:center;padding:0 0 24px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 
-/* ── Board shell ────────────────────────────────────────────────────── */
+/* ── Board shell — WHITE THEME ───────────────────────────────────── */
 .bb-board{
   width:100%;min-width:1000px;
-  background:#060D1A;
+  background:#FFFFFF;
   border-radius:14px;
   overflow:hidden;
   position:relative;
   box-shadow:
-    0 0 0 1px rgba(255,255,255,.06),
-    0 8px 40px rgba(0,0,0,.6),
-    0 0 80px rgba(59,130,246,.04);
+    0 0 0 1px rgba(15,23,42,.08),
+    0 8px 40px rgba(15,23,42,.12),
+    0 2px 8px rgba(15,23,42,.06);
 }
 
 /* ── Screenshot bar ─────────────────────────────────────────────────── */
@@ -2459,36 +2482,36 @@ nt-size: 14px;
 }
 .bb-meta{margin-top:12px;position:relative;z-index:1;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .bb-pill{
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
   border-radius:4px;padding:2px 10px;
   font-family:'Barlow Condensed',sans-serif;
   font-size:10px;font-weight:600;
-  color:rgba(255,255,255,.4);
+  color:rgba(255,255,255,.65);
   letter-spacing:.4px;
 }
 .bb-pill.gold{
-  color:rgba(212,168,48,.7);
-  border-color:rgba(212,168,48,.2);
-  background:rgba(212,168,48,.06);
+  color:rgba(255,215,80,.85);
+  border-color:rgba(255,215,80,.25);
+  background:rgba(255,215,80,.08);
 }
 
-/* ── Column header bar ───────────────────────────────────────────────── */
+/* ── Column header bar — WHITE THEME ────────────────────────────── */
 .bb-col-hdr{
-  background:#040A15;
+  background:#F1F5F9;
   display:flex;align-items:center;
   padding-right:0;width:100%;
   position:relative;z-index:10;
-  border-bottom:1px solid rgba(255,255,255,.05);
+  border-bottom:1.5px solid #E2E8F0;
 }
 .bb-ch{
   font-family:'DM Sans','Inter',system-ui,sans-serif;
   font-size:9px;font-weight:700;
-  color:rgba(255,255,255,.62);
+  color:#64748B;
   text-transform:uppercase;letter-spacing:1.4px;
   padding:11px 0;text-align:center;
 }
-.bb-sorted{color:rgba(212,168,48,.85) !important;background:rgba(212,168,48,.06)}
+.bb-sorted{color:#B45309 !important;background:rgba(212,168,48,.08)}
 .bb-sort-icon{font-size:8px;margin-left:2px;display:inline-block;opacity:.5;transition:opacity .12s}
 .bb-sort-icon{opacity:1}
 
@@ -2529,82 +2552,82 @@ nt-size: 14px;
 }
 .bb-tier-sub{
   font-family:'DM Sans',system-ui,sans-serif;
-  font-size:9px;color:rgba(255,255,255,.38);
+  font-size:9px;color:rgba(255,255,255,.5);
   font-weight:500;letter-spacing:.2px;white-space:nowrap;
 }
 .bb-tier-picks{
   margin-left:auto;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:9px;color:rgba(255,255,255,.28);
+  font-size:9px;color:rgba(255,255,255,.35);
   letter-spacing:.8px;flex-shrink:0;
 }
 
-/* ── Rows ────────────────────────────────────────────────────────────── */
+/* ── Rows — WHITE THEME ──────────────────────────────────────────────── */
 .bb-row{
   display:flex;align-items:center;
   height:64px;padding-right:0;
-  border-bottom:1px solid rgba(255,255,255,.04);
+  border-bottom:1px solid #F1F5F9;
   transition:background .15s ease;
   overflow:hidden;cursor:pointer;
   position:relative;
-  background:#060D1A;
+  background:#FFFFFF;
 }
 /* Left tier accent line */
 .bb-row::before{
   content:'';
   position:absolute;
   left:0;top:10%;bottom:10%;
-  width:2px;
-  border-radius:0 2px 2px 0;
+  width:3px;
+  border-radius:0 3px 3px 0;
   background:var(--bb-accent,transparent);
-  opacity:.6;
+  opacity:.7;
   transition:opacity .15s;
 }
 .bb-row:hover{
-  background:rgba(255,255,255,.028) !important;
+  background:#F8FAFC !important;
 }
 .bb-row:hover::before{ opacity:1 }
 
 /* Tier row tints + accent colors */
 .bb-row.bbt1{
   --bb-accent: linear-gradient(180deg,#F59E0B,#D97706);
-  background:rgba(212,168,48,.025);
+  background:rgba(245,158,11,.03);
 }
 .bb-row.bbt2{
   --bb-accent: linear-gradient(180deg,#A78BFA,#7C3AED);
   background:rgba(124,58,237,.02);
 }
-.bb-row.alt{background:#070E1E}
+.bb-row.alt{background:#FAFBFC}
 
-/* ── Rank number ─────────────────────────────────────────────────────── */
+/* ── Rank number — WHITE THEME ───────────────────────────────────────── */
 .bb-rk{
   font-family:'Barlow Condensed',sans-serif;
   font-size:17px;font-weight:900;
-  color:rgba(255,255,255,.38);
+  color:#CBD5E1;
   line-height:1;user-select:none;flex-shrink:0;
   letter-spacing:.5px;
 }
-/* Franchise tier rank — amber glow */
-.bb-row.bbt1 .bb-rk{color:rgba(212,168,48,.35)}
-/* Lottery tier rank — purple glow */
-.bb-row.bbt2 .bb-rk{color:rgba(167,139,250,.35)}
+/* Franchise tier rank — amber */
+.bb-row.bbt1 .bb-rk{color:rgba(217,119,6,.55)}
+/* Lottery tier rank — purple */
+.bb-row.bbt2 .bb-rk{color:rgba(124,58,237,.4)}
 
-/* ── Avatar ──────────────────────────────────────────────────────────── */
+/* ── Avatar — WHITE THEME ───────────────────────────────────────────── */
 .bb-av{flex-shrink:0;display:flex;align-items:center;justify-content:center}
-/* Tier glow ring around avatar */
+/* Tier accent ring around avatar */
 .bb-row.bbt1 .bb-av > div{
-  box-shadow:0 0 0 1.5px rgba(212,168,48,.35),0 0 10px rgba(212,168,48,.15) !important;
+  box-shadow:0 0 0 2px rgba(245,158,11,.4),0 0 8px rgba(245,158,11,.12) !important;
 }
 .bb-row.bbt2 .bb-av > div{
-  box-shadow:0 0 0 1.5px rgba(167,139,250,.3),0 0 10px rgba(167,139,250,.12) !important;
+  box-shadow:0 0 0 2px rgba(124,58,237,.3),0 0 8px rgba(124,58,237,.1) !important;
 }
 
-/* ── Identity ────────────────────────────────────────────────────────── */
+/* ── Identity — WHITE THEME ──────────────────────────────────────────── */
 .bb-id{min-width:0;padding:0 6px 0 10px;display:flex;flex-direction:column;justify-content:center;gap:2px;overflow:hidden}
 .bb-name{
   font-family:'Barlow Condensed',sans-serif;
   font-size:16px;font-weight:900;
-  color:rgba(255,255,255,.92);
+  color:#0F172A;
   line-height:1.1;white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis;
   letter-spacing:.1px;
@@ -2612,30 +2635,30 @@ nt-size: 14px;
 .bb-school-line{display:flex;align-items:center;gap:4px;overflow:hidden;min-width:0}
 .bb-school{
   font-family:'DM Sans',system-ui,sans-serif;
-  font-size:9.5px;color:rgba(255,255,255,.48);
+  font-size:9.5px;color:#64748B;
   font-weight:500;white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis;letter-spacing:.1px;
 }
-.bb-cls-dot{font-size:9px;color:rgba(255,255,255,.18);font-weight:500;flex-shrink:0}
+.bb-cls-dot{font-size:9px;color:#94A3B8;font-weight:500;flex-shrink:0}
 
-/* ── Position + Role tags ────────────────────────────────────────────── */
+/* ── Position + Role tags — WHITE THEME ─────────────────────────────── */
 .bb-tags{flex-shrink:0;display:flex;flex-direction:column;gap:3px;justify-content:center;overflow:hidden}
 .bb-tag{
-  display:inline-block;border-radius:3px;
-  padding:1px 5px;
+  display:inline-block;border-radius:4px;
+  padding:2px 6px;
   font-family:'DM Sans',system-ui,sans-serif;
   font-size:8.5px;font-weight:700;letter-spacing:.2px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   max-width:108px;line-height:1.5;
 }
 /* Guard — blue */
-.bb-tag-g{background:rgba(59,130,246,.12);color:rgba(147,197,253,.9);border:1px solid rgba(59,130,246,.2)}
+.bb-tag-g{background:#DBEAFE;color:#1D4ED8;border:1px solid #BFDBFE}
 /* Forward — violet */
-.bb-tag-w{background:rgba(139,92,246,.12);color:rgba(196,181,253,.9);border:1px solid rgba(139,92,246,.2)}
+.bb-tag-w{background:#EDE9FE;color:#6D28D9;border:1px solid #DDD6FE}
 /* Center — teal */
-.bb-tag-b{background:rgba(20,184,166,.1);color:rgba(94,234,212,.9);border:1px solid rgba(20,184,166,.18)}
-/* Role — neutral ghost */
-.bb-tag-r{background:rgba(255,255,255,.04);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.08);font-weight:600}
+.bb-tag-b{background:#CCFBF1;color:#0F766E;border:1px solid #99F6E4}
+/* Role — neutral slate */
+.bb-tag-r{background:#F1F5F9;color:#475569;border:1px solid #E2E8F0;font-weight:600}
 
 /* ── Metric cell ─────────────────────────────────────────────────────── */
 .bb-met-cell{flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative}
@@ -2645,114 +2668,141 @@ nt-size: 14px;
   border-radius:5px;padding:5px 8px;
   min-width:62px;text-align:center;
   white-space:nowrap;font-variant-numeric:tabular-nums;
-  /* color and box-shadow injected by bbMetGlowStyle() */
+  /* background + color injected by bbMetStyle() — light-theme fill gradient */
 }
 
-/* ── Stat cells — dark + glow border ────────────────────────────────── */
+/* ── Stat cells — WHITE THEME: filled gradient pill ─────────────────── */
 .bb-stat-cell{
   flex-shrink:0;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  gap:0;border-radius:5px;
-  margin:5px 2px;padding:0 3px;min-height:40px;
-  background:rgba(255,255,255,.03);
-  /* border + box-shadow injected by bbGlowStyle() */
-  transition:box-shadow .2s ease,border-color .2s ease;
+  gap:0;border-radius:6px;
+  margin:5px 2px;padding:0 4px;min-height:40px;
+  background:#F1F5F9;
+  /* background + color injected by bbGlowStyle() */
+  transition:background .15s ease,color .15s ease;
 }
 .bb-ccomp{width:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 
-/* Stat value — clean and large */
+/* Stat value — inherits color from the gradient cell (bbGlowStyle sets color on parent) */
 .bb-sv{
   font-family:'Barlow Condensed',sans-serif;
   font-size:13px;font-weight:800;
-  color:rgba(255,255,255,.82);
+  color:#1E293B;
   line-height:1;white-space:nowrap;
   font-variant-numeric:tabular-nums;
   letter-spacing:-.2px;
 }
-/* Stat label — dim caption */
+/* When in a gradient-filled cell, inherit the cell's color */
+.bb-sv.bb-sv-inherit{ color:inherit }
+/* Stat label — muted caption */
 .bb-sl{
   font-family:'DM Sans',system-ui,sans-serif;
-  font-size:6.5px;color:rgba(255,255,255,.2);
+  font-size:6.5px;color:inherit;opacity:.55;
   text-transform:uppercase;letter-spacing:1px;
   margin-top:3px;font-weight:600;white-space:nowrap;
 }
 
-/* ── Ht / Wt ─────────────────────────────────────────────────────────── */
+/* ── Ht / Wt — WHITE THEME ───────────────────────────────────────────── */
 .bb-ht-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%}
 .bb-ht-val{
   font-family:'Barlow Condensed',sans-serif;
   font-size:14px;font-weight:800;
-  color:rgba(255,255,255,.75);
+  color:#334155;
   line-height:1;font-variant-numeric:tabular-nums;
 }
 .bb-wt-val{
   font-family:'DM Sans',system-ui,sans-serif;
-  font-size:9px;color:rgba(255,255,255,.28);
+  font-size:9px;color:#94A3B8;
   font-weight:500;margin-top:2px;
 }
 
-/* ── Footer ──────────────────────────────────────────────────────────── */
+/* ── Footer — WHITE THEME ────────────────────────────────────────────── */
 .bb-footer{
-  background:#040A15;
+  background:#F8FAFC;
   padding:10px 22px;
   display:flex;align-items:center;justify-content:space-between;
   flex-wrap:wrap;gap:6px;
-  border-top:1px solid rgba(255,255,255,.05);
+  border-top:1px solid #E2E8F0;
   position:relative;
 }
 .bb-footer::before{
   content:'';
-  position:absolute;top:0;left:0;right:0;height:1px;
+  position:absolute;top:0;left:0;right:0;height:1.5px;
   background:linear-gradient(90deg,
-    transparent,rgba(212,168,48,.3) 30%,rgba(120,180,255,.3) 70%,transparent
+    transparent,rgba(212,168,48,.4) 30%,rgba(59,130,246,.3) 70%,transparent
   );
 }
 .bb-footer-brand{
   font-family:'Barlow Condensed',sans-serif;
   font-size:11px;font-weight:900;
-  color:rgba(212,168,48,.6);letter-spacing:1.5px;text-transform:uppercase;
+  color:rgba(180,130,9,.75);letter-spacing:1.5px;text-transform:uppercase;
 }
 .bb-footer-note{
   font-family:'DM Sans',system-ui,sans-serif;
-  font-size:9px;color:rgba(255,255,255,.18);font-weight:500;letter-spacing:.2px;
+  font-size:9px;color:#94A3B8;font-weight:500;letter-spacing:.2px;
 }
 
-/* ── Mobile legend ───────────────────────────────────────────────────── */
+/* ── Mobile legend — WHITE THEME ─────────────────────────────────────── */
 .bb-mobile-legend{
   display:none;
   overflow-x:auto;scrollbar-width:none;
   padding:6px 10px 8px;gap:8px;
-  background:rgba(255,255,255,.02);
-  border-top:1px solid rgba(255,255,255,.05);
+  background:#F8FAFC;
+  border-top:1px solid #E2E8F0;
   flex-wrap:nowrap;
 }
 .bb-mobile-legend-chip{
   display:inline-flex;flex-direction:column;align-items:center;
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  background:white;border:1px solid #E2E8F0;
   border-radius:6px;padding:4px 8px;flex-shrink:0;cursor:default;
 }
-.bb-mlc-abbr{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:900;color:rgba(212,168,48,.8);letter-spacing:.5px;line-height:1}
-.bb-mlc-full{font-size:8.5px;color:rgba(255,255,255,.35);font-weight:500;white-space:nowrap;margin-top:2px;line-height:1}
+.bb-mlc-abbr{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:900;color:#B45309;letter-spacing:.5px;line-height:1}
+.bb-mlc-full{font-size:8.5px;color:#64748B;font-weight:500;white-space:nowrap;margin-top:2px;line-height:1}
 
-/* ── Compare button ──────────────────────────────────────────────────── */
+/* ── Compare button — WHITE THEME ────────────────────────────────────── */
 .bb-compare-dot{
-  background:rgba(15,23,42,.04) !important;
-  border:1px solid rgba(15,23,42,.1) !important;
-  color:rgba(15,23,42,.35) !important;
+  background:#F1F5F9 !important;
+  border:1px solid #E2E8F0 !important;
+  color:#94A3B8 !important;
   transition:all .15s !important;
 }
 .bb-compare-dot:hover{
-  background:rgba(59,130,246,.12) !important;
-  border-color:rgba(59,130,246,.4) !important;
-  color:rgba(147,197,253,.9) !important;
-  box-shadow:0 0 8px rgba(59,130,246,.2) !important;
+  background:#DBEAFE !important;
+  border-color:#93C5FD !important;
+  color:#1D4ED8 !important;
+  box-shadow:0 0 6px rgba(59,130,246,.15) !important;
 }
 
-/* Twitter sub-mode: narrower board — column widths use fixed-width globals */
-/* Only override non-layout properties for the compact tweet card */
+/* ── Two-column layout ────────────────────────────────────────────────── */
+.bb-two-col-mode{ min-width:840px }
+.bb-two-col-wrap{
+  display:flex;
+  background:#E2E8F0; /* acts as 1px column divider */
+  gap:1px;
+}
+.bb-col-panel{
+  flex:1;min-width:0;background:#FFFFFF;
+  display:flex;flex-direction:column;
+}
+/* Trimmed column widths for 2-col panels */
+.bb-tc-cr  {width:34px;flex-shrink:0;text-align:center}
+.bb-tc-cav {width:44px;flex-shrink:0}
+.bb-tc-cid {flex:1;min-width:110px;max-width:200px}
+.bb-tc-cmet{width:68px;flex-shrink:0;text-align:center}
+.bb-tc-cts {width:60px;flex-shrink:0;text-align:center}
+.bb-tc-cpa {width:60px;flex-shrink:0;text-align:center}
+.bb-tc-csb {width:60px;flex-shrink:0;text-align:center}
+/* Tighter name in 2-col */
+.bb-tc-name{font-size:13px !important}
+.bb-tc-met {font-size:16px !important;min-width:52px !important;padding:3px 5px !important}
+/* Tighter row height in 2-col */
+.bb-tc-row {height:52px !important}
+
+/* Twitter sub-mode: slightly more compact */
 #board2026Content .bb-board.bb-tw .bb-sv{font-size:11px}
 #board2026Content .bb-board.bb-tw .bb-sl{font-size:7px}
 #board2026Content .bb-board.bb-tw .bb-row{height:48px}
+#board2026Content .bb-board.bb-tw .bb-stat-cell{min-height:32px;margin:3px 2px}
 
 /* ── TIER EDITOR ─────────────────────────────────────────────────────────── */
 .tier-customize-btn{background:rgba(10,22,40,.07);color:var(--gray-600);
@@ -3588,9 +3638,20 @@ REEFORM BOARD — full base CSS ────────────────
 }
 .ff2-tap-expanded{pointer-events:auto}
 .ff2-exp-close{
-  position:absolute;top:8px;right:10px;
+  position:absolute;top:0;right:0;
+  /* 44x44 tap target via padding — negative margin keeps layout unchanged */
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
   font-size:16px;color:rgba(255,255,255,.4);cursor:pointer;
   line-height:1;background:none;border:none;padding:0;
+  border-radius:0 10px 0 0;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .12s,background .12s;
+}
+.ff2-exp-close:hover,.ff2-exp-close:active{
+  color:rgba(255,255,255,.85);
+  background:rgba(255,255,255,.08);
 }
 .ff2-exp-photo{
   width:52px;height:52px;border-radius:8px;overflow:hidden;
@@ -9159,6 +9220,7 @@ function bbFmt(val, key) {
 }
 
 var bbSubMode = 'full'; // 'full' | 'twitter'
+var bbTwoCol  = false;  // two-column layout mode for shareable exports
 
 // ── Sort state: col key + direction (1=asc, -1=desc).
 // Default is rank ascending (board order). Clicking a stat column switches to
@@ -9175,39 +9237,26 @@ function bbMetStyle(val) {
   return 'background:hsl('+Math.round(t*120)+',72%,'+Math.round(94-t*8)+'%);color:hsl('+Math.round(t*120)+',65%,'+Math.round(34-t*12)+'%)';
 }
 
-// ── Dark-theme metric glow: large number with colored outer glow ─────
-function bbMetGlowStyle(val) {
-  if (!val || val <= 0)
-    return 'background:rgba(255,255,255,.04);color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.06)';
-  var mn = 47, mx = 155;
-  var t  = Math.max(0, Math.min(1, (val - mn) / (mx - mn)));
-  var h  = Math.round(t * 120);           // 0=red, 120=green
-  var sat = 75, litBdr = 50, litTxt = 72;
-  return [
-    'background:rgba(255,255,255,.04)',
-    'color:hsl('+h+','+sat+'%,'+litTxt+'%)',
-    'border:1.5px solid hsl('+h+','+sat+'%,'+litBdr+'%,.35)',
-    'box-shadow:0 0 12px hsl('+h+','+sat+'%,'+litBdr+'%,.18),inset 0 0 8px hsl('+h+','+sat+'%,'+litBdr+'%,.06)'
-  ].join(';');
-}
-
-// ── Glow border stat cell: dark bg + hsl border + outer glow ────────
+// ── Light-theme stat cell gradient: filled HSL pill ─────────────────
+// Uses same red(0°)→green(120°) hue ramp as the metric cell.
+// Background is a very light tint; text is a saturated dark version.
 function bbGlowStyle(val, key) {
   var rng = STAT_RANGES[key];
   if (!rng || val === null || val === undefined || val === 0) {
-    return 'background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05)';
+    return 'background:#F1F5F9;color:#94A3B8;border:1px solid #E2E8F0';
   }
   var t = Math.max(0, Math.min(1, (val - rng.mn) / (rng.mx - rng.mn)));
   var h = Math.round(t * 120);
-  var bdrOpacity  = (0.18 + t * 0.22).toFixed(2);   // 0.18 – 0.40
-  var glowOpacity = (0.06 + t * 0.14).toFixed(2);   // 0.06 – 0.20
-  var glowSpread  = Math.round(4 + t * 6);           // 4–10px
+  var bgL  = Math.round(94 - t * 8);   // 94% (light) → 86% (more saturated)
+  var txtL = Math.round(33 - t * 12);  // 33% → 21% (darker text for best values)
   return [
-    'background:rgba(255,255,255,.03)',
-    'border:1px solid hsl('+h+',68%,52%,'+bdrOpacity+')',
-    'box-shadow:0 0 '+glowSpread+'px hsl('+h+',68%,52%,'+glowOpacity+')'
+    'background:hsl('+h+',68%,'+bgL+'%)',
+    'color:hsl('+h+',62%,'+txtL+'%)',
+    'border:1px solid hsl('+h+',55%,'+(bgL-8)+'%)'
   ].join(';');
 }
+
+// bbMetGlowStyle is retired — bbMetStyle() handles light-theme metric cell.
 
 function bbTagCls(pos) {
   var p = (pos||'').toLowerCase();
@@ -9229,8 +9278,8 @@ function bbBuildRow(p, idx) {
   else if (cls==='Junior')    cls='Jr';
   else if (cls==='Senior')    cls='Sr';
 
-  // Metric — glow style for dark theme
-  var metSty  = bbMetGlowStyle(p.metric);
+  // Metric — light-theme fill gradient (bbMetStyle = white/light theme)
+  var metSty  = bbMetStyle(p.metric);
   var metVal  = bbFmt(p.metric,  'metric');
   var tsVal   = bbFmt(p.ts_pct,  'ts_pct');
   var paVal   = bbFmt(p.pa2_usg, 'pa2_usg');
@@ -9257,9 +9306,9 @@ function bbBuildRow(p, idx) {
   var ftarSty = bbGlowStyle(p.ftar,    'ftar');
   var tparSty = bbGlowStyle(p.tpar,    'tpar');
 
-  // Stat value color — inherits from glow (white-ish, readable on dark)
+  // Stat value — inherits color from the light-theme gradient cell (bbGlowStyle)
   var SV = function(val) {
-    return '<div class="bb-sv">' + val + '</div>';
+    return '<div class="bb-sv bb-sv-inherit">' + val + '</div>';
   };
 
   return '<div class="bb-row '+tierCls+' '+altCls+'" onclick="openPlayerModal('+p.rank+')" data-rank="'+p.rank+'">'
@@ -9403,6 +9452,7 @@ function renderBoardBigboard(players) {
   var out = '<div class="bb-screenshot-bar">'
     + '<button class="bb-sub-btn' + (bbSubMode === 'full'    ? ' active' : '') + '" onclick="setBBSubMode(\'full\')">📋 Full Board (60)</button>'
     + '<button class="bb-sub-btn' + (bbSubMode === 'twitter' ? ' active' : '') + '" onclick="setBBSubMode(\'twitter\')">🐦 Twitter Card (30)</button>'
+    + '<button class="bb-sub-btn' + (bbTwoCol ? ' active' : '') + '" onclick="toggleBBTwoCol()" title="Split into two side-by-side columns for portrait-friendly screenshots">⊞ 2-Col</button>'
     + '<div class="bb-range-group" style="margin-left:auto">'
       + '<span class="bb-range-lbl">Export ranks</span>'
       + '<input class="bb-range-input" id="bbRangeFrom" type="number" min="1" max="60" value="1" title="Start rank">'
@@ -9427,10 +9477,10 @@ function renderBoardBigboard(players) {
     + '</div>';
   }
 
-  // Board wrapper
-  out += '<div class="bb-wrap"><div id="bbBoard" class="bb-board' + (bbSubMode === 'twitter' ? ' bb-tw' : '') + '">';
+  // Board wrapper — add bb-two-col-mode class when in 2-col layout
+  out += '<div class="bb-wrap"><div id="bbBoard" class="bb-board' + (bbSubMode === 'twitter' ? ' bb-tw' : '') + (bbTwoCol ? ' bb-two-col-mode' : '') + '">';
 
-  // Header
+  // Header (always full-width — shared across both columns)
   out += '<div class="bb-header">'
     + '<div class="bb-header-row">'
       + '<div class="bb-logo-box" style="background:none;border:none;padding:0">'+ (BB_LOGO_SRC ? '<img src="' + BB_LOGO_SRC + '" style="width:34px;height:34px;object-fit:contain;display:block;" alt="HoopsWill">' : '<div style="font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:900;color:#D4A830;line-height:1">HW</div>')+ '</div>'
@@ -9445,30 +9495,118 @@ function renderBoardBigboard(players) {
     + '</div>'
   + '</div>';
 
-  // Column headers — built from COLS definition
-  out += '<div class="bb-col-hdr">';
-  for (var ci = 0; ci < COLS.length; ci++) {
-    out += colHdr(COLS[ci]);
-  }
-  out += '</div>'; // close bb-col-hdr
+  if (bbTwoCol) {
+    // ── TWO-COLUMN LAYOUT ──────────────────────────────────────────────────
+    // Split the current range in half; each panel gets its own column headers
+    // and tier bands. Trimmed column set: Rank, Avatar, Name, Metric, TS%, P+A/USG, STL+BL
+    var rowIdx2 = 0;
+    var panelMid = Math.floor(limited.length / 2);
+    var leftPlayers  = limited.slice(0, panelMid);
+    var rightPlayers = limited.slice(panelMid);
 
-  // Mobile stat legend: scrollable chip strip showing abbrev→full stat name.
-  // Replaces hover-only data-tip tooltips inaccessible on touch devices.
-  // Base CSS: display:none; mobile MQ: #bbMobileLegend { display:flex !important }
-  out += '<div class="bb-mobile-legend" id="bbMobileLegend">' + _bbMobileLegendChips() + '</div>';
+    // Trimmed column headers for each panel
+    var TC_COLS = [
+      { key:'rank',    cls:'bb-tc-cr',  label:'#',        tip:'Board rank', sortable:false, left:false },
+      { key:null,      cls:'bb-tc-cav', label:'',         tip:null,         sortable:false, left:false },
+      { key:'name',    cls:'bb-tc-cid', label:'Player',   tip:'Player name', sortable:false, left:true },
+      { key:'metric',  cls:'bb-tc-cmet',label:'Metric',   tip:'HoopsWill Draft Model composite', sortable:false, left:false },
+      { key:'ts_pct',  cls:'bb-tc-cts', label:'TS%',      tip:'True Shooting %', sortable:false, left:false },
+      { key:'pa2_usg', cls:'bb-tc-cpa', label:'P+A/USG',  tip:'Points+2×Assists per 100 usage', sortable:false, left:false },
+      { key:'stl_bl',  cls:'bb-tc-csb', label:'Stl+Bl',   tip:'Steals+Blocks per 75', sortable:false, left:false },
+    ];
 
-  // Tiers + rows
-  var rowIdx = 0;
-  BB_TIERS.forEach(function(t) {
-    if (t.from > limit) return;
-    out += '<div class="bb-tier-band" style="background:' + t.grad + '">'
-      + '<span class="bb-tier-label">' + t.label + '</span>'
-      + '<span class="bb-tier-sub">'   + t.sub   + '</span>'
-      + '<span class="bb-tier-picks">' + t.picks + '</span>'
+    function tcHdr(col) {
+      return '<div class="bb-ch ' + col.cls + (col.left ? ' left' : '') + '">' + col.label + '</div>';
+    }
+
+    function tcHdrRow() {
+      var h = '<div class="bb-col-hdr">';
+      TC_COLS.forEach(function(c){ h += tcHdr(c); });
+      return h + '</div>';
+    }
+
+    function buildTwoColRow(p, idx) {
+      var base  = p.name || '';
+      var school = p.school || '';
+      var cls = (p.cls||'').trim();
+      if      (cls==='Freshman'||cls==='Fresh') cls='Fr';
+      else if (cls==='Sophomore') cls='So';
+      else if (cls==='Junior')    cls='Jr';
+      else if (cls==='Senior')    cls='Sr';
+      var rankStr = p.rank<10 ? '0'+p.rank : ''+p.rank;
+      var tierCls = p.rank<=TIER_CUTS.franchise ? 'bbt1'
+                  : p.rank<=TIER_CUTS.lottery   ? 'bbt2'
+                  : '';
+      var altCls  = idx%2===1 ? 'alt' : '';
+      var avHtml  = avatarHtml(p.name, p.position||'', '36px', '6px')
+                      .replace('class="avatar-fallback"', 'style="font-size:13px" class="avatar-fallback"');
+      var metSty  = bbMetStyle(p.metric);
+      var tsSty   = bbGlowStyle(p.ts_pct,  'ts_pct');
+      var paSty   = bbGlowStyle(p.pa2_usg, 'pa2_usg');
+      var sbSty   = bbGlowStyle(p.stl_bl,  'stl_bl');
+      var metVal  = bbFmt(p.metric,  'metric');
+      var tsVal   = bbFmt(p.ts_pct,  'ts_pct');
+      var paVal   = bbFmt(p.pa2_usg, 'pa2_usg');
+      var sbVal   = bbFmt(p.stl_bl,  'stl_bl');
+      return '<div class="bb-row bb-tc-row '+tierCls+' '+altCls+'" onclick="openPlayerModal('+p.rank+')" data-rank="'+p.rank+'">'
+        +'<div class="bb-rk bb-tc-cr">'+rankStr+'</div>'
+        +'<div class="bb-av bb-tc-cav">'+avHtml+'</div>'
+        +'<div class="bb-id bb-tc-cid">'
+          +'<div class="bb-name bb-tc-name">'+base+getBadgeHtml(p.name)+'</div>'
+          +(school ? '<div class="bb-school">'+school+(cls?'&thinsp;·&thinsp;'+cls:'')+'</div>' : '')
+        +'</div>'
+        +'<div class="bb-met-cell bb-tc-cmet"><div class="bb-met-val bb-tc-met" style="'+metSty+'">'+metVal+'</div></div>'
+        +'<div class="bb-stat-cell bb-tc-cts" style="'+tsSty+'"><div class="bb-sv bb-sv-inherit">'+tsVal+'</div><div class="bb-sl">TS%</div></div>'
+        +'<div class="bb-stat-cell bb-tc-cpa" style="'+paSty+'"><div class="bb-sv bb-sv-inherit">'+paVal+'</div><div class="bb-sl">P+A/USG</div></div>'
+        +'<div class="bb-stat-cell bb-tc-csb" style="'+sbSty+'"><div class="bb-sv bb-sv-inherit">'+sbVal+'</div><div class="bb-sl">STL+BL</div></div>'
+      +'</div>';
+    }
+
+    function buildPanel(panelPlayers, startIdx) {
+      var html = tcHdrRow();
+      var idx = startIdx;
+      BB_TIERS.forEach(function(t) {
+        var rows = panelPlayers.filter(function(p){ return p.rank >= t.from && p.rank <= t.to; });
+        if (!rows.length) return;
+        html += '<div class="bb-tier-band" style="background:' + t.grad + '">'
+          + '<span class="bb-tier-label">' + t.label + '</span>'
+          + '<span class="bb-tier-sub">'   + t.sub   + '</span>'
+        + '</div>';
+        rows.forEach(function(p){ html += buildTwoColRow(p, idx++); });
+      });
+      return html;
+    }
+
+    out += '<div class="bb-two-col-wrap">'
+      + '<div class="bb-col-panel">' + buildPanel(leftPlayers, 0) + '</div>'
+      + '<div class="bb-col-panel">' + buildPanel(rightPlayers, 0) + '</div>'
     + '</div>';
-    limited.filter(function(p){ return p.rank >= t.from && p.rank <= Math.min(t.to, limit); })
-           .forEach(function(p){ out += bbBuildRow(p, rowIdx++); });
-  });
+
+  } else {
+    // ── SINGLE-COLUMN LAYOUT (default) ────────────────────────────────────
+    // Column headers — built from COLS definition
+    out += '<div class="bb-col-hdr">';
+    for (var ci = 0; ci < COLS.length; ci++) {
+      out += colHdr(COLS[ci]);
+    }
+    out += '</div>'; // close bb-col-hdr
+
+    // Mobile stat legend
+    out += '<div class="bb-mobile-legend" id="bbMobileLegend">' + _bbMobileLegendChips() + '</div>';
+
+    // Tiers + rows
+    var rowIdx = 0;
+    BB_TIERS.forEach(function(t) {
+      if (t.from > limit) return;
+      out += '<div class="bb-tier-band" style="background:' + t.grad + '">'
+        + '<span class="bb-tier-label">' + t.label + '</span>'
+        + '<span class="bb-tier-sub">'   + t.sub   + '</span>'
+        + '<span class="bb-tier-picks">' + t.picks + '</span>'
+      + '</div>';
+      limited.filter(function(p){ return p.rank >= t.from && p.rank <= Math.min(t.to, limit); })
+             .forEach(function(p){ out += bbBuildRow(p, rowIdx++); });
+    });
+  }
 
   // Footer
   out += '<div class="bb-footer">'
@@ -9486,6 +9624,11 @@ function setBBSubMode(mode) {
   // carry-over of a "sorted by TS%" state into the Twitter card export view
   bbSortCol = 'rank';
   bbSortDir = 1;
+  renderBoard2026();
+}
+
+function toggleBBTwoCol() {
+  bbTwoCol = !bbTwoCol;
   renderBoard2026();
 }
 
@@ -13617,29 +13760,43 @@ var FreeformBoard = (function() {
 
     // ── Viewport-clamped expand origin ────────────────────────────────────
     // Use card's actual pixel rect (accounts for zoom/pan) not its % left value.
-    // Expanded card width is 224px; we shift it so it stays within the viewport.
+    // Expanded card width is 224px, estimated height ~280px.
+    // Clamp both axes so the panel never clips outside the visible viewport.
     var EXPANDED_W = 224;
+    var EXPANDED_H = 280;
+    var MARGIN     = 8;
     var vpW        = window.innerWidth;
+    var vpH        = window.innerHeight;
     var cardRect   = el.getBoundingClientRect();
-    var cardCX     = cardRect.left + cardRect.width / 2;  // card centre in viewport px
+    var cardCX     = cardRect.left + cardRect.width  / 2;
+    var cardCY     = cardRect.top  + cardRect.height / 2;
 
-    // How far to shift: if card is near left edge shift right, near right edge shift left
-    var spaceLeft  = cardCX;
-    var spaceRight = vpW - cardCX;
-    var ox;
-    if (spaceLeft < EXPANDED_W * 0.5 + 8) {
-      // Near left wall — anchor from left edge of card
-      ox = '0%';
-      el.style.transform = 'translate(0, -50%)';
-    } else if (spaceRight < EXPANDED_W * 0.5 + 8) {
-      // Near right wall — anchor from right edge of card
-      ox = '100%';
-      el.style.transform = 'translate(-100%, -50%)';
+    // ── Horizontal ────────────────────────────────────────────────────────
+    var ox, tx;
+    if (cardCX < EXPANDED_W * 0.5 + MARGIN) {
+      ox = '0%';   tx = 0;
+    } else if (vpW - cardCX < EXPANDED_W * 0.5 + MARGIN) {
+      ox = '100%'; tx = -100;
     } else {
-      // Centre — standard centred expand
-      ox = '50%';
-      el.style.transform = 'translate(-50%, -50%)';
+      ox = '50%';  tx = -50;
     }
+
+    // ── Vertical: clamp so panel stays within viewport ────────────────────
+    // Default: centre on the card (ty = -50%).
+    // Convert to px to test against viewport edges, then convert shift back to %.
+    var cardH    = cardRect.height;
+    var panelTop = cardCY - EXPANDED_H * 0.5;
+    var panelBot = cardCY + EXPANDED_H * 0.5;
+    var ty = -50;
+    if (panelTop < MARGIN) {
+      var shiftPx = MARGIN - panelTop;
+      ty = -50 + (shiftPx / cardH) * 100;
+    } else if (panelBot > vpH - MARGIN) {
+      var shiftPx = panelBot - (vpH - MARGIN);
+      ty = -50 - (shiftPx / cardH) * 100;
+    }
+
+    el.style.transform       = 'translate(' + tx + '%, ' + ty.toFixed(1) + '%)';
     el.style.transformOrigin = ox + ' 50%';
     el.style.boxShadow       = '0 24px 64px rgba(0,0,0,.82),0 0 0 1.5px rgba(255,255,255,.18),0 0 32px ' + posCol + '28';
     el.style.background      = 'rgba(4,13,30,.97)';
