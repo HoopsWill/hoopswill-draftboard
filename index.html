@@ -4389,7 +4389,7 @@ ock Drafts table CSS ───────────────────�
     </select>
     <div class="search-wrap" style="max-width:260px">
       <span class="search-icon">🔍</span>
-      <input class="search-input" id="histSearch" placeholder="Search player…" oninput="renderHistory()">
+      <input class="search-input" id="histSearch" placeholder="Search player…" oninput="hwDebounceHistory()">
     </div>
   </div>
   <div id="historyContent"></div>
@@ -4420,7 +4420,7 @@ ock Drafts table CSS ───────────────────�
   <div class="controls-bar" style="margin-bottom:18px">
     <div class="search-wrap" style="max-width:360px">
       <span class="search-icon">&#128269;</span>
-      <input class="search-input" id="resourceSearch" placeholder="Search tools, topics, notes..." oninput="renderResources()">
+      <input class="search-input" id="resourceSearch" placeholder="Search tools, topics, notes..." oninput="hwDebounceResources()">
     </div>
     <select class="filter-select" id="resourceCategory" onchange="renderResources()">
       <option value="">All Categories</option>
@@ -4996,28 +4996,37 @@ function crossGradStyle(value, key, year) {
   return 'background:hsl(' + hue + ',72%,' + Math.round(94 - ratio*8) + '%);color:hsl(' + hue + ',65%,' + Math.round(34 - ratio*12) + '%);';
 }
 
+var _schoolLogoUrlMemo = {};
 function schoolLogoUrl(school) {
   function espnUrl(id) {
     return 'https://a.espncdn.com/combiner/i?img=/i/teamlogos/ncaa/500/'+id+'.png&w=80&h=80&transparent=true';
   }
   if (!school) return null;
-  if (SCHOOL_LOGOS[school]) return espnUrl(SCHOOL_LOGOS[school]);
-  var norm = normalizeSchoolName(school);
-  if (norm && SCHOOL_LOGOS[norm]) return espnUrl(SCHOOL_LOGOS[norm]);
-  var sl = school.toLowerCase().replace(/[.']/g,'').trim();
-  if (!schoolLogoUrl._cache) {
-    schoolLogoUrl._cache = Object.keys(SCHOOL_LOGOS).map(function(k) {
-      return {raw:k, norm:k.toLowerCase().replace(/[.']/g,'').trim()};
-    });
-  }
-  var cache = schoolLogoUrl._cache;
-  for (var i=0;i<cache.length;i++) {
-    var kl = cache[i].norm;
-    if (kl===sl||sl.indexOf(kl)===0||kl.indexOf(sl)===0) {
-      return espnUrl(SCHOOL_LOGOS[cache[i].raw]);
+  if (_schoolLogoUrlMemo.hasOwnProperty(school)) return _schoolLogoUrlMemo[school];
+  var result = null;
+  if (SCHOOL_LOGOS[school]) { result = espnUrl(SCHOOL_LOGOS[school]); }
+  else {
+    var norm = normalizeSchoolName(school);
+    if (norm && SCHOOL_LOGOS[norm]) { result = espnUrl(SCHOOL_LOGOS[norm]); }
+    else {
+      var sl = school.toLowerCase().replace(/[.']/g,'').trim();
+      if (!schoolLogoUrl._cache) {
+        schoolLogoUrl._cache = Object.keys(SCHOOL_LOGOS).map(function(k) {
+          return {raw:k, norm:k.toLowerCase().replace(/[.']/g,'').trim()};
+        });
+      }
+      var cache = schoolLogoUrl._cache;
+      for (var i=0;i<cache.length;i++) {
+        var kl = cache[i].norm;
+        if (kl===sl||sl.indexOf(kl)===0||kl.indexOf(sl)===0) {
+          result = espnUrl(SCHOOL_LOGOS[cache[i].raw]);
+          break;
+        }
+      }
     }
   }
-  return null;
+  _schoolLogoUrlMemo[school] = result;
+  return result;
 }
 
 function schoolInitials(school) {
@@ -5781,6 +5790,7 @@ var DataService = (function() {
     _cache = {};  // invalidate all cached boards — new data, fresh normalization
     // Also clear module-level caches that depend on the same underlying data
     if (typeof schoolLogoUrl === 'function') schoolLogoUrl._cache = null;
+    if (typeof _schoolLogoUrlMemo !== 'undefined') _schoolLogoUrlMemo = {};
     // _statRankCache is rebuilt via rebuildStatRanges() at the end of this function.
     if (parsed.board2026)  DATA.board2026  = parsed.board2026;
     if (parsed.board2027)  DATA.board2027  = parsed.board2027;
@@ -5824,6 +5834,7 @@ var DataService = (function() {
     if (typeof schoolLogoUrl === 'function' && schoolLogoUrl._cache) {
       schoolLogoUrl._cache = null;
     }
+    if (typeof _schoolLogoUrlMemo !== 'undefined') _schoolLogoUrlMemo = {};
     if (typeof rebuildStatRanges === 'function') rebuildStatRanges();
     // M2: flush ScatterEngine cache on roll-forward/back
     if (typeof ScatterEngine !== 'undefined') ScatterEngine.invalidate();
@@ -5980,9 +5991,6 @@ var LayoutEngine = (function() {
 
 // ── BOARD 2026 ────────────────────────────────────────────
 function renderBoard2026() {
-  // P-1: filter change → invalidate view caches so next render is fresh
-  hwInvalidateCache('cards'); hwInvalidateCache('table');
-
   // Data flows through DataService; filter state from AppState (not DOM)
   if (typeof DataService === 'undefined') return;
   var state   = AppState.get();
@@ -6103,6 +6111,13 @@ function getBadgeHtml(playerName) {
 }
 // Separating this from the loop makes the template readable and independently
 // testable. The function has NO side effects and touches NO globals.
+// ── Ordinal suffix helper (hoisted from buildPlayerCard for zero per-call allocation)
+function ordSfx(n) {
+  var v = n % 100;
+  if (v >= 11 && v <= 13) return 'th';
+  return ['th','st','nd','rd','th'][Math.min(n % 10, 4)];
+}
+
 function buildPlayerCard(p, tierKey) {
   var name   = p.name   || '';
   var school = p.school || '';
@@ -6149,12 +6164,7 @@ function buildPlayerCard(p, tierKey) {
     var pctFgL = Math.round(34 - pctR * 12);
     htPctSty = 'background:hsl(' + pctHue + ',68%,' + pctBgL + '%);color:hsl(' + pctHue + ',60%,' + pctFgL + '%);';
   }
-  // Ordinal suffix: 1st 2nd 3rd Nth
-  function ordSfx(n) {
-    var v = n % 100;
-    if (v >= 11 && v <= 13) return 'th';
-    return ['th','st','nd','rd','th'][Math.min(n % 10, 4)];
-  }
+  // Ordinal suffix: uses module-level _ordSfx
 
   // ── Chips row (position + role) ──────────────────────────────────────
   var chipsHtml = '';
@@ -7808,6 +7818,9 @@ function histSetSort(key) {
 function renderHistory() {
   const yr = document.getElementById('histYear').value;
   const search = (document.getElementById('histSearch').value||'').toLowerCase();
+  var _hSig = ['history', yr, search, _histSortKey||'', _histSortDir].join('|');
+  if (_hwCacheValid('history', _hSig) && document.getElementById('historyContent').innerHTML) { return; }
+  _hwCacheSet('history', _hSig);
   let players = (DATA.historical[yr]||[]).filter(p => !search || (p.name||'').toLowerCase().includes(search));
   if (_histSortKey) {
     const asc = _histSortDir === 'asc';
@@ -7858,33 +7871,31 @@ function renderHistory() {
     const top10 = p.rank <= 10;
     const diff = p.draft_diff;
     const ds = typeof diff==='number' ? (diff>0?`<span style="color:var(--green)">+${diff}</span>`:diff<0?`<span style="color:var(--red)">${diff}</span>`:`<span style="color:var(--gray-400)">0</span>`) : '—';
-    html += (() => {
-      const gMet = hGrad(p.metric,  'metric');
-      const gTs  = hGrad(p.ts_pct,  'ts_pct');
-      const gPa  = hGrad(p.pa2_usg, 'pa2_usg');
-      const gSb  = hGrad(p.stl_bl,  'stl_bl');
-      const gAto = hGrad(p.ato,     'ato');
-      const gFta = hGrad(p.ftar,    'ftar');
-      const gTpa = hGrad(p.tpar,    'tpar');
-      const metV = p.metric ? Number(p.metric).toFixed(2) : '—';
-      const tsV  = pct(p.ts_pct);
-      const paV  = p.pa2_usg ? Math.round(p.pa2_usg) : '—';
-      const sbV  = p.stl_bl  ? parseFloat(p.stl_bl).toFixed(2)  : '—';
-      const atoV = p.ato     ? parseFloat(p.ato).toFixed(2)     : '—';
-      const ftaV = p.ftar    ? parseFloat(p.ftar).toFixed(3)    : '—';
-      const tpaV = p.tpar    ? parseFloat(p.tpar).toFixed(3)    : '—';
-      const av   = avatarHtml(p.name, p.position||'', '28px', '5px').replace('class="avatar-fallback"','class="td-mini-fb"');
-      let row = `<tr>
+    const gMet = hGrad(p.metric,  'metric');
+    const gTs  = hGrad(p.ts_pct,  'ts_pct');
+    const gPa  = hGrad(p.pa2_usg, 'pa2_usg');
+    const gSb  = hGrad(p.stl_bl,  'stl_bl');
+    const gAto = hGrad(p.ato,     'ato');
+    const gFta = hGrad(p.ftar,    'ftar');
+    const gTpa = hGrad(p.tpar,    'tpar');
+    const metV = p.metric ? Number(p.metric).toFixed(2) : '—';
+    const tsV  = pct(p.ts_pct);
+    const paV  = p.pa2_usg ? Math.round(p.pa2_usg) : '—';
+    const sbV  = p.stl_bl  ? parseFloat(p.stl_bl).toFixed(2)  : '—';
+    const atoV = p.ato     ? parseFloat(p.ato).toFixed(2)     : '—';
+    const ftaV = p.ftar    ? parseFloat(p.ftar).toFixed(3)    : '—';
+    const tpaV = p.tpar    ? parseFloat(p.tpar).toFixed(3)    : '—';
+    const av   = avatarHtml(p.name, p.position||'', '28px', '5px').replace('class="avatar-fallback"','class="td-mini-fb"');
+    const hLogo = schoolLogoHtml(school || '', '16px', '2px');
+    const hSchoolSpan = hLogo
+      ? '<span class="school" style="display:inline-flex;align-items:center;gap:4px">' + hLogo + '<span>' + (school || '') + '</span></span>'
+      : '<span class="school">' + (school || '') + '</span>';
+    const nameCell = '<div class="td-name-wrap"><span class="name" onclick="openPlayerModal(' + p.rank + ',\'' + yr + '\')">' + name + '</span>' + hSchoolSpan + '</div>';
+    html += `<tr>
       <td class="td-rank ${top10?'top10':''}">${p.rank}</td>
       <td><div class="td-player-cell">
         ${av}
-        ` + (() => {
-                    const hLogo = schoolLogoHtml(school || '', '16px', '2px');
-                    const hSchoolSpan = hLogo
-                      ? '<span class="school" style="display:inline-flex;align-items:center;gap:4px">' + hLogo + '<span>' + (school || '') + '</span></span>'
-                      : '<span class="school">' + (school || '') + '</span>';
-                    return '<div class="td-name-wrap"><span class="name" onclick="openPlayerModal(' + p.rank + ',\'' + yr + '\')">' + name + '</span>' + hSchoolSpan + '</div>';
-                  })() + `
+        ${nameCell}
       </div></td>
       <td style="font-size:11px;color:var(--gray-600)">${p.torvik_role||'—'}</td>
       <td style="${gMet}border-radius:4px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800">${metV}</td>
@@ -7894,8 +7905,6 @@ function renderHistory() {
       <td style="${gAto}border-radius:4px;text-align:center;font-size:12px;font-weight:700">${atoV}</td>
       <td style="${gFta}border-radius:4px;text-align:center;font-size:12px;font-weight:700">${ftaV}</td>
       <td style="${gTpa}border-radius:4px;text-align:center;font-size:12px;font-weight:700">${tpaV}</td>`;
-      return row;
-    })();
     if (hasDraft) html += `<td style="font-size:11px">${p.team||'—'}</td><td class="td-num">${p.draft_no||'—'}</td><td class="td-num">${ds}</td>`;
     html += '</tr>';
   }
@@ -7908,6 +7917,9 @@ function renderFuture() {
   var players = DATA.board2027 || [];
   var el = document.getElementById('futureContent');
   if (!el) return;
+  var _fSig = ['future', players.length, _future2027View || 'cards'].join('|');
+  if (_hwCacheValid('future', _fSig) && el.innerHTML) { return; }
+  _hwCacheSet('future', _fSig);
   if (!players.length) {
     el.innerHTML = '<div class="empty"><div class="empty-icon">🔭</div><p>No 2027 data yet</p></div>';
     return;
@@ -8376,10 +8388,13 @@ var _hwRenderCache = {};
 function _hwCacheSig(key, players) {
   var p = players || [];
   var s = AppState.get().board || {};
-  return [key, p.length,
+  var tc = typeof TIER_CUTS !== 'undefined' ? TIER_CUTS : {};
+  return [key, typeof currentView !== 'undefined' ? currentView : '',
+    p.length,
     p.length ? p[0].rank : 0,
     p.length > 1 ? p[p.length-1].rank : 0,
-    s.sortCol||''  , s.sortDir||''].join('|');
+    s.sortCol||'', s.sortDir||'',
+    tc.franchise||'', tc.lottery||'', tc.lateFirst||'', tc.second||''].join('|');
 }
 function _hwCacheValid(key, sig) {
   var e = _hwRenderCache[key]; return e && e.sig === sig;
@@ -8390,6 +8405,16 @@ function _hwCacheSet(key, sig) {
 function hwInvalidateCache(key) {
   if (key) delete _hwRenderCache[key]; else _hwRenderCache = {};
 }
+
+// ── Perf-1A: Debounce wrappers for search inputs ──────────────────────────
+// Prevents full DOM rebuilds on every keystroke. 120ms is fast enough
+// to feel instant on pause, but coalesces bursts of rapid typing.
+var _hwHistTimer = null;
+function hwDebounceHistory() { clearTimeout(_hwHistTimer); _hwHistTimer = setTimeout(renderHistory, 120); }
+var _hwResTimer = null;
+function hwDebounceResources() { clearTimeout(_hwResTimer); _hwResTimer = setTimeout(renderResources, 120); }
+var _hwGsTimer = null;
+function hwDebounceGlobalSearch(v) { clearTimeout(_hwGsTimer); _hwGsTimer = setTimeout(function(){ runGlobalSearch(v); }, 100); }
 
 function hwInit() {
   // One-time setup ──────────────────────────────────────────────────────────
@@ -15239,9 +15264,11 @@ var IntelService = (function() {
 
     if (searchEl && !searchEl._hwWired) {
       searchEl._hwWired = true;
+      var _searchTimer = null;
       searchEl.addEventListener('input', function(e) {
         AppState.dispatch({ type: 'SET_BOARD_FILTER', payload: { search: e.target.value } });
-        renderBoard2026();
+        clearTimeout(_searchTimer);
+        _searchTimer = setTimeout(renderBoard2026, 120);
       });
     }
     if (posEl && !posEl._hwWired) {
@@ -15289,7 +15316,7 @@ var IntelService = (function() {
         autocomplete="off"
         spellcheck="false"
         style="flex:1;border:none;outline:none;font-size:16px;font-family:'DM Sans',sans-serif;color:#0A1628"
-        oninput="runGlobalSearch(this.value)"
+        oninput="hwDebounceGlobalSearch(this.value)"
         onkeydown="handleSearchKey(event)">
       <kbd style="font-size:11px;color:#94A3B8;border:1px solid #E2E8F0;border-radius:5px;padding:2px 7px;font-family:monospace;white-space:nowrap">Esc</kbd>
     </div>
