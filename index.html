@@ -51,6 +51,7 @@
   --border-med:   rgba(15,23,42,.14);  /* medium emphasis borders */
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden}
 body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy);min-height:100vh;line-height:1.5}
 
 /* HEADER */
@@ -65,6 +66,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 
 /* NAV */
 .nav-tabs{background:white;border-bottom:1px solid var(--gray-200);padding:0 8px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;position:sticky;top:52px;z-index:199;box-shadow:0 1px 4px rgba(10,22,40,.04);scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-mask-image:linear-gradient(to right,black calc(100% - 28px),transparent 100%);mask-image:linear-gradient(to right,black calc(100% - 28px),transparent 100%)}
+/* P2-8: bidirectional fade — left fade appears when scrolled right */
+.nav-tabs.scrolled-left{-webkit-mask-image:linear-gradient(to right,transparent 0%,black 28px,black calc(100% - 28px),transparent 100%);mask-image:linear-gradient(to right,transparent 0%,black 28px,black calc(100% - 28px),transparent 100%)}
+/* Remove right fade when scrolled to end */
+.nav-tabs.scrolled-end{-webkit-mask-image:linear-gradient(to right,transparent 0%,black 28px);mask-image:linear-gradient(to right,transparent 0%,black 28px)}
+/* Both edges clear: no fade needed */
+.nav-tabs.scrolled-end:not(.scrolled-left){-webkit-mask-image:none;mask-image:none}
 .nav-tabs::-webkit-scrollbar{display:none}
 .nav-tab{padding:10px 14px;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;scroll-snap-align:start;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:all .15s;display:flex;align-items:center;gap:6px;user-select:none}
 .nav-tab:hover{color:var(--gold,var(--amber))}
@@ -73,6 +80,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 /* MAIN */
 .main{padding:10px 10px;max-width:1440px;margin:0 auto}
 .tab-panel{display:none}.tab-panel.active{display:block}
+/* P0-2: #tab-methodology lives outside <main> — replicate .main constraints */
+#tab-methodology{padding:10px 10px;max-width:1440px;margin:0 auto}
+#tab-methodology .mc-hero-outer{padding:28px 16px 24px}
 
 /* CONTROLS */
 .controls-bar{display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap}
@@ -1514,7 +1524,7 @@ tr:hover td{background:var(--gray-50)}
   /* [169577 countdown duplicate — intentionally omitted] */
 
   /* ──────────── [169979] ──────────── */
-  /* sc-canvas-wrap 300px: superseded by canonical 280px rule in main block above */
+  /* sc-canvas-wrap: 280px set in main 640px block above */
   /* Top-5 panel: compact card format on mobile */
   .sc-top5-row {
     padding: 7px 10px;
@@ -1740,8 +1750,9 @@ tr:hover td{background:var(--gray-50)}
 
   /* ──────────── [179944] ──────────── */
   /* Remove 2027 option visual noise — keep functional */
-  /* Controls bar: stack year + player selectors vertically */
-nt-size: 14px;
+  /* Controls bar: compare selects — touch-friendly sizing */
+  #tab-compare .filter-select {
+    font-size: 14px;
     min-height: 44px;
     touch-action: manipulation !important;
   }
@@ -1796,8 +1807,8 @@ nt-size: 14px;
     touch-action: manipulation !important;
   }
 
-  /* Canvas: taller for better axis readability */
-  /* sc-canvas-wrap 280px: canonical 280px rule handles this */
+  /* Canvas: compact for mobile viewport — leaves room for controls + focus card */
+  .sc-canvas-wrap{height:280px;min-height:240px}
 
   /* Top-5 panel: hidden on mobile — tap-to-focus is the discovery model */
   .sc-top5-wrap { display: none !important; }
@@ -1934,6 +1945,7 @@ nt-size: 14px;
   /* Make the bb-compare-col visible again on mobile */
   .bb-compare-col { display: flex !important; }
 }
+} /* ── END @media(max-width:640px) — the main mobile block ─────────────────── */
 
 
 
@@ -2028,7 +2040,7 @@ nt-size: 14px;
   }
   .td-name-wrap .school{
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-    max-width:120px; font-size:9px;
+    max-width:120px; font-size:10px;
   }
   /* Metric — compact colored cell */
   .board-table th:nth-child(5),
@@ -2097,8 +2109,6 @@ nt-size: 14px;
   /* ── TABLE VIEW: improve readability at 360px */
   .td-rank{font-size:15px;width:36px}
   .td-mini-avatar{width:28px;height:28px}
-  .td-name-wrap .name{font-size:12px}
-  .td-name-wrap .school{font-size:10px}
   .td-metric{font-size:14px}
   .td-num{font-size:11px}
   th{padding:8px 10px;font-size:10px;letter-spacing:.4px}
@@ -2123,7 +2133,7 @@ nt-size: 14px;
   /* ── SCATTER: controls tighter on mobile */
   .sc-controls{padding:12px 14px;margin-bottom:12px}
   .sc-ctrl-label{font-size:9.5px}
-  .sc-select{padding:6px 8px;font-size:11px;border-radius:6px}
+  .sc-select{padding:6px 8px;font-size:16px;border-radius:6px}
   .sc-plot-wrap{padding:14px}
   .sc-plot-title{font-size:15px}
   .sc-plot-meta{font-size:10px}
@@ -2144,14 +2154,15 @@ nt-size: 14px;
   .watch-banner{padding:12px 14px;gap:10px;border-radius:10px;flex-wrap:wrap}
   .watch-banner > div:nth-child(2) > div:first-child{font-size:16px}
   .watch-banner > div:nth-child(2) > div:last-child{font-size:11px}
+  /* P2-6: single column on mobile — 330px minmax overflows ≤360px screens */
+  .future-cards-grid{grid-template-columns:1fr;gap:10px}
 
   /* ── COMP EXPLORER: search card compact */
   .comp-search-card{padding:14px;border-radius:10px}
   .comp-search-card > div > div > div:first-child{font-size:18px}
   .comp-search-card > div > div > div:last-child{font-size:11px;line-height:1.5}
 
-  /* ── RESOURCES: search bar full-width */
-  .search-wrap{max-width:280px !important}
+  /* ── RESOURCES: search bar — no cap needed on mobile, fills available width */
 
   /* ── MODAL body: better text density */
   .modal-metrics-row{gap:7px;margin-bottom:14px}
@@ -2225,6 +2236,9 @@ nt-size: 14px;
   }
 
   .main{padding:16px 24px 32px;}
+  /* P0-2: methodology tab desktop padding matches .main */
+  #tab-methodology{padding:16px 24px 32px;}
+  #tab-methodology .mc-hero-outer{padding:40px 40px 36px}
 
   /* ── Controls bar ────────────────────────────────────────────────────── */
   .controls-bar{gap:8px;margin-bottom:14px;}
@@ -8257,7 +8271,27 @@ function escHtml(s) {
   }
 })();
 
-// ── hwRenderTab: single render dispatch ────────────────────────────────────
+// ── P2-8: Nav-tabs scroll fade affordance ─────────────────────────────────
+// Toggles .scrolled-left / .scrolled-end classes so CSS mask-image shows
+// fade hints on whichever edge has hidden tabs.
+(function() {
+  var nav = document.getElementById('navTabs');
+  if (!nav) return;
+  var _raf = 0;
+  function updateFade() {
+    _raf = 0;
+    var sl = nav.scrollLeft;
+    var atLeft = sl > 4;
+    var atEnd  = sl + nav.clientWidth >= nav.scrollWidth - 4;
+    nav.classList.toggle('scrolled-left', atLeft);
+    nav.classList.toggle('scrolled-end', atEnd);
+  }
+  nav.addEventListener('scroll', function() {
+    if (!_raf) _raf = requestAnimationFrame(updateFade);
+  }, { passive: true });
+  // Initial check after layout
+  requestAnimationFrame(updateFade);
+})();
 // Used by both tab click handlers and hwInit() (bfcache restore path).
 function hwRenderTab(tabName) {
   if (tabName === 'analytics')   { renderAnalytics();  return; }
@@ -9221,6 +9255,8 @@ function bbFmt(val, key) {
 
 var bbSubMode = 'full'; // 'full' | 'twitter'
 var bbTwoCol  = false;  // two-column layout mode for shareable exports
+var bbRangeFrom = 1;    // live board start rank (shared by render + export)
+var bbRangeTo   = 60;   // live board end rank   (shared by render + export)
 
 // ── Sort state: col key + direction (1=asc, -1=desc).
 // Default is rank ascending (board order). Clicking a stat column switches to
@@ -9366,8 +9402,12 @@ function renderBoardBigboard(players) {
   var el = document.getElementById('board2026Content');
   if (!el) return;
 
-  var limit   = bbSubMode === 'twitter' ? 30 : 60;
-  var limited = players.slice(0, limit);
+  // ── Range: use module-level state (bbRangeFrom/bbRangeTo).
+  // setBBSubMode and bbSetRange both update state then re-render, so these
+  // values are always current. Filter players to the selected rank window.
+  var rankFrom = bbRangeFrom;
+  var rankTo   = bbRangeTo;
+  var limited  = players.filter(function(p){ return p.rank >= rankFrom && p.rank <= rankTo; });
   var now     = new Date();
   var dateStr = now.toLocaleDateString('en-US', {month:'short', year:'numeric'});
 
@@ -9455,9 +9495,9 @@ function renderBoardBigboard(players) {
     + '<button class="bb-sub-btn' + (bbTwoCol ? ' active' : '') + '" onclick="toggleBBTwoCol()" title="Split into two side-by-side columns for portrait-friendly screenshots">⊞ 2-Col</button>'
     + '<div class="bb-range-group" style="margin-left:auto">'
       + '<span class="bb-range-lbl">Export ranks</span>'
-      + '<input class="bb-range-input" id="bbRangeFrom" type="number" min="1" max="60" value="1" title="Start rank">'
+      + '<input class="bb-range-input" id="bbRangeFrom" type="number" min="1" max="60" value="' + rankFrom + '" title="Start rank" oninput="bbApplyRange()">'
       + '<span class="bb-range-sep">&mdash;</span>'
-      + '<input class="bb-range-input" id="bbRangeTo"   type="number" min="1" max="60" value="' + (bbSubMode === 'twitter' ? '30' : '60') + '" title="End rank">'
+      + '<input class="bb-range-input" id="bbRangeTo"   type="number" min="1" max="60" value="' + rankTo + '" title="End rank" oninput="bbApplyRange()">'
       + '<button class="bb-preset-btn" onclick="bbSetRange(1,30)">1&ndash;30</button>'
       + '<button class="bb-preset-btn" onclick="bbSetRange(31,60)">31&ndash;60</button>'
       + '<button class="bb-preset-btn" onclick="bbSetRange(1,60)">All</button>'
@@ -9491,7 +9531,7 @@ function renderBoardBigboard(players) {
     + '</div>'
     + '<div class="bb-meta">'
       + '<span class="bb-pill gold">' + dateStr + '</span>'
-      + (bbSubMode === 'full' ? '<span class="bb-pill">Top 60</span>' : '<span class="bb-pill">Top 30</span>')
+      + '<span class="bb-pill">Ranks ' + rankFrom + '&ndash;' + rankTo + '</span>'
     + '</div>'
   + '</div>';
 
@@ -9594,16 +9634,16 @@ function renderBoardBigboard(players) {
     // Mobile stat legend
     out += '<div class="bb-mobile-legend" id="bbMobileLegend">' + _bbMobileLegendChips() + '</div>';
 
-    // Tiers + rows
+    // Tiers + rows — limited is already filtered to bbRangeFrom..bbRangeTo
     var rowIdx = 0;
     BB_TIERS.forEach(function(t) {
-      if (t.from > limit) return;
+      if (t.from > rankTo || t.to < rankFrom) return; // tier entirely outside range
       out += '<div class="bb-tier-band" style="background:' + t.grad + '">'
         + '<span class="bb-tier-label">' + t.label + '</span>'
         + '<span class="bb-tier-sub">'   + t.sub   + '</span>'
         + '<span class="bb-tier-picks">' + t.picks + '</span>'
       + '</div>';
-      limited.filter(function(p){ return p.rank >= t.from && p.rank <= Math.min(t.to, limit); })
+      limited.filter(function(p){ return p.rank >= t.from && p.rank <= t.to; })
              .forEach(function(p){ out += bbBuildRow(p, rowIdx++); });
     });
   }
@@ -9620,8 +9660,10 @@ function renderBoardBigboard(players) {
 
 function setBBSubMode(mode) {
   bbSubMode = mode;
-  // Reset sort to default rank order when switching modes — avoids confusing
-  // carry-over of a "sorted by TS%" state into the Twitter card export view
+  // Snap range to sensible defaults for each mode
+  bbRangeFrom = 1;
+  bbRangeTo   = (mode === 'twitter') ? 30 : 60;
+  // Reset sort to default rank order when switching modes
   bbSortCol = 'rank';
   bbSortDir = 1;
   renderBoard2026();
@@ -9632,11 +9674,29 @@ function toggleBBTwoCol() {
   renderBoard2026();
 }
 
+// bbSetRange: preset button handler — updates state + re-renders live board.
 function bbSetRange(from, to) {
-  var f = document.getElementById('bbRangeFrom');
-  var t = document.getElementById('bbRangeTo');
-  if (f) f.value = from;
-  if (t) t.value = to;
+  bbRangeFrom = Math.max(1,  from);
+  bbRangeTo   = Math.min(60, to);
+  renderBoard2026();
+}
+
+// bbApplyRange: oninput handler on the text inputs — reads both DOM values,
+// clamps them, writes back to state, re-renders. Debounced 220ms so fast
+// typing doesn't hammer the renderer.
+var _bbRangeTimer = null;
+function bbApplyRange() {
+  clearTimeout(_bbRangeTimer);
+  _bbRangeTimer = setTimeout(function() {
+    var f = document.getElementById('bbRangeFrom');
+    var t = document.getElementById('bbRangeTo');
+    var from = f ? Math.max(1,  parseInt(f.value, 10) || 1)  : bbRangeFrom;
+    var to   = t ? Math.min(60, parseInt(t.value, 10) || 60) : bbRangeTo;
+    if (from > to) { var tmp = from; from = to; to = tmp; }
+    bbRangeFrom = from;
+    bbRangeTo   = to;
+    renderBoard2026();
+  }, 220);
 }
 
 // ── bbSort: called by column header clicks.
@@ -9659,11 +9719,9 @@ function bbScreenshot() {
   var board = document.getElementById('bbBoard');
   if (!board) return;
 
-  var fromEl   = document.getElementById('bbRangeFrom');
-  var toEl     = document.getElementById('bbRangeTo');
-  var rankFrom = fromEl ? Math.max(1,  parseInt(fromEl.value, 10) || 1)  : 1;
-  var rankTo   = toEl   ? Math.min(60, parseInt(toEl.value,   10) || 60) : 60;
-  if (rankFrom > rankTo) { var tmp = rankFrom; rankFrom = rankTo; rankTo = tmp; }
+  // Use module-level state — always in sync with the live board
+  var rankFrom = bbRangeFrom;
+  var rankTo   = bbRangeTo;
 
   // Clone visible board so the live DOM is never mutated
   var clone = board.cloneNode(true);
