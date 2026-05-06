@@ -215,7 +215,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
   border-radius: inherit;
   display: block;
   transition: transform 320ms cubic-bezier(.22,1,.36,1);
-  transform-origin: 50% 40%;   /* keep face roughly centered during scale */
+  transform-origin: 50% 40%;
+  image-rendering:-webkit-optimize-contrast;-webkit-backface-visibility:hidden;backface-visibility:hidden;
 }
 
 /* Initials fallback also clips to shape */
@@ -281,7 +282,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
   justify-content:center;
   gap:2px;
 }
-/* card-bio-left/right removed — layout now flat flex-column in card-identity */
 /* School row: logo + name horizontal, never wraps (name truncates) */
 .card-school-row{
   display:flex;
@@ -308,7 +308,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
   text-overflow:ellipsis;
 }
 /* School block: small logo above school name text */
-/* card-school-block replaced by card-school-row (horizontal) */
 .card-school-logo{
   display:flex;
   align-items:center;
@@ -411,7 +410,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
   flex-shrink:0;
   /* no border — clean text only */
 }
-/* .meas-sep replaced by .meas-dot */
 .meas-dot{
   font-size:11px;
   font-weight:400;
@@ -494,7 +492,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 }
 
 /* ── Row 2: Measurables — compact, data-driven ── */
-/* .tag.cls — superseded by .meas-cls in card-measurables */
 
 /* Age + height: inline style injected via JS gradStyle — no static color */
 .tag.age,
@@ -508,7 +505,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
   padding:2px 6px;
 }
 
-/* .tag.wt — superseded by .meas-item in card-measurables */
 
 /* ── Stats grid: 2×3 with mini progress bars ── */
 /* Divider uses rgba instead of hard gray-100 — matches the off-white card bg */
@@ -569,21 +565,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
   cursor:default;
   flex-shrink:0
 }
-/* Year label: small pill in team gold so it reads as a callout, not body text */
-.champ-badge-year{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:9px;font-weight:800;
-  color:#92400E;
-  background:rgba(212,168,48,.18);
-  border:1px solid rgba(212,168,48,.35);
-  border-radius:3px;
-  padding:0 3px;
-  line-height:1.6;
-  letter-spacing:.2px
-}
 /* Big Board variant: smaller emoji, tighter margin to suit the dense row height */
 .bb-name .champ-badge{font-size:11px;margin-left:4px}
-.bb-name .champ-badge-year{font-size:8px}
 
 /* UPLOAD PANEL */
 .file-menu{position:relative}
@@ -616,7 +599,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 .compare-add-btn:hover{background:var(--blue-light)}
 .compare-clear-btn{background:none;color:var(--gray-400);border:1.5px solid var(--gray-200);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;margin-left:auto}
 .compare-clear-btn:hover{color:var(--red);border-color:var(--red)}
-.compare-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:24px}
 .compare-card{background:white;border:2px solid var(--gray-200);border-radius:12px;overflow:hidden;position:relative;transition:box-shadow .15s}
 .compare-card:hover{box-shadow:var(--shadow-md)}
 .compare-card-header{padding:14px 14px 10px;display:flex;align-items:center;gap:10px}
@@ -627,26 +609,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 .compare-card-rank .rl{font-size:8px;opacity:.7;text-transform:uppercase;letter-spacing:.3px}
 .compare-card-info .cn{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--navy);line-height:1.1}
 .compare-card-info .cs{font-size:11px;color:var(--gray-400);display:flex;align-items:center;gap:4px;margin-top:2px}
-.compare-stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--gray-100);border-top:1px solid var(--gray-100)}
-.compare-stat-cell{background:white;padding:8px 10px;text-align:center}
-.compare-stat-val{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--navy);line-height:1}
-.compare-stat-lbl{font-size:9px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
 .compare-metric-row{padding:8px 14px;background:var(--gray-50);border-top:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between}
 .compare-metric-val{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900}
 .compare-metric-lbl{font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.4px}
-.compare-radar-wrap{background:white;border:1.5px solid var(--gray-200);border-radius:12px;padding:20px;margin-bottom:24px}
 .compare-radar-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--navy);margin-bottom:14px}
-.compare-table-wrap{background:white;border:1.5px solid var(--gray-200);border-radius:12px;overflow:hidden;margin-bottom:24px}
 .compare-table-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--navy);padding:14px 16px;border-bottom:1px solid var(--gray-100)}
-.compare-table table{width:100%;border-collapse:collapse}
-.compare-table th{background:var(--gray-50);padding:8px 12px;font-size:11px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.4px;text-align:left;border-bottom:1px solid var(--gray-100)}
-.compare-table td{padding:9px 12px;font-size:13px;border-bottom:1px solid var(--gray-100)}
-.compare-table tr:last-child td{border-bottom:none}
-.compare-table td:first-child{font-weight:700;color:var(--navy);font-family:'Barlow Condensed',sans-serif;font-size:14px}
 .compare-best{font-weight:800;color:var(--green)}
 .compare-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;color:var(--gray-400);gap:12px}
 .compare-empty-icon{font-size:40px;opacity:.4}
-.compare-empty-text{font-size:14px;font-weight:600}
 /* RANK BADGE */
 .rank-badge{width:38px;height:38px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
 .rank-badge .rank-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;color:white;line-height:1}
@@ -690,7 +660,6 @@ tr:hover td{background:var(--gray-50)}
 .modal-close-bar{display:none}
 .modal-avatar{width:96px;height:96px;border-radius:14px;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,.2);box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .modal-avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 15%}
-.modal-avatar-fb{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;color:white}
 .modal-player-info{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;width:100%}
 .modal-rank-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.55;margin-bottom:2px;text-align:center}
 .modal-name{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;letter-spacing:.3px;line-height:1.1;text-align:center}
@@ -802,11 +771,7 @@ tr:hover td{background:var(--gray-50)}
   transition:background .15s}
 .comp-add-compare-btn:hover{background:#DBEAFE}
 .comp-add-compare-btn:active{background:#BFDBFE}
-.comp-result{background:white;border:1.5px solid var(--gray-200);border-radius:12px;padding:22px}
 
-.comp-table th{background:var(--gray-50);padding:8px 12px;font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--gray-200);text-align:left;white-space:nowrap}
-.comp-table td{padding:9px 12px;border-bottom:1px solid var(--gray-100);font-size:12px}
-.comp-table tr:last-child td{border-bottom:none}
 
 /* EMPTY */
 .empty{text-align:center;padding:48px;color:var(--gray-400)}
@@ -821,7 +786,6 @@ tr:hover td{background:var(--gray-50)}
   .mdc-wrap{height:calc(100vh - 140px)}
   .sc-canvas-wrap{height:420px}
   .mc-hero{padding:20px 24px}
-  .methodology-hero-inner{flex-direction:column}
   #simPoolPanel{width:220px}
 }
 
@@ -925,7 +889,6 @@ tr:hover td{background:var(--gray-50)}
   /* card-measurables on mobile */
   .card-measurables{padding:6px 8px 8px;gap:0;row-gap:3px}
   .meas-cls{font-size:11px;padding:1px 4px}
-  .meas-sep{margin:0 5px}
   .meas-item{font-size:12px}
   .meas-pct{font-size:11px;padding:1px 5px}
   .meas-pos{font-size:9px}
@@ -942,7 +905,6 @@ tr:hover td{background:var(--gray-50)}
   /* C-04: Hide comp footer — not enough room on 2-col mobile cards */
   .card-comp{display:none !important}
   /* Hide tweet button — touch-unfriendly at this density */
-  .player-card > .card-header > .pc-tweet-btn{display:none !important}
 
   /* Table: sticky rank + player columns — background must track the row colour.
      Using background:inherit on sticky cells means they automatically adopt
@@ -971,7 +933,6 @@ tr:hover td{background:var(--gray-50)}
   /* Once user has scrolled, JS adds .scrolled class to hide the hint */
   .table-wrap.scrolled::before{display:none}
   .table-wrap.scrolled::after{display:none}
-  /* min-width removed — sticky columns provide context without forcing horizontal scroll */
   .board-table{border-collapse:separate;border-spacing:0}
   .board-table tbody td{border-bottom:1px solid #f1f5f9}
   /* Sticky rank column */
@@ -1195,12 +1156,6 @@ tr:hover td{background:var(--gray-50)}
   .sc-top5-info{display:flex;flex-direction:column;align-items:center;min-width:0}
   .sc-top5-name{text-align:center;font-size:10px;line-height:1.2}
   .sc-top5-val{font-size:11px}
-  /* SC-03: selected state — use bottom border + stronger bg so it's visible in horiz layout */
-  .sc-top5-row-selected{
-    background:rgba(212,168,48,.15);
-    border-bottom:3px solid var(--amber);
-    border-left:none
-  }
   /* Controls: 2-column grid */
   
   
@@ -1305,21 +1260,6 @@ tr:hover td{background:var(--gray-50)}
   .mc-hero .methodology-hero-inner{flex-direction:column;gap:12px}
   .mc-hero-title{font-size:22px}
   .mc-hero-sub{font-size:12px}
-
-  /* Freeform */
-  .ff-outer{border-radius:10px}
-  .ff-board-header{padding:14px 16px 12px;flex-wrap:wrap;gap:8px}
-  .ff-board-title{font-size:17px}
-  .ff-pos-legend{gap:10px}
-  .ff-col-hdr{font-size:9px;letter-spacing:1.5px}
-  .ff-col-sub{display:none}
-  .ff-card{width:78px;padding:4px 5px 4px 9px}
-  .ff-card-name{font-size:11px}
-  .ff-card-rank{font-size:8px}
-  .ff-card-pos{font-size:10px}
-
-  /* Compare */
-  .compare-grid{grid-template-columns:1fr}
 
   /* Upload panel */
   .upload-panel{width:100%;left:0;right:0}
@@ -1434,8 +1374,6 @@ tr:hover td{background:var(--gray-50)}
   .view-btn:active:not(.active){background:var(--gray-300)!important;color:var(--navy)!important;transition:none}
 
   /* ── CE-02: Comp explorer table labels — prevent wrapping ────────────── */
-  .comp-table th{white-space:nowrap;font-size:9px;padding:7px 8px}
-  .comp-table td{white-space:nowrap;font-size:11px;padding:7px 8px}
   /* Comp stat labels in the results table — prevent ugly multi-line headers */
   .comp-tbl th{white-space:nowrap;font-size:9px;padding:6px 8px}
   .comp-tbl td{font-size:11px;padding:6px 8px
@@ -1593,14 +1531,9 @@ tr:hover td{background:var(--gray-50)}
 
   /* ──────────── [172144] ──────────── */
   /* Cards strip: 2 columns at 360px, 1 column at 380px */
-  .compare-strip {
-    grid-template-columns: 1fr 1fr;
-    gap: 7px;
-  }
   /* Stat mini-grid in card: reduce to 3 cols on very small screens */
   @media (max-width: 380px) {
     .ccard-stats { grid-template-columns: repeat(3, 1fr); }
-    .compare-strip { grid-template-columns: 1fr; }
   }
   /* Radar section */
   #compareRadar { min-height: 240px; height: 240px !important; }
@@ -1615,7 +1548,6 @@ tr:hover td{background:var(--gray-50)}
     padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   }
   /* Bio text: better line-height on mobile */
-  .modal-notes { font-size: 13px; line-height: 1.65; }
 
   /* ──────────── [173122] ──────────── */
   /* Cards must be large enough to tap */
@@ -1717,11 +1649,8 @@ tr:hover td{background:var(--gray-50)}
   /* Tags: age, ht, wt hidden on mobile via this 640px MQ */
   .tag.age, .tag.ht, .tag.wt { display: none !important; }
 
-  /* Comp footer: removed */
   .card-comp { display: none !important; }
 
-  /* Tweet button: removed */
-  .pc-tweet-btn { display: none !important; }
 
   /* Compare button (⊕): larger tap target */
   .hw-card-compare-btn {
@@ -2172,7 +2101,6 @@ tr:hover td{background:var(--gray-50)}
   .metric-box .rank-ctx{font-size:8.5px}
   .modal-name{font-size:24px}
   .modal-meta{font-size:11px}
-  /* .modal-avatar mobile size removed — global 96px works on all screens */
   .modal-header{padding:12px 14px}
   /* Modal tab bar: compact */
   .modal-tab-bar{padding:3px;gap:0;margin-bottom:12px}
@@ -2191,7 +2119,6 @@ tr:hover td{background:var(--gray-50)}
   #globalSearchModal{padding:40px 12px 12px}
   #globalSearchModal > div{border-radius:12px}
   #globalSearchResults{max-height:55vh}
-  .gs-section-header{padding:5px 14px;font-size:9.5px}
   .gs-result-name{font-size:14px}
   .gs-result-meta{font-size:10.5px}
   .gs-stat{font-size:10px;padding:2px 5px}
@@ -2519,14 +2446,14 @@ tr:hover td{background:var(--gray-50)}
   border-bottom:1.5px solid #E2E8F0;
 }
 .bb-ch{
-  font-family:'DM Sans','Inter',system-ui,sans-serif;
-  font-size:9px;font-weight:700;
-  color:#64748B;
-  text-transform:uppercase;letter-spacing:1.4px;
-  padding:11px 0;text-align:center;
+  font-family:'Barlow Condensed','DM Sans',system-ui,sans-serif;
+  font-size:11px;font-weight:800;
+  color:#475569;
+  text-transform:uppercase;letter-spacing:1px;
+  padding:12px 0;text-align:center;
 }
 .bb-sorted{color:#B45309 !important;background:rgba(212,168,48,.08)}
-.bb-sort-icon{font-size:8px;margin-left:2px;display:inline-block;opacity:.5;transition:opacity .12s}
+.bb-sort-icon{font-size:9px;margin-left:2px;display:inline-block;opacity:.5;transition:opacity .12s}
 .bb-sort-icon{opacity:1}
 
 /* ── Column widths ──────────────────────────────────────────────────── */
@@ -2628,6 +2555,7 @@ tr:hover td{background:var(--gray-50)}
 
 /* ── Avatar — WHITE THEME ───────────────────────────────────────────── */
 .bb-av{flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.bb-av img{image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges;-webkit-backface-visibility:hidden;backface-visibility:hidden}
 /* Tier accent ring around avatar */
 .bb-row.bbt1 .bb-av > div{
   box-shadow:0 0 0 2px rgba(245,158,11,.4),0 0 8px rgba(245,158,11,.12) !important;
@@ -2788,7 +2716,7 @@ tr:hover td{background:var(--gray-50)}
 }
 
 /* ── Two-column layout ────────────────────────────────────────────────── */
-.bb-two-col-mode{ min-width:840px }
+.bb-two-col-mode{ min-width:1080px }
 .bb-two-col-wrap{
   display:flex;
   background:#E2E8F0; /* acts as 1px column divider */
@@ -2798,19 +2726,25 @@ tr:hover td{background:var(--gray-50)}
   flex:1;min-width:0;background:#FFFFFF;
   display:flex;flex-direction:column;
 }
-/* Trimmed column widths for 2-col panels */
-.bb-tc-cr  {width:34px;flex-shrink:0;text-align:center}
-.bb-tc-cav {width:44px;flex-shrink:0}
-.bb-tc-cid {flex:1;min-width:110px;max-width:200px}
-.bb-tc-cmet{width:68px;flex-shrink:0;text-align:center}
-.bb-tc-cts {width:60px;flex-shrink:0;text-align:center}
-.bb-tc-cpa {width:60px;flex-shrink:0;text-align:center}
-.bb-tc-csb {width:60px;flex-shrink:0;text-align:center}
+/* Trimmed column widths for 2-col panels — all 7 stats */
+.bb-tc-cr  {width:30px;flex-shrink:0;text-align:center}
+.bb-tc-cav {width:40px;flex-shrink:0}
+.bb-tc-cid {flex:1;min-width:100px;max-width:160px}
+.bb-tc-cmet{width:58px;flex-shrink:0;text-align:center}
+.bb-tc-cts,
+.bb-tc-cpa,
+.bb-tc-csb,
+.bb-tc-cato,
+.bb-tc-cftar,
+.bb-tc-ctpar{width:52px;flex-shrink:0;text-align:center}
 /* Tighter name in 2-col */
 .bb-tc-name{font-size:13px !important}
-.bb-tc-met {font-size:16px !important;min-width:52px !important;padding:3px 5px !important}
+.bb-tc-met {font-size:15px !important;min-width:46px !important;padding:2px 4px !important}
 /* Tighter row height in 2-col */
 .bb-tc-row {height:52px !important}
+.bb-tc-row .bb-stat-cell{margin:3px 1px;padding:0 2px;min-height:34px;border-radius:4px}
+.bb-tc-row .bb-sv{font-size:11px !important}
+.bb-tc-row .bb-sl{font-size:7px !important}
 
 /* Twitter sub-mode: slightly more compact */
 #board2026Content .bb-board.bb-tw .bb-sv{font-size:11px}
@@ -3370,19 +3304,11 @@ ap{
   flex-shrink:0;
   background:#080F1C;
 }
-.mdc-pool-header-row{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:8px;
-}
 .mdc-pool-title{
   font-family:'Barlow Condensed',sans-serif;
   font-size:13px;font-weight:900;
   color:rgba(255,255,255,.75);letter-spacing:.5px;
   text-transform:uppercase;
-}
-.mdc-pool-count{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;color:rgba(255,255,255,.28);font-weight:600;
 }
 .mdc-pool-filters{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .mdc-pool-search{
@@ -3398,7 +3324,6 @@ ap{
 }
 .mdc-pool-search:focus{border-color:rgba(59,130,246,.5)}
 .mdc-pool-search::placeholder{color:rgba(255,255,255,.22)}
-.mdc-pos-btns{display:flex;gap:4px}
 .mdc-pos-filter{
   padding:2px 8px;border-radius:4px;
   border:1px solid rgba(255,255,255,.12);
@@ -3751,7 +3676,6 @@ catter plot base CSS ───────────────────�
 .sc-plot-meta{font-size:11px;color:var(--gray-400);font-weight:500}
 .sc-canvas-wrap{position:relative;width:100%;height:480px;min-height:320px}
 .sc-canvas{position:absolute;inset:0;width:100%;height:100%}
-.sc-warn{background:#FFFBEB;border:1px solid #FCD34D;border-radius:6px;padding:8px 12px;font-size:11px;color:#92400E;display:flex;align-items:center;gap:6px}
 .sc-top5-wrap{width:200px;flex-shrink:0;border-left:1px solid var(--gray-100);display:flex;flex-direction:column;max-height:600px;overflow-y:auto;scrollbar-width:thin}
 .sc-top5-hdr{padding:10px 14px 8px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);flex-shrink:0}
 .sc-top5-hdr-label{font-size:9px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px}
@@ -3759,7 +3683,6 @@ catter plot base CSS ───────────────────�
 .sc-top5-empty{padding:12px 14px;font-size:11px;color:var(--gray-300);font-style:italic}
 .sc-top5-row{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--gray-50);cursor:pointer;transition:background .1s}
 .sc-top5-row:hover{background:var(--gray-50)}
-.sc-top5-row-selected{background:rgba(212,168,48,.1) !important;border-left:3px solid var(--amber)}
 .sc-top5-row-active{background:rgba(212,168,48,.08) !important}
 .sc-top5-idx{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;color:var(--gray-400);min-width:16px;flex-shrink:0}
 .sc-top5-logo{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
@@ -3773,9 +3696,6 @@ catter plot base CSS ───────────────────�
 .sc-bot5-row{}
 .sc-trend-btn{background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;font-family:'Barlow Condensed',sans-serif;color:var(--gray-500);cursor:pointer;transition:all .12s;white-space:nowrap}
 .sc-stat-chip{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid transparent}
-.sc-mf-wrap{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--gray-50);border-top:1px solid var(--gray-100)}
-.sc-mf-avatar{flex-shrink:0}
-.sc-mf-info{flex:1;min-width:0}
 .sc-mf-name{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:900;color:var(--navy);line-height:1}
 .sc-mf-school{font-size:11px;color:var(--gray-400);margin-bottom:6px}
 .sc-mf-stats{display:flex;flex-wrap:wrap;gap:6px}
@@ -4867,9 +4787,11 @@ const POS_HT_SORTED = {};
 
 function gradStyle(value, statKey) {
   if(value === null || value === undefined || value === 0 || value === '') return '';
+  var numVal = typeof value === 'number' ? value : parseFloat(value);
+  if(isNaN(numVal)) return '';
   var range = STAT_RANGES[statKey];
   if(!range || range.mn === range.mx) return '';
-  var ratio = Math.max(0, Math.min(1, (value - range.mn) / (range.mx - range.mn)));
+  var ratio = Math.max(0, Math.min(1, (numVal - range.mn) / (range.mx - range.mn)));
   var hue = Math.round(ratio * 120);
   var bgL = Math.round(94 - ratio * 8);
   var fgL = Math.round(34 - ratio * 12);
@@ -5163,6 +5085,12 @@ function buildShotChart(playerName) {
   if (!d) d = SHOT_DATA[baseName.replace(/\s+Jr\.?$/i,'').trim()];
 
   if (!d) return { hasShotData: false, html: '' };
+
+  // Guard: ensure all required numeric fields exist — partial data should not crash
+  var _reqFields = ['rp','ra','mp','ma','tp','ta','fp','fa'];
+  for (var _fi = 0; _fi < _reqFields.length; _fi++) {
+    if (d[_reqFields[_fi]] == null || isNaN(d[_reqFields[_fi]])) return { hasShotData: false, html: '' };
+  }
 
   // ── Color helpers ────────────────────────────────────────────
   function effColor(v, lo, mid, hi) {
@@ -5596,7 +5524,7 @@ function getPhotoUrl(playerName) {
 
 function avatarHtml(playerName, position, size='52px', borderRadius='10px', spotlight=false) {
   const color    = posColor(position);
-  const initials = getInitials(playerName).toUpperCase();
+  const initials = escHtml(getInitials(playerName).toUpperCase());
   const url      = getPhotoUrl(playerName);
   // onload: if ESPN returns a silent placeholder (naturalWidth <= 10) show initials instead
   const loadChk  = "if(this.naturalWidth<=10){this.style.display='none';this.nextElementSibling.style.display='flex';}";
@@ -5655,8 +5583,6 @@ function rankPipHtml(rank) {
 
 // ── BOARD STATE ───────────────────────────────────────────
 let currentView = 'cards';
-// sortCol/sortDir removed — sort state lives in AppState.board.sortCol/sortDir
-// (previously module-level globals; now dispatched via SET_BOARD_SORT)
 
 function setView(v) {
   currentView = v;
@@ -6119,8 +6045,8 @@ function ordSfx(n) {
 }
 
 function buildPlayerCard(p, tierKey) {
-  var name   = p.name   || '';
-  var school = p.school || '';
+  var name   = escHtml(p.name   || '');
+  var school = escHtml(p.school || '');
 
   // Metric — primary analytical signal
   var gm          = gradStyle(p.metric, 'metric');
@@ -6377,8 +6303,8 @@ function renderBoardTable(players) {
   html += '</tr></thead><tbody>';
 
   for (const p of sorted) {
-    const name   = p.name;
-    const school = p.school || '';
+    const name   = escHtml(p.name);
+    const school = escHtml(p.school || '');
     const elite = p.metric > 140, top10 = p.rank <= 10;
     html += (() => {
       const gMet  = gradStyle(p.metric,  'metric');
@@ -6938,7 +6864,7 @@ function openPlayerModal(rank, year) {
   body += '<div class="intel-section">'
     + '<div class="intel-header">'
     + '<div class="intel-title">&#x1F4E1; Pre-Draft Intelligence</div>'
-    + '<button class="intel-refresh-btn" id="intelRefreshBtn" onclick="hwIntel.refresh(\''+name+'\',\''+((school)||'')+'\')">'
+    + '<button class="intel-refresh-btn" id="intelRefreshBtn" onclick="hwIntel.refresh(\''+escHtml(name).replace(/'/g,"\\'")+'\',\''+escHtml(school||'').replace(/'/g,"\\'")+'\')">'
     + '&#x21BB; Refresh</button>'
     + '</div>'
     + '<div id="intelFeedBody"></div>'
@@ -7867,7 +7793,9 @@ function renderHistory() {
   }
 
   for (const p of players) {
-    const [name, school] = splitName(p.name);
+    const [rawName, rawSchool] = splitName(p.name);
+    const name = escHtml(rawName);
+    const school = escHtml(rawSchool);
     const top10 = p.rank <= 10;
     const diff = p.draft_diff;
     const ds = typeof diff==='number' ? (diff>0?`<span style="color:var(--green)">+${diff}</span>`:diff<0?`<span style="color:var(--red)">${diff}</span>`:`<span style="color:var(--gray-400)">0</span>`) : '—';
@@ -7960,8 +7888,8 @@ function _renderFuture2027Cards(players) {
     out += '<div class="future-cards-grid">';
     group.forEach(function(p) {
       var parts  = p.name.indexOf(' - ') > 0 ? [p.name.slice(0,p.name.indexOf(' - ')), p.name.slice(p.name.indexOf(' - ')+3)] : [p.name, ''];
-      var name   = parts[0];
-      var school = parts[1];
+      var name   = escHtml(parts[0]);
+      var school = escHtml(parts[1]);
       var posCol = posColor(p.position||'');
       var logoHtml = school && school !== 'Uncommitted' ? schoolLogoHtml(school,'18px','3px') : '';
       var schoolDisplay = school || 'Uncommitted';
@@ -8037,7 +7965,7 @@ function _renderFuture2027Table(players) {
 
   players.forEach(function(p) {
     var parts  = p.name.indexOf(' - ') > 0 ? [p.name.slice(0,p.name.indexOf(' - ')), p.name.slice(p.name.indexOf(' - ')+3)] : [p.name,''];
-    var name   = parts[0], school = parts[1];
+    var name   = escHtml(parts[0]), school = escHtml(parts[1]);
     var uncommitted = school === 'Uncommitted' || !school;
     var logoHtml = !uncommitted ? schoolLogoHtml(school,'16px','2px') : '';
     var av = avatarHtml(p.name, p.position||'', '32px', '5px');
@@ -8953,9 +8881,11 @@ function handleSearchKey(e) {
 
 // Highlight matching text
 function gsHighlight(text, query) {
-  if (!query || !text) return text || '';
-  var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
-  return String(text).replace(re, '<span class="gs-highlight">$1</span>');
+  if (!query || !text) return escHtml(text || '');
+  var safe = escHtml(String(text));
+  var safeQ = escHtml(query);
+  var re = new RegExp('(' + safeQ.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+  return safe.replace(re, '<span class="gs-highlight">$1</span>');
 }
 
 // Build a mini stat pill row from a player object
@@ -9155,7 +9085,7 @@ function runGlobalSearch(query) {
     var draftInfo = '';
     if (primary.draft_no) {
       draftInfo = ' <span style="color:var(--amber);font-weight:700">#'+primary.draft_no+' Pick</span>';
-      if (primary.team) draftInfo += ' <span style="color:#64748B">→ '+primary.team+'</span>';
+      if (primary.team) draftInfo += ' <span style="color:#64748B">→ '+escHtml(primary.team)+'</span>';
     }
 
     var mockLine = mockApps.length
@@ -9303,7 +9233,7 @@ function bbMetStyle(val) {
 // Background is a very light tint; text is a saturated dark version.
 function bbGlowStyle(val, key) {
   var rng = STAT_RANGES[key];
-  if (!rng || val === null || val === undefined || val === 0) {
+  if (!rng || val === null || val === undefined || val === 0 || rng.mx === rng.mn) {
     return 'background:#F1F5F9;color:#94A3B8;border:1px solid #E2E8F0';
   }
   var t = Math.max(0, Math.min(1, (val - rng.mn) / (rng.mx - rng.mn)));
@@ -9327,8 +9257,8 @@ function bbTagCls(pos) {
 }
 
 function bbBuildRow(p, idx) {
-  var base   = p.name   || '';
-  var school = p.school || '';
+  var base   = escHtml(p.name   || '');
+  var school = escHtml(p.school || '');
   var ht = p.ht ? (Math.floor(p.ht/12)+"'"+(p.ht%12)+'"') : '—';
   var wt = p.wt ? p.wt+'lb' : '—';
 
@@ -9563,21 +9493,24 @@ function renderBoardBigboard(players) {
   if (bbTwoCol) {
     // ── TWO-COLUMN LAYOUT ──────────────────────────────────────────────────
     // Split the current range in half; each panel gets its own column headers
-    // and tier bands. Trimmed column set: Rank, Avatar, Name, Metric, TS%, P+A/USG, STL+BL
+    // and tier bands. Full stat set: Rank, Avatar, Name, Metric, TS%, P+A/USG, STL+BL, A/TO, FTAr, 3PAr
     var rowIdx2 = 0;
     var panelMid = Math.floor(limited.length / 2);
     var leftPlayers  = limited.slice(0, panelMid);
     var rightPlayers = limited.slice(panelMid);
 
-    // Trimmed column headers for each panel
+    // Full column headers for each panel — all 7 stats included
     var TC_COLS = [
-      { key:'rank',    cls:'bb-tc-cr',  label:'#',        tip:'Board rank', sortable:false, left:false },
-      { key:null,      cls:'bb-tc-cav', label:'',         tip:null,         sortable:false, left:false },
-      { key:'name',    cls:'bb-tc-cid', label:'Player',   tip:'Player name', sortable:false, left:true },
-      { key:'metric',  cls:'bb-tc-cmet',label:'Metric',   tip:'HoopsWill Draft Model composite', sortable:false, left:false },
-      { key:'ts_pct',  cls:'bb-tc-cts', label:'TS%',      tip:'True Shooting %', sortable:false, left:false },
-      { key:'pa2_usg', cls:'bb-tc-cpa', label:'P+A/USG',  tip:'Points+2×Assists per 100 usage', sortable:false, left:false },
-      { key:'stl_bl',  cls:'bb-tc-csb', label:'Stl+Bl',   tip:'Steals+Blocks per 75', sortable:false, left:false },
+      { key:'rank',    cls:'bb-tc-cr',   label:'#',        tip:'Board rank', sortable:false, left:false },
+      { key:null,      cls:'bb-tc-cav',  label:'',         tip:null,         sortable:false, left:false },
+      { key:'name',    cls:'bb-tc-cid',  label:'Player',   tip:'Player name', sortable:false, left:true },
+      { key:'metric',  cls:'bb-tc-cmet', label:'Metric',   tip:'HoopsWill Draft Model composite', sortable:false, left:false },
+      { key:'ts_pct',  cls:'bb-tc-cts',  label:'TS%',      tip:'True Shooting %', sortable:false, left:false },
+      { key:'pa2_usg', cls:'bb-tc-cpa',  label:'P+A/USG',  tip:'Points+2×Assists per 100 usage', sortable:false, left:false },
+      { key:'stl_bl',  cls:'bb-tc-csb',  label:'Stl+Bl',   tip:'Steals+Blocks per 75', sortable:false, left:false },
+      { key:'ato',     cls:'bb-tc-cato', label:'A/TO',      tip:'Assist-to-Turnover ratio', sortable:false, left:false },
+      { key:'ftar',    cls:'bb-tc-cftar',label:'FTAr',      tip:'Free Throw Attempt Rate', sortable:false, left:false },
+      { key:'tpar',    cls:'bb-tc-ctpar',label:'3PAr',      tip:'3-Point Attempt Rate', sortable:false, left:false },
     ];
 
     function tcHdr(col) {
@@ -9609,10 +9542,16 @@ function renderBoardBigboard(players) {
       var tsSty   = bbGlowStyle(p.ts_pct,  'ts_pct');
       var paSty   = bbGlowStyle(p.pa2_usg, 'pa2_usg');
       var sbSty   = bbGlowStyle(p.stl_bl,  'stl_bl');
+      var atoSty  = bbGlowStyle(p.ato,     'ato');
+      var ftarSty = bbGlowStyle(p.ftar,    'ftar');
+      var tparSty = bbGlowStyle(p.tpar,    'tpar');
       var metVal  = bbFmt(p.metric,  'metric');
       var tsVal   = bbFmt(p.ts_pct,  'ts_pct');
       var paVal   = bbFmt(p.pa2_usg, 'pa2_usg');
       var sbVal   = bbFmt(p.stl_bl,  'stl_bl');
+      var atoVal  = bbFmt(p.ato,     'ato');
+      var ftarVal = bbFmt(p.ftar,    'ftar');
+      var tparVal = bbFmt(p.tpar,    'tpar');
       return '<div class="bb-row bb-tc-row '+tierCls+' '+altCls+'" onclick="openPlayerModal('+p.rank+')" data-rank="'+p.rank+'">'
         +'<div class="bb-rk bb-tc-cr">'+rankStr+'</div>'
         +'<div class="bb-av bb-tc-cav">'+avHtml+'</div>'
@@ -9621,9 +9560,12 @@ function renderBoardBigboard(players) {
           +(school ? '<div class="bb-school">'+school+(cls?'&thinsp;·&thinsp;'+cls:'')+'</div>' : '')
         +'</div>'
         +'<div class="bb-met-cell bb-tc-cmet"><div class="bb-met-val bb-tc-met" style="'+metSty+'">'+metVal+'</div></div>'
-        +'<div class="bb-stat-cell bb-tc-cts" style="'+tsSty+'"><div class="bb-sv bb-sv-inherit">'+tsVal+'</div><div class="bb-sl">TS%</div></div>'
-        +'<div class="bb-stat-cell bb-tc-cpa" style="'+paSty+'"><div class="bb-sv bb-sv-inherit">'+paVal+'</div><div class="bb-sl">P+A/USG</div></div>'
-        +'<div class="bb-stat-cell bb-tc-csb" style="'+sbSty+'"><div class="bb-sv bb-sv-inherit">'+sbVal+'</div><div class="bb-sl">STL+BL</div></div>'
+        +'<div class="bb-stat-cell bb-tc-cts"  style="'+tsSty+'"><div class="bb-sv bb-sv-inherit">'+tsVal+'</div><div class="bb-sl">TS%</div></div>'
+        +'<div class="bb-stat-cell bb-tc-cpa"  style="'+paSty+'"><div class="bb-sv bb-sv-inherit">'+paVal+'</div><div class="bb-sl">P+A/USG</div></div>'
+        +'<div class="bb-stat-cell bb-tc-csb"  style="'+sbSty+'"><div class="bb-sv bb-sv-inherit">'+sbVal+'</div><div class="bb-sl">STL+BL</div></div>'
+        +'<div class="bb-stat-cell bb-tc-cato" style="'+atoSty+'"><div class="bb-sv bb-sv-inherit">'+atoVal+'</div><div class="bb-sl">A/TO</div></div>'
+        +'<div class="bb-stat-cell bb-tc-cftar" style="'+ftarSty+'"><div class="bb-sv bb-sv-inherit">'+ftarVal+'</div><div class="bb-sl">FTAr</div></div>'
+        +'<div class="bb-stat-cell bb-tc-ctpar" style="'+tparSty+'"><div class="bb-sv bb-sv-inherit">'+tparVal+'</div><div class="bb-sl">3PAr</div></div>'
       +'</div>';
     }
 
@@ -10127,8 +10069,8 @@ function mdcRenderPool() {
 
   var html = '';
   available.forEach(function(p) {
-    var base   = p.name.indexOf(' - ')>0 ? p.name.slice(0,p.name.indexOf(' - ')) : p.name;
-    var school = p.name.indexOf(' - ')>0 ? p.name.slice(p.name.indexOf(' - ')+3) : '';
+    var base   = escHtml(p.name.indexOf(' - ')>0 ? p.name.slice(0,p.name.indexOf(' - ')) : p.name);
+    var school = escHtml(p.name.indexOf(' - ')>0 ? p.name.slice(p.name.indexOf(' - ')+3) : '');
     var metSty = bbMetStyle(p.metric);
     var metVal = p.metric > 0 ? Number(p.metric).toFixed(1) : null;
     var posClr = posColors[p.position] || 'rgba(255,255,255,.2)';
@@ -10143,7 +10085,7 @@ function mdcRenderPool() {
     // Name + school
     html += '<div class="mdc-pool-name">';
     html += '  <div class="mdc-pool-pname">' + base + '</div>';
-    var meta = (school ? school : '') + (p.torvik_role ? (school ? ' · ' : '') + p.torvik_role : '');
+    var meta = (school ? school : '') + (p.torvik_role ? (school ? ' · ' : '') + escHtml(p.torvik_role) : '');
     html += '  <div class="mdc-pool-school">' + meta + '</div>';
     html += '</div>';
     // Metric pill
