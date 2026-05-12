@@ -260,6 +260,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 .card-identity{
   flex:1;
   min-width:0;
+  overflow:hidden;
   display:flex;
   flex-direction:column;
   justify-content:center;
@@ -271,13 +272,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
   align-items:center;
   gap:5px;
   min-width:0;
+  overflow:hidden;
 }
-/* Chips row: position + role always on the same line together */
+/* Chips row: position + role can wrap on narrow cards; overflow clips cleanly */
 .card-chips-row{
   display:flex;
   align-items:center;
-  flex-wrap:nowrap;
+  flex-wrap:wrap;
   gap:4px;
+  row-gap:2px;
+  overflow:hidden;
+  max-height:36px;/* cap at 2 lines to prevent excessive stretch */
 }
 .card-name{
   font-family:'Barlow Condensed',sans-serif;
@@ -304,7 +309,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  max-width:90px;
+  max-width:120px;
+  min-width:0;
 }
 /* card-school kept for backward compat with any non-card usage */
 .card-school{
@@ -1002,38 +1008,60 @@ tr:hover td{background:var(--gray-50)}
   /* Use 1fr 1fr but add gap + padding to keep cards breathable */
   .cards-grid{grid-template-columns:1fr 1fr;gap:8px}
 
-  /* Mobile card: rank + photo prominent, metric right, school stacked */
-  .card-header{gap:8px;padding:10px 10px 8px}
-  .card-rank-badge{font-size:18px;min-width:24px}
-  .card-metric-chip{min-width:50px;padding:6px 6px 5px;border-radius:9px;align-self:stretch}
-  .card-metric{font-size:21px}
-  .card-metric.elite{font-size:23px}
-  .card-metric-label{font-size:6px}
-  .card-name{
-    font-size:clamp(14px,3.8vw,19px);
-    line-height:1.1;
-    font-weight:900
+  /* Mobile card: scale avatar down so name/metric have room */
+  /* Avatar is hardcoded 60px inline — .pc-av class lets CSS override with !important */
+  .pc-av{
+    width:44px !important;
+    height:44px !important;
+    flex-shrink:0
   }
-  .card-school-name{font-size:9px;max-width:90px}
-  .card-logo-ring{width:14px;height:14px}
+
+  .card-header{gap:6px;padding:8px 8px 6px}
+  .card-rank-badge{font-size:15px;min-width:20px}
+
+  /* Metric chip: shrink to free up identity column */
+  .card-metric-chip{min-width:42px;padding:5px 5px 4px;border-radius:8px;align-self:stretch}
+  .card-metric{font-size:18px}
+  .card-metric.elite{font-size:20px}
+  .card-metric-label{font-size:6px}
+  .card-elite-pip{font-size:6px;padding:1px 4px}
+
+  /* Identity: allow name to use all available width */
+  .card-identity{min-width:0;flex:1;overflow:hidden}
+  .card-name{
+    font-size:clamp(11px,3.4vw,14px);
+    line-height:1.15;
+    font-weight:900;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis
+  }
+  /* School name: cap width so it doesn't crowd the logo */
+  .card-school-name{font-size:9px;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .card-logo-ring{width:13px;height:13px;flex-shrink:0}
   .card-school{font-size:9px;gap:3px;margin-top:1px}
 
-  /* C-04: Tags — tight but legible */
-  /* card-measurables on mobile */
-  .card-measurables{padding:6px 8px 8px;gap:0;row-gap:3px}
-  .meas-cls{font-size:11px;padding:1px 4px}
-  .meas-item{font-size:12px}
-  .meas-pct{font-size:11px;padding:1px 5px}
-  .meas-pos{font-size:9px}
-  .card-chips-row{gap:3px;margin-top:1px}
-  .tag{font-size:9px;padding:2px 5px}
+  /* Chips: allow wrap so position+role never overflow their container */
+  .card-chips-row{gap:3px;margin-top:2px;flex-wrap:wrap;row-gap:2px}
+  .tag{font-size:8px;padding:1px 4px;border-radius:3px}
+  .tag.pos{font-size:8px;border-width:1px}
+  .tag.role{font-size:8px;border-width:1px}
+
+  /* C-04: Measurables — tighter, allow wrapping without dots breaking */
+  .card-measurables{padding:5px 8px 7px;gap:0;row-gap:2px;flex-wrap:wrap}
+  .meas-cls{font-size:10px}
+  .meas-item{font-size:11px}
+  .meas-dot{margin:0 3px;font-size:10px}
+  .meas-pct{font-size:10px;padding:1px 4px}
+  .meas-pos{font-size:8px}
 
   /* C-04: Stats — compress for small cards, keep 3-col */
   .card-stats{gap:3px;padding:0 6px 7px;padding-top:7px}
   .stat-cell{padding:4px 2px 3px}
   .stat-val{font-size:12px}
   .stat-bar{display:block !important;opacity:.45;height:2px}
-  .stat-lbl{font-size:8px}
+  .stat-lbl{font-size:7px;letter-spacing:.1px}
+  .pos-ring{width:11px;height:11px;top:2px;right:2px}
 
   /* C-04: Hide comp footer — not enough room on 2-col mobile cards */
   .card-comp{display:none !important}
@@ -2140,8 +2168,17 @@ tr:hover td{background:var(--gray-50)}
   .filter-select{min-width:76px;font-size:16px;padding:5px 6px}
   /* Cards: tighten further at 360px — gap 6px so grid fits without wrap */
   .cards-grid{gap:6px}
-  .card-header{gap:5px;padding:7px 7px 5px}
-  .card-name{font-size:clamp(10px,2.9vw,13px) !important}
+  .card-header{gap:4px;padding:6px 6px 4px}
+  .card-rank-badge{font-size:13px;min-width:16px}
+  .card-metric-chip{min-width:36px;padding:4px 4px 3px}
+  .card-metric{font-size:16px}
+  .card-metric.elite{font-size:17px}
+  /* Further shrink avatar at 360px — leave maximum room for name */
+  .pc-av{width:36px !important;height:36px !important}
+  .card-name{font-size:clamp(10px,2.9vw,12px) !important}
+  .card-school-name{max-width:56px !important}
+  .tag{font-size:7px !important;padding:1px 3px !important}
+  .stat-lbl{font-size:6.5px !important}
 }
 
 /* ── LAYOUT + DENSITY IMPROVEMENTS — 360px–430px screens ───────────────────
@@ -6321,7 +6358,7 @@ function buildPlayerCard(p, tierKey) {
 
       + '<div class="card-rank-badge">#' + p.rank + '</div>'
 
-      + avatarHtml(p.name, p.position || '', '60px', '10px', true)
+      + avatarHtml(p.name, p.position || '', '60px', '10px', true).replace('class="card-avatar-wrap"','class="card-avatar-wrap pc-av"')
 
       + '<div class="card-identity">'
         + '<div class="card-name">' + name + getBadgeHtml(p.name) + '</div>'
