@@ -49,6 +49,10 @@
 
   /* UI component tokens */
   --border-med:   rgba(15,23,42,.14);  /* medium emphasis borders */
+
+  /* Per-card dynamic token — set via inline style at render time.
+     Fallback here prevents a flash of undefined value before JS runs. */
+  --tier-glow: transparent;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{overflow-x:hidden}
@@ -139,7 +143,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
   overflow:hidden;
   display:flex;
   flex-direction:row;
-  will-change:transform
+  will-change:transform;
+  /* C3: Skip paint/layout for off-screen cards. contain-intrinsic-size gives the
+     browser a placeholder height so scroll position stays stable before paint.
+     ~220px ≈ typical card height at 2-col mobile; browser adjusts on first paint. */
+  content-visibility:auto;
+  contain-intrinsic-size:0 220px;
 }
 .player-card:hover{
   transform:translateY(-4px) scale(1.012);
@@ -413,7 +422,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 .upload-btn:hover{background:rgba(37,99,235,.25);border-color:var(--blue)}
 .upload-panel{position:fixed;top:0;right:0;height:100%;width:400px;background:white;box-shadow:-4px 0 32px rgba(0,0,0,.18);z-index:1000;transform:translateX(110%);transition:transform .25s cubic-bezier(.4,0,.2,1)}
 .upload-panel.upload-open{transform:translateX(0)}
-.upload-panel-inner{padding:28px 24px;display:flex;flex-direction:column;gap:18px;height:100%;overflow-y:auto;box-sizing:border-box}
+.upload-panel-inner{padding:28px 24px;display:flex;flex-direction:column;gap:18px;height:100%;overflow-y:auto;box-sizing:border-box;overscroll-behavior:contain}
 .upload-header{display:flex;align-items:center;justify-content:space-between}
 .upload-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--navy)}
 .upload-close{background:none;border:none;font-size:20px;color:var(--gray-400);cursor:pointer;line-height:1;padding:4px;transition:color .15s}
@@ -901,57 +910,30 @@ tr:hover td{background:var(--gray-50)}
   .tier-editor > div{flex-wrap:wrap;gap:12px;padding:4px 0}
   .tier-ed-group{flex:1 0 140px}
 
-  /* C-04: Cards — 2-column grid optimised for 360–430px screens */
+  /* C-04: Cards — 2-column grid on mobile */
   .cards-grid{grid-template-columns:1fr 1fr;gap:8px}
 
   /* New layout: tier bar + 4-col header grid */
   .pc-tier-bar{width:4px}
   .card-header{grid-template-columns:30px 40px 1fr auto;gap:7px;padding:10px 10px 8px}
-
-  /* Avatar: scale down to fit 40px column on mobile */
   .card-avatar-wrap{width:40px !important;height:40px !important}
-
-  /* Rank stack: shrink label, keep number readable */
   .card-rank-label{font-size:8px}
   .card-rank-num{font-size:22px}
-
-  /* Identity: tighter name + school */
   .card-name{font-size:clamp(12px,3.4vw,15px);line-height:1.05}
   .card-school-name{font-size:9.5px;max-width:80px}
   .card-logo-ring{width:14px;height:14px}
   .card-school{font-size:9px;gap:3px;margin-top:1px}
-
-  /* Metric chip: tighter */
   .card-metric-chip{min-width:46px;padding:6px 7px 5px;border-radius:10px;align-self:stretch}
   .card-metric{font-size:20px}
   .card-metric.elite{font-size:22px}
   .card-metric-label{font-size:6px}
   .card-elite-pip{font-size:7px;padding:1px 4px;margin-top:2px}
-
-  /* Bio strip: tighter padding, smaller pills */
-  .card-measurables{padding:5px 9px 6px;gap:4px}
   .card-bio-left{gap:4px}
-  .bio-pill{font-size:11px;padding:2px 6px}
-  .bio-pill.cls-pill{font-size:10px}
-  .bio-ht-pct{font-size:11px;padding:2px 5px}
-  .bio-ht-label{font-size:8.5px}
-
-  /* Chips: tighter */
   .card-chips-row{gap:3px;margin-top:3px}
   .tag{font-size:8px;padding:1px 4px}
-
-  /* Stats: compress cells, keep 3-col */
-  .card-stats{gap:3px;padding:7px 8px 8px}
-  .stat-cell{padding:6px 2px 5px;border-radius:7px}
-  .stat-val{font-size:13px}
   .stat-bar{display:block !important;opacity:.38;height:2px;margin-top:3px}
-  .stat-lbl{font-size:7.5px;margin-top:3px}
   .pos-ring{width:11px;height:11px;top:2px;right:2px}
-
-  /* Comp footer: show but compact as pills */
-  .card-comp{padding:5px 9px 8px;gap:4px}
-  .card-comp-label{font-size:7.5px}
-  .card-comp-name{font-size:9px;padding:1px 5px}
+  .card-comp{display:none !important}
 
   /* Table: sticky rank + player columns — background must track the row colour.
      Using background:inherit on sticky cells means they automatically adopt
@@ -1026,9 +1008,18 @@ tr:hover td{background:var(--gray-50)}
   .bb-ch.left{justify-content:flex-start;padding-left:8px}
   .bb-col-hdr{min-height:40px;padding-right:2px}
   /* BB-MOB: board width determined by visible columns (no fixed min-width) */
-  .bb-board{min-width:420px}
-  /* Hide columns that do not fit a phone screen.
-     NOTE: .bb-compare-col is re-shown below (see bb-compare-dot section) */
+  /* P5: Drop min-width to match actual visible column sum — eliminates phantom
+     horizontal scroll when nothing is clipped. Visible: rank+compare+avatar+
+     name+metric+4 stats ≈ 340px. Board fills phone naturally; scroll still
+     available when user rotates or sorts extra columns into view. */
+  .bb-board{min-width:340px}
+  /* Redistribute freed space: metric and stat cols wider for legibility */
+  .bb-cmet{width:60px;flex-shrink:0}
+  .bb-cts{width:48px;flex-shrink:0}
+  .bb-cpa{width:48px;flex-shrink:0}
+  .bb-csb{width:48px;flex-shrink:0}
+  .bb-cato{width:48px;flex-shrink:0}
+  /* Hide columns that do not fit a phone screen */
   .bb-cht,.bb-ctag,.bb-cftar,.bb-ctpar{display:none !important}
 
   /* BB-03: Header — compact but still premium on mobile */
@@ -1041,7 +1032,7 @@ tr:hover td{background:var(--gray-50)}
   .bb-pill{font-size:9px;padding:1px 6px;letter-spacing:.2px}
 
   /* BB-03: Row height — 48px keeps density, still comfortable tap target */
-  .bb-row{height:48px}
+  .bb-row{height:48px;contain-intrinsic-size:0 48px}
 
   /* BB-04: Stat values — up 1px for legibility; labels slightly brighter */
   .bb-sv{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;}
@@ -1085,7 +1076,7 @@ tr:hover td{background:var(--gray-50)}
   .bb-screenshot-bar{flex-wrap:wrap;gap:6px;margin-bottom:10px}
   .bb-range-group{flex-wrap:nowrap;gap:4px;padding:3px 8px}
   .bb-range-lbl{font-size:9px}
-  .bb-range-input{width:32px;font-size:11px}
+  .bb-range-input{width:32px;font-size:16px}
   .bb-preset-btn{font-size:10px;padding:2px 6px}
   .bb-sub-btn{font-size:11px;padding:4px 10px}
 
@@ -1127,10 +1118,13 @@ tr:hover td{background:var(--gray-50)}
      + mode strip 37 + wrapper margin 22) = 171px measured + 5px buffer = 176px.
      Previous calc(100vh - 160px) was 11px short, causing overflow on every device. */
   .mdc-board{height:calc(100dvh - 176px);min-height:400px}
-  /* F1: Ensure the scroll container can clear the fixed FAB (approx 50px tall, anchored
-     20px from bottom = 70px occupied) plus iOS safe-area on devices with home indicator.
-     Without this padding the last 2-3 picks are permanently hidden under the FAB. */
-  .mdc-picks-scroll{padding-bottom:calc(88px + env(safe-area-inset-bottom, 0px))}
+  /* P9: Scroll padding — must clear FAB fully.
+     FAB height: padding(13*2)+font(~18px) ≈ 56px rendered.
+     FAB bottom anchor: calc(16px + safe-area).
+     Total blocked: 56 + 16 = 72px + safe-area.
+     Add 28px breathing room so the last pick row sits comfortably above FAB.
+     Previous 88px was borderline; 108px guarantees clearance on all devices. */
+  .mdc-picks-scroll{padding-bottom:calc(108px + env(safe-area-inset-bottom, 16px))}
   .mdc-pool{
     /* FIX MDC-01: Use visibility+transform instead of display:none so the
        CSS transform transition fires correctly. display:none suppresses all
@@ -1196,19 +1190,7 @@ tr:hover td{background:var(--gray-50)}
   /* Controls: wrap naturally on mobile */
   
 
-  /* Scatter warning banner for "All classes" on mobile */
-  #scMobileWarning{
-    display:none;
-    background:rgba(245,158,11,.12);
-    border:1px solid rgba(245,158,11,.3);
-    border-radius:8px;
-    padding:8px 12px;
-    font-size:12px;
-    color:#92400E;
-    font-weight:600;
-    margin-bottom:10px;
-    line-height:1.5
-  }
+
 
   /* Modal — bottom-sheet on mobile */
   /* FIX M-01: Isolate scroll to the modal inner div, not the overlay.
@@ -1228,6 +1210,96 @@ tr:hover td{background:var(--gray-50)}
     overscroll-behavior:contain;
     overscroll-behavior-y:contain
   }
+  /* P2: Modal — taller sheet + compact header on mobile ─────────────────
+     Problem: 88vh cap + full-size avatar + centred stacked header burns
+     ~180px before scrollable content begins, showing <2 sections above fold.
+     Fix: push to 96dvh (survives iOS toolbar hide), flatten the header to a
+     horizontal single-row layout, shrink avatar, tighten all paddings.     */
+  .modal{max-height:96dvh}
+
+  /* Header: switch from centred column to horizontal row */
+  .modal-header{
+    padding:10px 44px 10px 12px;   /* right pad leaves room for close btn */
+    flex-direction:row;
+    align-items:center;
+    gap:10px;
+    text-align:left;
+  }
+  /* Avatar: shrink from 96px to 52px */
+  .modal-avatar{
+    width:52px !important;
+    height:52px !important;
+    border-radius:9px;
+    flex-shrink:0;
+  }
+  /* Player info: fill remaining space */
+  .modal-player-info{
+    flex:1;
+    min-width:0;
+    align-items:flex-start;
+    gap:1px;
+  }
+  .modal-rank-label{
+    font-size:9px;
+    letter-spacing:1.5px;
+    margin-bottom:0;
+    text-align:left;
+  }
+  .modal-name{
+    font-size:20px;
+    line-height:1.05;
+    text-align:left;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:100%;
+  }
+  .modal-meta{
+    font-size:10px;
+    margin-top:1px;
+    text-align:left;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  /* Nav prev/next: reposition for horizontal layout */
+  .modal-nav-btn{top:50%;transform:translateY(-50%)}
+  .modal-nav-prev{left:6px}
+  .modal-nav-next{right:44px}   /* sits left of the close btn */
+  .modal-nav-counter{bottom:4px;font-size:8px}
+
+  /* Metrics row: tighter */
+  .modal-metrics-row{gap:6px;margin-bottom:12px}
+  .metric-box{padding:8px 8px;border-radius:8px}
+  .metric-box .val{font-size:20px}
+  .metric-box .lbl{font-size:9px;margin-top:2px}
+  .metric-box .rank-ctx{font-size:8px}
+
+  /* Modal body: slightly more padding than before */
+  .modal-body{padding:12px 14px 8px}
+
+  /* Tab bar: more compact */
+  .modal-tab-bar{padding:3px;gap:0;margin-bottom:10px}
+  .modal-tab{padding:6px 8px;font-size:10px;letter-spacing:.3px}
+  .modal-tab .tab-icon{font-size:11px}
+
+  /* Meas grid: force 3-col with tighter cells */
+  .meas-grid{grid-template-columns:repeat(3,1fr);gap:5px}
+  .meas-item{padding:6px 8px}
+  /* P8: Prevent label clipping on sub-360px — reduce font + allow wrap */
+  .meas-item .lbl{font-size:8px;letter-spacing:.1px;white-space:normal;line-height:1.2}
+  .meas-item .val{font-size:16px}
+  .meas-item .combine-sub{font-size:8px}
+  .meas-item .combine-pct{font-size:7.5px;padding:1px 4px}
+
+  /* S+W grid: single column */
+  .sw-grid,.sw-grid.has-neutral{grid-template-columns:1fr}
+  .sw-col{padding:10px 12px}
+  .notes-text{font-size:12px;padding:10px 12px}
+
+  /* Hide desktop close button — close bar at bottom replaces it */
+  .modal-header .modal-close{display:none}
+
   /* FIX M-02: Mobile close bar — sticky thumb-reachable footer */
   .modal-close-bar{
     display:flex !important;
@@ -1251,8 +1323,6 @@ tr:hover td{background:var(--gray-50)}
     -webkit-tap-highlight-color:transparent
   }
   .modal-close-bar button:active{background:var(--gray-200);transition:none}
-  /* Hide desktop close button on mobile — close bar replaces it */
-  .modal-header .modal-close{display:none}
 
   /* Comp explorer: hide wide table on mobile, show card layout instead */
   .comp-tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -1395,7 +1465,49 @@ tr:hover td{background:var(--gray-50)}
 
   /* ── MA-02: Active states on nav links and interactive elements ───────── */
   /* Nav tabs: stronger tap feedback */
-  .nav-tab{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  /* P1: Tighter tab padding — more tabs visible before scroll starts */
+  .nav-tab{
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+    padding:8px 11px;
+    font-size:11px;
+    gap:4px;
+  }
+  /* P1: Stronger right-fade to signal scrollability — wider and more opaque */
+  .nav-tabs{
+    -webkit-mask-image:linear-gradient(to right,black calc(100% - 40px),transparent 100%);
+    mask-image:linear-gradient(to right,black calc(100% - 40px),transparent 100%);
+  }
+  .nav-tabs.scrolled-left{
+    -webkit-mask-image:linear-gradient(to right,transparent 0%,black 20px,black calc(100% - 40px),transparent 100%);
+    mask-image:linear-gradient(to right,transparent 0%,black 20px,black calc(100% - 40px),transparent 100%);
+  }
+  .nav-tabs.scrolled-end{
+    -webkit-mask-image:linear-gradient(to right,transparent 0%,black 20px);
+    mask-image:linear-gradient(to right,transparent 0%,black 20px);
+  }
+  .nav-tabs.scrolled-end:not(.scrolled-left){
+    -webkit-mask-image:none;
+    mask-image:none;
+  }
+  /* P1: Scroll-right arrow — persistent caret pinned to right edge of nav */
+  #navScrollHint{
+    display:flex;
+    position:sticky;
+    right:0;
+    flex-shrink:0;
+    align-items:center;
+    justify-content:center;
+    width:28px;
+    background:linear-gradient(to right,transparent,white 40%);
+    color:var(--gray-400);
+    font-size:12px;
+    pointer-events:none;
+    transition:opacity .2s;
+    z-index:10;
+    margin-left:-28px;
+  }
+  .nav-tabs.scrolled-end #navScrollHint{opacity:0}
   .nav-tab:active{
     background:rgba(212,168,48,.18);
     color:var(--amber);
@@ -1543,9 +1655,9 @@ tr:hover td{background:var(--gray-50)}
   /* Pick rows: tap-friendly height */
   .mdc-pick-row { min-height: 48px; }
   .mdc-pool-item { min-height: 48px; }
-  /* FAB: nudge up from bottom safe area on iOS */
+  /* FAB: nudge up from bottom safe area on iOS — 16px fallback matches scroll padding */
   #mdcPoolFab {
-    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(16px + env(safe-area-inset-bottom, 16px));
   }
   /* Simulator speed / rounds controls: stack cleanly */
   #simSpeedSelect, #simRoundsSelect {
@@ -1632,23 +1744,69 @@ tr:hover td{background:var(--gray-50)}
   /* Count badge: inline after toggle */
   .count-badge { font-size: 11px; }
 
-  /* Controls bar: 2-row layout on mobile */
-  .controls-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+  /* P4: Controls bar — 2-row grid on mobile
+     Row 1: [search .................] [tier btn]
+     Row 2: [pos filter] [cls filter] [view toggle .......]            */
+  .controls-bar{
+    display:grid;
+    grid-template-columns:1fr auto;
+    grid-template-rows:auto auto;
+    gap:6px;
+    margin-bottom:12px;
+    align-items:center;
   }
-  .search-wrap {
-    flex: 1 1 100%; /* full width on first row */
-    min-width: 0;
+  .search-wrap{
+    grid-column:1;
+    grid-row:1;
+    flex:none;
+    min-width:0;
+    max-width:none;
+    width:100%;
   }
-  /* Filters: share second row */
-  #posFilter, #clsFilter {
-    flex: 1 1 calc(50% - 3px);
-    min-width: 0;
+  /* Tier button goes to row 1, col 2 */
+  .controls-bar > div:has(.tier-customize-btn){
+    grid-column:2;
+    grid-row:1;
   }
-  /* Tier customize button: icon-only on mobile */
-  .tier-customize-btn .tier-btn-label { display: none; }
+  /* Row 2: filters + view toggle share one flex row */
+  .controls-bar-row2{
+    grid-column:1/-1;
+    grid-row:2;
+    display:flex;
+    gap:6px;
+    align-items:center;
+  }
+  #posFilter,#clsFilter{
+    flex:1;
+    min-width:0;
+    max-width:none;
+    font-size:14px !important;
+    padding:6px 8px;
+    min-height:38px;
+  }
+  .view-toggle{
+    flex-shrink:0;
+    display:flex;
+    gap:2px;
+    padding:3px;
+    width:auto;
+  }
+  .view-btn{
+    padding:5px 8px;
+    font-size:10px;
+    gap:2px;
+    min-height:36px;
+    white-space:nowrap;
+  }
+  .vb-badge{display:none}
+  .count-badge{display:none}
+  /* Tier button: icon + short label, no overflow */
+  .tier-customize-btn{
+    padding:5px 8px;
+    font-size:10px;
+    white-space:nowrap;
+  }
+  .tier-btn-label{display:none}
 
   /* ──────────── [176753] ──────────── */
   /* Export controls: completely hidden. Exporting from a phone is edge case. */
@@ -1760,18 +1918,24 @@ tr:hover td{background:var(--gray-50)}
     text-transform: uppercase;
     letter-spacing: .5px;
   }
-  .sc-select {
-    font-size: 14px; /* prevent iOS zoom */
-    padding: 8px 8px;
-    min-height: 40px;
-    touch-action: manipulation !important;
+  /* sc-select: font-size 16px set globally in CONTROLS BAR block above (iOS zoom prevention) */
+
+  /* P7: Scatter — taller canvas + trimmed panels on mobile ──────────────
+     Problem: 300px canvas + full 5-row panels leaves almost no room above
+     the fold; users must scroll to see the plot and both panels at once.
+     Fix: 360px canvas, trim each panel to 3 rows via nth-child (no JS change),
+     compact axis controls. Net result: plot + controls + panels all visible
+     in ~580px — fits a 390px iPhone with 94px sticky chrome consumed.       */
+  .sc-canvas-wrap{height:360px;min-height:280px}
+
+  /* Trim top/bottom panels to 3 rows on mobile — rows 4 & 5 hidden */
+  #scTop5 .sc-top5-row:nth-child(n+4),
+  #scBot5 .sc-top5-row:nth-child(n+4){
+    display:none;
   }
 
-  /* Canvas: compact for mobile viewport — leaves room for panels strip */
-  .sc-canvas-wrap{height:300px;min-height:240px}
-
-  /* Panels strip: reduce row density on tiny screens */
-  .sc-panel-hdr{padding:6px 10px 5px}
+  /* Panels strip: tighter rows */
+  .sc-panel-hdr{padding:5px 10px 4px}
   .sc-top5-row{padding:4px 8px;gap:4px}
   .sc-top5-logo{display:none}
   .sc-top5-name{font-size:10px}
@@ -2036,34 +2200,28 @@ tr:hover td{background:var(--gray-50)}
   }
 }
 
+/* P6: At ≤360px hide the compare column entirely — recovers 26px for the
+   name column which otherwise compresses below legibility on 320px devices.
+   The compare ⊕ button is still accessible via the player modal on these screens. */
+@media(max-width:360px){
+  .board-table th:nth-child(2),
+  .board-table td:nth-child(2){
+    display:none;
+  }
+  /* Name column: shift sticky left offset from 58px → 32px (rank only) */
+  .board-table th:nth-child(3),
+  .board-table td:nth-child(3){
+    left:32px;
+    min-width:110px;
+    max-width:180px;
+  }
+  .board-table thead th:nth-child(3){ background:var(--navy) !important; }
+}
+
 /* ── MODAL — safe-area padding for phones with home indicator ────────────── */
 
 
 /* ── CONTROLS BAR + ULTRA-SMALL SCREENS (≤400px) ───────────────────────── */
-@media(max-width:400px){
-  .main{padding:8px 8px}
-  .controls-bar{gap:4px}
-  .search-wrap{min-width:100px}
-  .filter-select{min-width:76px;font-size:16px;padding:5px 6px}
-  /* Cards: tighten further at 360px */
-  .cards-grid{gap:6px}
-  .pc-tier-bar{width:3px}
-  .card-header{grid-template-columns:24px 32px 1fr auto;gap:5px;padding:8px 8px 6px}
-  .card-rank-label{font-size:7px}
-  .card-rank-num{font-size:18px}
-  .card-avatar-wrap{width:32px !important;height:32px !important}
-  .card-name{font-size:clamp(11px,3vw,13px) !important}
-  .card-school-name{max-width:64px !important}
-  .card-metric-chip{min-width:40px;padding:5px 5px 4px}
-  .card-metric{font-size:17px}
-  .card-metric.elite{font-size:18px}
-  .bio-pill{font-size:10px !important;padding:1px 5px !important}
-  .bio-pill.cls-pill{font-size:9px !important}
-  .tag{font-size:7.5px !important;padding:1px 3px !important}
-  .stat-val{font-size:12px}
-  .stat-lbl{font-size:7px !important}
-}
-
 /* ── LAYOUT + DENSITY IMPROVEMENTS — 360px–430px screens ───────────────────
    All rules below are targeted mobile-only improvements grouped by tab.
    They do NOT affect desktop (>640px). ──────────────────────────────────── */
@@ -2071,7 +2229,30 @@ tr:hover td{background:var(--gray-50)}
 
   /* ── GLOBAL spacing — already 10px from MQ above; keep at 8px only for 360px phones handled via 400px MQ below */
 
-  /* ── TIER SECTION HEADERS: reduce wasted vertical rhythm */
+  /* P3: Cards — reduce vertical bulk on mobile ───────────────────────────
+     Problem: 6 stat cells + bio strip (cls/wt/ht + ht%ile) consume ~120px
+     per card, showing only ~2 cards above fold on 390px screens.
+     Fix: hide weight pill (ht already conveys size), hide FTAr + 3PAr cells
+     (lower-signal stats visible in modal), drop to 4-cell 2×2 grid.       */
+
+  /* Hide weight pill on mobile — height + class are sufficient at this density */
+  .bio-pill.wt-pill{display:none}
+
+  /* 4-cell 2×2 stats grid on mobile (was 3-col 2-row = 6 cells) */
+  .card-stats{grid-template-columns:repeat(2,1fr);gap:4px;padding:8px 10px 9px}
+  .stat-cell--secondary{display:none}
+
+  /* Tighter bio strip */
+  .card-measurables{padding:5px 10px 6px;gap:5px}
+  .bio-pill{font-size:11px;padding:2px 6px}
+  .bio-pill.cls-pill{font-size:10px}
+  .bio-ht-pct{font-size:11px;padding:2px 5px}
+  .bio-ht-label{font-size:8.5px}
+
+  /* Stat cells: slightly taller in 2-col to fill same visual area */
+  .stat-cell{padding:8px 4px 7px;border-radius:8px}
+  .stat-val{font-size:15px}
+  .stat-lbl{font-size:8px;margin-top:3px}
   .tier-section{margin-bottom:20px}
   .tier-header{margin-bottom:8px;padding-bottom:6px;gap:8px}
   .tier-name{font-size:16px}
@@ -2080,7 +2261,14 @@ tr:hover td{background:var(--gray-50)}
 
   /* ── CONTROLS BAR: tighter on mobile */
   .controls-bar{margin-bottom:12px}
-  .search-input{font-size:13px;padding:8px 10px 8px 32px;letter-spacing:.01em;min-height:38px;border-radius:8px}
+  /* iOS keyboard zoom prevention: any input/select with font-size < 16px triggers
+     automatic zoom on iOS Safari. Set all interactive fields to exactly 16px here
+     so the OS never zooms. Desktop escalation restores smaller sizes. */
+  .search-input{font-size:16px;padding:8px 10px 8px 32px;letter-spacing:.01em;min-height:38px;border-radius:8px}
+  .sc-select{font-size:16px;padding:8px 8px;min-height:40px}
+  .modal-search-input{font-size:16px}
+  #histSearch{font-size:16px}
+  #mcSearchInput{font-size:16px}
   .search-icon{font-size:12px;left:8px}
 
   /* ── TABLE VIEW: improve readability at 360px */
@@ -2140,23 +2328,7 @@ tr:hover td{background:var(--gray-50)}
 
   /* ── RESOURCES: search bar — no cap needed on mobile, fills available width */
 
-  /* ── MODAL body: better text density */
-  .modal-metrics-row{gap:7px;margin-bottom:14px}
-  .metric-box{padding:9px 10px;border-radius:8px}
-  .metric-box .val{font-size:22px}
-  .metric-box .lbl{font-size:10px;margin-top:2px}
-  .metric-box .rank-ctx{font-size:8.5px}
-  .modal-name{font-size:24px}
-  .modal-meta{font-size:11px}
-  .modal-header{padding:12px 14px}
-  /* Modal tab bar: compact */
-  .modal-tab-bar{padding:3px;gap:0;margin-bottom:12px}
-  .modal-tab{padding:7px 10px;font-size:11px;letter-spacing:.4px}
-  .modal-tab .tab-icon{font-size:12px}
-  /* S+W grid: single column on narrow */
-  .sw-grid,.sw-grid.has-neutral{grid-template-columns:1fr}
-  .sw-col{padding:10px 12px}
-  .notes-text{font-size:12px;padding:10px 12px}
+  /* ── MODAL: handled by P2 block in the main 640px MQ above ── */
 
   /* ── EMPTY STATES: reduce over-padded empties */
   .empty{padding:32px 20px}
@@ -2169,6 +2341,32 @@ tr:hover td{background:var(--gray-50)}
   .gs-result-name{font-size:14px}
   .gs-result-meta{font-size:10.5px}
   .gs-stat{font-size:10px;padding:2px 5px}
+}
+
+/* ── NARROW PHONE OVERRIDES (≤400px) ────────────────────────────────────────
+   Must come AFTER all max-width:640px blocks so specificity cascade wins
+   at the narrower breakpoint. Controls tighten further, cards compress. ── */
+@media(max-width:400px){
+  .main{padding:8px 8px}
+  .controls-bar{gap:4px}
+  .search-wrap{min-width:100px}
+  .filter-select{min-width:76px;font-size:16px;padding:5px 6px}
+  .cards-grid{gap:6px}
+  .pc-tier-bar{width:3px}
+  .card-header{grid-template-columns:24px 32px 1fr auto;gap:5px;padding:8px 8px 6px}
+  .card-rank-label{font-size:7px}
+  .card-rank-num{font-size:18px}
+  .card-avatar-wrap{width:32px !important;height:32px !important}
+  .card-name{font-size:clamp(11px,3vw,13px) !important}
+  .card-school-name{max-width:64px !important}
+  .card-metric-chip{min-width:40px;padding:5px 5px 4px}
+  .card-metric{font-size:17px}
+  .card-metric.elite{font-size:18px}
+  .bio-pill{font-size:10px !important;padding:1px 5px !important}
+  .bio-pill.cls-pill{font-size:9px !important}
+  .tag{font-size:7.5px !important;padding:1px 3px !important}
+  .stat-val{font-size:12px !important}
+  .stat-lbl{font-size:7px !important}
 }
 
 
@@ -2215,8 +2413,19 @@ tr:hover td{background:var(--gray-50)}
   #tab-methodology .mc-hero-outer{padding:40px 40px 36px}
 
   /* ── Controls bar ────────────────────────────────────────────────────── */
-  .controls-bar{gap:8px;margin-bottom:14px;}
+  .controls-bar{
+    display:flex;
+    flex-wrap:nowrap;
+    align-items:center;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  /* On desktop row2 dissolves — its children join the single flex row */
+  .controls-bar-row2{
+    display:contents; /* children participate in parent flex as if unwrapped */
+  }
   .search-wrap{min-width:180px;max-width:320px;}
+  .search-input{font-size:13px;}
   .filter-select{
     padding:8px 12px;
     font-size:13px;
@@ -2247,13 +2456,40 @@ tr:hover td{background:var(--gray-50)}
     padding:24px 28px 20px;
     border-radius:16px 16px 0 0;
     flex-shrink:unset;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:8px;
   }
+  .modal-avatar{width:96px !important;height:96px !important;border-radius:14px}
+  .modal-player-info{align-items:center}
+  .modal-rank-label{font-size:11px;letter-spacing:2px;margin-bottom:2px;text-align:center}
+  .modal-name{font-size:30px;text-align:center;white-space:normal;overflow:visible;text-overflow:clip}
+  .modal-meta{font-size:12px;text-align:center;white-space:normal;overflow:visible}
+  .modal-nav-prev{left:8px}
+  .modal-nav-next{right:8px}
+  .modal-nav-counter{bottom:8px;font-size:9px}
+  .modal-header .modal-close{display:flex}
+  .modal-close-bar{display:none !important}
+  /* Restore metrics row */
+  .modal-metrics-row{gap:10px;margin-bottom:18px}
+  .metric-box{padding:11px 14px;border-radius:10px}
+  .metric-box .val{font-size:26px}
+  .metric-box .lbl{font-size:11px;margin-top:3px}
+  .metric-box .rank-ctx{font-size:9px}
+  /* Tab bar */
+  .modal-tab-bar{padding:4px;margin-bottom:18px}
+  .modal-tab{padding:9px 16px;font-size:12px;letter-spacing:.6px}
+  .modal-tab .tab-icon{font-size:14px}
+  /* Meas grid */
+  .meas-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:7px}
+  .meas-item{padding:7px 10px}
 
   /* ── Scatter controls ────────────────────────────────────────────────── */
   .sc-controls{flex-wrap:nowrap}
   .sc-ctrl-section-primary{gap:10px}
   .sc-ctrl-section-secondary{gap:10px}
-  .sc-select{width:auto;min-width:130px;max-width:190px;font-size:12px;}
+  .sc-select{width:auto;min-width:130px;max-width:190px;font-size:12px;min-height:auto;}
   .sc-ctrl-section-primary .sc-select{min-width:150px;}
   .sc-canvas-wrap{
     height:620px;
@@ -2277,6 +2513,10 @@ tr:hover td{background:var(--gray-50)}
     min-height:auto;
     touch-action:auto;
   }
+
+  .bb-range-input{width:38px;padding:2px 4px;font-size:11px;}
+  .mdc-pool-search{font-size:12px;}
+  #mcSearchInput{font-size:12px;}
 
   /* ── Big Board — desktop column widths (dark space theme) ───────────── */
   .bb-cr{width:44px;flex-shrink:0;}
@@ -2561,6 +2801,10 @@ tr:hover td{background:var(--gray-50)}
   overflow:hidden;cursor:pointer;
   position:relative;
   background:#FFFFFF;
+  /* C3: Skip off-screen rows. Fixed height (64px desktop, 48px mobile) means
+     contain-intrinsic-size matches exactly — no scroll jump on paint. */
+  content-visibility:auto;
+  contain-intrinsic-size:0 64px;
 }
 /* Left tier accent line */
 .bb-row::before{
@@ -2827,7 +3071,7 @@ tr:hover td{background:var(--gray-50)}
 .tier-ed-reset:hover{background:rgba(255,255,255,.18);color:white}
 
 /* ── DRAFT SIMULATOR ─────────────────────────────────────────────────────── */
-#simPicksBoard{max-height:600px;overflow-y:auto}
+#simPicksBoard{max-height:600px;overflow-y:auto;overscroll-behavior:contain}
 #simPoolList .sim-pool-row:hover{background:var(--gray-50)}
 
 /* ── SIMULATOR BUTTONS ───────────────────────────────────────────────────── */
@@ -3170,7 +3414,7 @@ ap{
 }
 
 /* ── Round header ────────────────────────────────────── */
-.mdc-picks-scroll{flex:1;overflow-y:auto;padding:0;scrollbar-width:thin;scrollbar-color:var(--gray-200) transparent}
+.mdc-picks-scroll{flex:1;overflow-y:auto;padding:0;scrollbar-width:thin;scrollbar-color:var(--gray-200) transparent;overscroll-behavior:contain}
 .mdc-round-hdr{
   padding:5px 18px;
   font-family:'Barlow Condensed',sans-serif;
@@ -3367,7 +3611,7 @@ ap{
   border-radius:6px;
   background:rgba(255,255,255,.05);
   color:rgba(255,255,255,.85);
-  font-size:12px;font-family:'DM Sans',system-ui,sans-serif;
+  font-size:16px;font-family:'DM Sans',system-ui,sans-serif;
   outline:none;transition:border-color .12s;
   margin-bottom:6px;
 }
@@ -3391,6 +3635,7 @@ ap{
   flex:1;overflow-y:auto;
   scrollbar-width:thin;
   scrollbar-color:rgba(255,255,255,.08) transparent;
+  overscroll-behavior:contain;
 }
 .mdc-pool-item{
   display:flex;align-items:center;gap:8px;
@@ -3996,6 +4241,7 @@ ock Drafts table CSS ───────────────────�
   <div class="nav-tab" data-tab="history">📅 Past Boards</div>
   <div class="nav-tab" data-tab="analytics">📊 Class Compare</div>
   <div class="nav-tab" data-tab="resources">📚 Resources</div>
+  <div id="navScrollHint">›</div>
 </nav>
 
 <div id="uploadPanel" class="upload-panel">
@@ -4024,38 +4270,8 @@ ock Drafts table CSS ───────────────────�
       <span class="search-icon">🔍</span>
       <input class="search-input" id="search2026" placeholder="Search player, school, role…">
     </div>
-    <select class="filter-select" id="posFilter">
-      <option value="">All Positions</option>
-      <option value="Guard">Guard</option>
-      <option value="Forward">Forward</option>
-      <option value="Center">Center</option>
-    </select>
-    <select class="filter-select" id="clsFilter">
-      <option value="">All Classes</option>
-      <option value="Freshman">Freshman</option>
-      <option value="Sophomore">Sophomore</option>
-      <option value="Junior">Junior</option>
-      <option value="Senior">Senior</option>
-      <option value="International">International</option>
-    </select>
-    <div class="view-toggle">
-      <button class="view-btn active" id="viewCards" onclick="setView('cards')">
-        <span class="vb-icon">⊞</span><span class="vb-label">Cards</span>
-      </button>
-      <button class="view-btn" id="viewFreeform" onclick="setView('freeform')">
-        <span class="vb-icon">⬡</span><span class="vb-label">Freeform</span>
-        <span class="vb-badge">NEW</span>
-      </button>
-      <button class="view-btn" id="viewTable" onclick="setView('table')">
-        <span class="vb-icon">☰</span><span class="vb-label">Table</span>
-      </button>
-      <button class="view-btn" id="viewBigboard" onclick="setView('bigboard')">
-        <span class="vb-icon">🏆</span><span class="vb-label">Big Board</span>
-      </button>
-    </div>
-    <span class="count-badge" id="boardCount"></span>
     <div style="position:relative">
-      <button class="tier-customize-btn" id="tierCustomBtn" onclick="toggleTierEditor()" style="background:rgba(10,22,40,.07);border-color:var(--gray-200);color:var(--gray-600);font-size:11px" title="Customize tier cutoffs">✦ Tiers</button>
+      <button class="tier-customize-btn" id="tierCustomBtn" onclick="toggleTierEditor()" style="background:rgba(10,22,40,.07);border-color:var(--gray-200);color:var(--gray-600);font-size:11px" title="Customize tier cutoffs">✦ <span class="tier-btn-label">Tiers</span></button>
       <div class="tier-editor" id="tierEditor" style="position:absolute;top:calc(100% + 8px);right:0;z-index:500;background:var(--navy);border-radius:9px;padding:10px 14px;box-shadow:0 8px 32px rgba(0,0,0,.25);min-width:520px">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
           <span class="tier-ed-label" style="color:rgba(255,255,255,.5)">Tier Cutoffs</span>
@@ -4069,6 +4285,38 @@ ock Drafts table CSS ───────────────────�
           <button class="tier-ed-reset" onclick="resetTierCuts()">Reset</button>
         </div>
       </div>
+    </div>
+    <div class="controls-bar-row2">
+      <select class="filter-select" id="posFilter">
+        <option value="">All Positions</option>
+        <option value="Guard">Guard</option>
+        <option value="Forward">Forward</option>
+        <option value="Center">Center</option>
+      </select>
+      <select class="filter-select" id="clsFilter">
+        <option value="">All Classes</option>
+        <option value="Freshman">Freshman</option>
+        <option value="Sophomore">Sophomore</option>
+        <option value="Junior">Junior</option>
+        <option value="Senior">Senior</option>
+        <option value="International">International</option>
+      </select>
+      <div class="view-toggle">
+        <button class="view-btn active" id="viewCards" onclick="setView('cards')">
+          <span class="vb-icon">⊞</span><span class="vb-label">Cards</span>
+        </button>
+        <button class="view-btn" id="viewFreeform" onclick="setView('freeform')">
+          <span class="vb-icon">⬡</span><span class="vb-label">Freeform</span>
+          <span class="vb-badge">NEW</span>
+        </button>
+        <button class="view-btn" id="viewTable" onclick="setView('table')">
+          <span class="vb-icon">☰</span><span class="vb-label">Table</span>
+        </button>
+        <button class="view-btn" id="viewBigboard" onclick="setView('bigboard')">
+          <span class="vb-icon">🏆</span><span class="vb-label">Big Board</span>
+        </button>
+      </div>
+      <span class="count-badge" id="boardCount"></span>
     </div>
   </div>
   
@@ -4556,7 +4804,7 @@ ock Drafts table CSS ───────────────────�
         </div>
       </div>
     </div>
-    <div id="scMobileWarning">⚠️ "All classes" shows 600+ players — individual dots may overlap on small screens. Pick a specific year for clearer results.</div>
+
     <div class="sc-body">
       <!-- ── Main chart (full width) ── -->
       <div class="sc-plot-wrap">
@@ -5076,6 +5324,7 @@ function schoolLogoHtml(school, size, borderRadius) {
   var loadChk = "if(this.naturalWidth<16||this.naturalHeight<16){" + swap + "}";
   return '<span style="display:inline-flex;align-items:center;vertical-align:middle">'
        + '<img src="' + url + '" '
+       + 'loading="lazy" '
        + 'style="width:'+size+';height:'+size+';object-fit:contain;flex-shrink:0;border-radius:'+borderRadius+'" '
        + 'onload="'+loadChk+'" onerror="'+swap+'" alt="'+school+'">'
        + '<span style="display:none">'+fallback+'</span>'
@@ -5672,17 +5921,36 @@ function rankPipHtml(rank) {
 // ── BOARD STATE ───────────────────────────────────────────
 let currentView = 'cards';
 
+// Abort token for in-flight view transitions. Incremented on every setView call
+// so any pending doRender closure from a previous call becomes a no-op.
+var _setViewToken = 0;
+
 function setView(v) {
   currentView = v;
+
+  // Cancel any pending render from a previous click
+  _setViewToken++;
+  var myToken = _setViewToken;
+
   AppState.dispatch({ type: 'SET_BOARD_VIEW', payload: v });
   urlSetState({view: v});
+
+  // Update button active states
   document.getElementById('viewCards').classList.toggle('active',    v === 'cards');
   document.getElementById('viewTable').classList.toggle('active',    v === 'table');
   document.getElementById('viewBigboard').classList.toggle('active', v === 'bigboard');
   document.getElementById('viewFreeform').classList.toggle('active', v === 'freeform');
+
   var el = document.getElementById('board2026Content');
 
-  // Skip transition animation for users who prefer reduced motion
+  // Invalidate cache for the incoming view so it always re-renders fresh.
+  // Without this, switching A→B→A would hit the stale A cache and bail.
+  hwInvalidateCache(v);
+  hwInvalidateCache('cards');
+  hwInvalidateCache('table');
+  hwInvalidateCache('bigboard');
+
+  // Skip animation for reduced-motion preference
   var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reducedMotion) {
     renderBoard2026();
@@ -5690,24 +5958,21 @@ function setView(v) {
     return;
   }
 
+  // Single rAF render: no transitionend listener, no setTimeout race.
+  // The exit class adds a brief opacity fade; render fires on the next frame
+  // so the browser paints the fade-start before the DOM swap occurs.
   el.classList.add('view-exit');
-  // 160ms matches the CSS transition; use transitionend as primary signal with
-  // a 200ms fallback so we never leave a blank panel if the transition is skipped
-  var _rendered = false;
-  function doRender() {
-    if (_rendered) return;
-    _rendered = true;
+  requestAnimationFrame(function() {
+    // Abort if a newer setView call has already taken over
+    if (myToken !== _setViewToken) return;
     renderBoard2026();
     el.classList.remove('view-exit');
     el.classList.add('view-enter');
-    requestAnimationFrame(function() { requestAnimationFrame(function() { el.classList.remove('view-enter'); }); });
-    if (window.hwIntel) hwIntel.refreshBadges();
-  }
-  el.addEventListener('transitionend', function _te() {
-    el.removeEventListener('transitionend', _te);
-    doRender();
+    requestAnimationFrame(function() {
+      el.classList.remove('view-enter');
+      if (window.hwIntel) hwIntel.refreshBadges();
+    });
   });
-  setTimeout(doRender, 200);
 }
 
 
@@ -6082,7 +6347,7 @@ function buildSchoolLogoHtml(school) {
   var swap = "this.style.display='none';this.nextElementSibling.style.display='flex';";
   var loadChk = "if(this.naturalWidth<16||this.naturalHeight<16){" + swap + "}";
   return '<div class="card-logo-ring">'
-    + '<img src="' + url + '" onload="' + loadChk + '" onerror="' + swap + '" alt="' + school + '">'
+    + '<img src="' + url + '" loading="lazy" onload="' + loadChk + '" onerror="' + swap + '" alt="' + school + '">'
     + '<span style="display:none">' + schoolInitialsBadge(school, '16px', '50%') + '</span>'
     + '</div>';
 }
@@ -6186,7 +6451,7 @@ function buildPlayerCard(p, tierKey) {
   // ── Bio strip: left pills (class / weight / height) + right ht pct ──
   var bioLeftHtml = '';
   if (clsAbbr) bioLeftHtml += '<span class="bio-pill cls-pill">' + clsAbbr + '</span>';
-  if (p.wt)    bioLeftHtml += '<span class="bio-pill">' + p.wt + ' lb</span>';
+  if (p.wt)    bioLeftHtml += '<span class="bio-pill wt-pill">' + p.wt + ' lb</span>';
   if (htDisplay) bioLeftHtml += '<span class="bio-pill">' + htDisplay + '</span>';
 
   var bioRightHtml = '';
@@ -6228,13 +6493,13 @@ function buildPlayerCard(p, tierKey) {
       + '<div class="stat-lbl">Stl+Bl</div>'
       + posRingHtml(p.stl_bl,  'stl_bl',  p.position)
     + '</div>'
-    + '<div class="stat-cell" style="' + gs4 + '">'
+    + '<div class="stat-cell stat-cell--secondary" style="' + gs4 + '">'
       + '<div class="stat-val">' + (p.ftar    ? parseFloat(p.ftar).toFixed(3) : '—') + '</div>'
       + statBarHtml(p.ftar, 'ftar')
       + '<div class="stat-lbl">FTAr</div>'
       + posRingHtml(p.ftar,    'ftar',    p.position)
     + '</div>'
-    + '<div class="stat-cell" style="' + gs5 + '">'
+    + '<div class="stat-cell stat-cell--secondary" style="' + gs5 + '">'
       + '<div class="stat-val">' + (p.tpar    ? parseFloat(p.tpar).toFixed(3) : '—') + '</div>'
       + statBarHtml(p.tpar, 'tpar')
       + '<div class="stat-lbl">3PAr</div>'
@@ -6321,7 +6586,7 @@ function buildPlayerCard(p, tierKey) {
 // (avoids repeated reflows from multiple appendChild calls).
 function renderBoardCards(players) {
   var _sig = _hwCacheSig('cards', players);
-  if (_hwCacheValid('cards', _sig) && document.getElementById('board2026Content').innerHTML) { return; }
+  if (_hwCacheValid('cards', _sig)) { return; }
   _hwCacheSet('cards', _sig);
   var el = document.getElementById('board2026Content');
   if (!players.length) {
@@ -6366,7 +6631,7 @@ function renderBoardCards(players) {
 // ── BOARD 2026 — TABLE VIEW ──────────────────────────────────────────────────
 function renderBoardTable(players) {
   var _sig = _hwCacheSig('table', players);
-  if (_hwCacheValid('table', _sig) && document.getElementById('board2026Content').innerHTML) { return; }
+  if (_hwCacheValid('table', _sig)) { return; }
   _hwCacheSet('table', _sig);
   // Read sort state from AppState — never from module-level globals.
   // AppState.board.sortCol/sortDir are the single source of truth; updated
@@ -7660,7 +7925,7 @@ function renderMocks() {
         const via      = normalizeTeamCode((rawTeam.match(/\(([^)]+)\)/) || [])[1] || '');
         const logoId   = NBA_TEAM_IDS[baseTeam];
         const logoHtml = logoId
-          ? '<img class="mock-team-logo" src="https://a.espncdn.com/i/teamlogos/nba/500/'
+          ? '<img class="mock-team-logo" loading="lazy" src="https://a.espncdn.com/i/teamlogos/nba/500/'
               + logoId + '.png" onerror="this.style.display=\'none\'" alt="' + baseTeam + '">'
           : (baseTeam
               ? '<div class="mock-team-logo-fb">' + baseTeam + '</div>'
@@ -8333,9 +8598,10 @@ function escHtml(s) {
   }
 })();
 
-// ── P2-8: Nav-tabs scroll fade affordance ─────────────────────────────────
+// ── P1: Nav-tabs scroll fade affordance + active-tab auto-scroll ──────────
 // Toggles .scrolled-left / .scrolled-end classes so CSS mask-image shows
 // fade hints on whichever edge has hidden tabs.
+// Also scrolls the active tab into view on page load so it is never hidden.
 (function() {
   var nav = document.getElementById('navTabs');
   if (!nav) return;
@@ -8351,8 +8617,14 @@ function escHtml(s) {
   nav.addEventListener('scroll', function() {
     if (!_raf) _raf = requestAnimationFrame(updateFade);
   }, { passive: true });
-  // Initial check after layout
-  requestAnimationFrame(updateFade);
+  // Initial check + scroll active tab into view after layout settles
+  requestAnimationFrame(function() {
+    updateFade();
+    var active = nav.querySelector('.nav-tab.active');
+    if (active) active.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'start' });
+    // Re-check fade after scroll
+    requestAnimationFrame(updateFade);
+  });
 })();
 // Used by both tab click handlers and hwInit() (bfcache restore path).
 function hwRenderTab(tabName) {
@@ -9747,6 +10019,14 @@ function renderBoardBigboard(players) {
   el.innerHTML = out;
 }
 
+// ── isBoardActive: returns true only when the 2026 board tab is the visible tab.
+// Used to prevent background re-renders when BB controls or tier cuts fire
+// while the user is on a different tab (e.g. navigated to Scatter mid-sort).
+function isBoardActive() {
+  var active = document.querySelector('.nav-tab.active');
+  return active && active.dataset.tab === 'board2026';
+}
+
 function setBBSubMode(mode) {
   bbSubMode = mode;
   // Snap range to sensible defaults for each mode
@@ -9755,19 +10035,19 @@ function setBBSubMode(mode) {
   // Reset sort to default rank order when switching modes
   bbSortCol = 'rank';
   bbSortDir = 1;
-  renderBoard2026();
+  if (isBoardActive()) renderBoard2026();
 }
 
 function toggleBBTwoCol() {
   bbTwoCol = !bbTwoCol;
-  renderBoard2026();
+  if (isBoardActive()) renderBoard2026();
 }
 
 // bbSetRange: preset button handler — updates state + re-renders live board.
 function bbSetRange(from, to) {
   bbRangeFrom = Math.max(1,  from);
   bbRangeTo   = Math.min(60, to);
-  renderBoard2026();
+  if (isBoardActive()) renderBoard2026();
 }
 
 // bbApplyRange: oninput handler on the text inputs — reads both DOM values,
@@ -9784,7 +10064,7 @@ function bbApplyRange() {
     if (from > to) { var tmp = from; from = to; to = tmp; }
     bbRangeFrom = from;
     bbRangeTo   = to;
-    renderBoard2026();
+    if (isBoardActive()) renderBoard2026();
   }, 220);
 }
 
@@ -9801,7 +10081,7 @@ function bbSort(col) {
     // Rank ascending makes sense as "board order"; all stats default desc (higher=better)
     bbSortDir = (col === 'rank') ? 1 : -1;
   }
-  renderBoard2026();
+  if (isBoardActive()) renderBoard2026();
 }
 
 function bbScreenshot() {
@@ -9987,7 +10267,7 @@ function mdcTeamLogoHtml(teamCode, size) {
   size = size || '28px';
   var id = NBA_TEAM_IDS[teamCode];
   if (id) {
-    return '<img class="mdc-team-logo" src="https://a.espncdn.com/i/teamlogos/nba/500/'
+    return '<img class="mdc-team-logo" loading="lazy" src="https://a.espncdn.com/i/teamlogos/nba/500/'
       + id + '.png" onerror="this.parentNode.innerHTML=\'<div class=mdc-team-logo-fb>'
       + teamCode + '</div>\'" alt="' + teamCode + '" style="width:' + size + ';height:' + size + '">';
   }
@@ -11872,13 +12152,6 @@ function scHideTip() { var tt = scGetTip(); tt.style.opacity = '0'; }
 // ── Debounced render ──────────────────────────────────────────────────────────
 var _scRenderTimer = null;
 function scRenderDebounced() {
-  // Show mobile warning when "All classes" selected on small screen
-  var warn = document.getElementById('scMobileWarning');
-  if (warn) {
-    var isMobile = window.innerWidth <= 640;
-    var isAll = document.getElementById('scYear') && document.getElementById('scYear').value === 'all';
-    warn.style.display = (isMobile && isAll) ? 'block' : 'none';
-  }
   // Dismiss mobile focus card on axis/year change — stale state on fresh chart
   if (typeof scDismissMobileFocus === 'function') scDismissMobileFocus();
   clearTimeout(_scRenderTimer);
@@ -12248,7 +12521,7 @@ function updateTierCuts() {
   TIER_CUTS = { franchise:f, lottery:l, lateFirst:lf, second:s };
   StorageService.saveTierCuts(TIER_CUTS);
   rebuildBBTiers();
-  renderBoard2026();
+  if (isBoardActive()) renderBoard2026();
 }
 
 function resetTierCuts() {
@@ -12259,7 +12532,7 @@ function resetTierCuts() {
   Object.keys(vals).forEach(function(id) {
     var el = document.getElementById(id); if(el) el.value = vals[id];
   });
-  renderBoard2026();
+  if (isBoardActive()) renderBoard2026();
 }
 
 // M6: Module-level reference so we can remove the exact listener that was added,
@@ -12290,11 +12563,11 @@ function toggleTierEditor() {
         ed.classList.remove('visible');
         if (btn) btn.classList.remove('on');
         document.removeEventListener('click',    _tierEditorDismiss);
-        document.removeEventListener('touchend', _tierEditorDismiss);
+        document.removeEventListener('touchend', _tierEditorDismiss, { passive: true });
         _tierEditorDismiss = null;
       };
       document.addEventListener('click',    _tierEditorDismiss);
-      document.addEventListener('touchend', _tierEditorDismiss);
+      document.addEventListener('touchend', _tierEditorDismiss, { passive: true });
     }, 0);
   }
 }
@@ -14800,7 +15073,7 @@ var CountdownModule = (function() {
       var now2  = Date.now();
       var diff2 = LOTTERY_TIME - now2;
       if (diff2 <= 0) {
-        lot.textContent = '🎱 LIVE';
+        lot.textContent = '✓ Completed';
         lot.style.color = '#4ADE80';
         if (lotLbl) lotLbl.textContent = 'Lottery Night';
         var lotPill = document.getElementById('lotteryCountdown');
@@ -15422,7 +15695,7 @@ var IntelService = (function() {
       <kbd style="font-size:11px;color:#94A3B8;border:1px solid #E2E8F0;border-radius:5px;padding:2px 7px;font-family:monospace;white-space:nowrap">Esc</kbd>
     </div>
     <!-- Results area -->
-    <div id="globalSearchResults" style="max-height:520px;overflow-y:auto;padding:8px 0">
+    <div id="globalSearchResults" style="max-height:520px;overflow-y:auto;padding:8px 0;overscroll-behavior:contain">
       <div style="text-align:center;padding:40px 20px;color:#94A3B8;font-size:14px">Start typing to search across all draft classes</div>
     </div>
   </div>
@@ -15703,7 +15976,7 @@ var IntelService = (function() {
     </div>
     <div class="mc-controls-row" style="margin-bottom:14px">
       <input id="mcSearchInput" type="text" placeholder="Search player or school…"
-        style="background:white;border:1.5px solid var(--gray-200);color:var(--navy);width:220px;padding:7px 12px;font-size:12px;border-radius:7px;outline:none"
+        style="background:white;border:1.5px solid var(--gray-200);color:var(--navy);width:220px;padding:7px 12px;border-radius:7px;outline:none"
         oninput="mcFilterResults(this.value)">
       <div class="mc-mode-group">
         <button class="mc-mode-btn active" onclick="mcSetFilter('all',this)">All 182</button>
