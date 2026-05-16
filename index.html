@@ -593,8 +593,8 @@ tr:hover td{background:var(--gray-50)}
 .metric-box .lbl{font-size:11px;color:inherit;opacity:.75;text-transform:uppercase;letter-spacing:.4px;font-weight:700;margin-top:3px}
 .metric-box .rank-ctx{font-size:9px;color:inherit;opacity:.55;margin-top:4px;letter-spacing:.2px;font-weight:500;line-height:1.3}
 .modal-section{margin-bottom:14px}
-.modal-section-label{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--gray-400);margin-bottom:8px;margin-top:4px}
-.modal-section-label--bpm{margin-top:14px;color:var(--blue);opacity:.7}
+.modal-section-label{font-size:12.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--gray-400);margin-bottom:10px;margin-top:4px}
+.modal-section-label--bpm{margin-top:16px;color:var(--blue);opacity:.7}
 .modal-bpm-row{grid-template-columns:repeat(3,1fr) !important;max-width:320px}
 /* ── MODAL TAB BAR ── */
 .modal-tab-bar{display:flex;gap:0;background:#f1f5f9;border-radius:10px;padding:4px;margin-bottom:18px;border:1px solid #e2e8f0}
@@ -620,7 +620,7 @@ tr:hover td{background:var(--gray-50)}
 .shot-source-row{font-size:9px;color:#cbd5e1;margin-top:14px;text-align:right;letter-spacing:.4px}
 .shot-source-row a{color:#4b6080}
 @media(max-width:600px){.shot-panel-wrap{flex-direction:column}.shot-court-col{width:100%}}
-.modal-sec-title{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.modal-sec-title{font-size:12.5px;font-weight:800;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .notes-text{font-size:13px;color:var(--gray-700);line-height:1.65;background:var(--gray-50);padding:12px 14px;border-radius:8px;border:1px solid var(--gray-100)}
 .sw-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .sw-grid.has-neutral{grid-template-columns:1fr 1fr 1fr}
@@ -1769,34 +1769,88 @@ tr:hover td{background:var(--gray-50)}
     grid-row:1;
   }
   /* Row 2: filters + view toggle share one flex row */
+  /* ── 1. Hide compare ⊕ button on mobile — accessible via player modal ── */
+  .hw-card-compare-btn{display:none !important}
+
+  /* ── 2. Metric chip overlap fix ─────────────────────────────────────────
+     On narrow cards the auto-sized metric chip squeezes the identity column.
+     Fix: fixed width chip, tighter font, clip chips row to one line only.  */
+  .card-header{grid-template-columns:30px 40px 1fr 48px;gap:7px;padding:10px 10px 8px}
+  .card-metric-chip{
+    min-width:0;
+    width:48px;
+    padding:6px 4px 5px;
+    border-radius:10px;
+    align-self:stretch;
+    overflow:hidden;
+  }
+  .card-metric{font-size:18px;letter-spacing:-.5px}
+  .card-metric.elite{font-size:19px}
+  .card-metric-label{font-size:5.5px;letter-spacing:.8px}
+  .card-elite-pip{font-size:6px;padding:1px 3px;margin-top:1px}
+  /* Identity: clip chips to single line so they never push into metric */
+  .card-identity{min-width:0;overflow:hidden}
+  .card-chips-row{
+    flex-wrap:nowrap;
+    overflow:hidden;
+    max-height:20px;
+    margin-top:3px;
+    gap:3px;
+  }
+
+  /* ── 3. Filter selects: stack vertically in their own sub-grid ──────────
+     Row 2 becomes a 2-row sub-structure:
+       Sub-row A: [pos filter] [cls filter]  — stacked on top of each other
+       Sub-row B: [view toggle ............]  — full width below             */
   .controls-bar-row2{
     grid-column:1/-1;
     grid-row:2;
-    display:flex;
-    gap:6px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:auto auto;
+    gap:5px;
     align-items:center;
   }
-  #posFilter,#clsFilter{
-    flex:1;
+  #posFilter{
+    grid-column:1;
+    grid-row:1;
+    flex:none;
     min-width:0;
     max-width:none;
-    font-size:14px !important;
-    padding:6px 8px;
+    width:100%;
+    font-size:16px;
+    padding:7px 8px;
+    min-height:38px;
+  }
+  #clsFilter{
+    grid-column:2;
+    grid-row:1;
+    flex:none;
+    min-width:0;
+    max-width:none;
+    width:100%;
+    font-size:16px;
+    padding:7px 8px;
     min-height:38px;
   }
   .view-toggle{
+    grid-column:1/-1;
+    grid-row:2;
     flex-shrink:0;
     display:flex;
     gap:2px;
     padding:3px;
-    width:auto;
+    width:100%;
+    justify-content:stretch;
   }
   .view-btn{
-    padding:5px 8px;
+    flex:1;
+    padding:6px 4px;
     font-size:10px;
     gap:2px;
     min-height:36px;
     white-space:nowrap;
+    justify-content:center;
   }
   .vb-badge{display:none}
   .count-badge{display:none}
@@ -2353,15 +2407,15 @@ tr:hover td{background:var(--gray-50)}
   .filter-select{min-width:76px;font-size:16px;padding:5px 6px}
   .cards-grid{gap:6px}
   .pc-tier-bar{width:3px}
-  .card-header{grid-template-columns:24px 32px 1fr auto;gap:5px;padding:8px 8px 6px}
+  .card-header{grid-template-columns:24px 32px 1fr 42px;gap:5px;padding:8px 8px 6px}
   .card-rank-label{font-size:7px}
   .card-rank-num{font-size:18px}
   .card-avatar-wrap{width:32px !important;height:32px !important}
   .card-name{font-size:clamp(11px,3vw,13px) !important}
   .card-school-name{max-width:64px !important}
-  .card-metric-chip{min-width:40px;padding:5px 5px 4px}
-  .card-metric{font-size:17px}
-  .card-metric.elite{font-size:18px}
+  .card-metric-chip{min-width:0;width:42px;padding:5px 3px 4px}
+  .card-metric{font-size:15px}
+  .card-metric.elite{font-size:16px}
   .bio-pill{font-size:10px !important;padding:1px 5px !important}
   .bio-pill.cls-pill{font-size:9px !important}
   .tag{font-size:7.5px !important;padding:1px 3px !important}
@@ -2426,14 +2480,26 @@ tr:hover td{background:var(--gray-50)}
   }
   .search-wrap{min-width:180px;max-width:320px;}
   .search-input{font-size:13px;}
-  .filter-select{
-    padding:8px 12px;
-    font-size:13px;
+  #posFilter,#clsFilter{
+    flex:none;
+    width:auto;
     min-width:120px;
+    max-width:none;
+    font-size:13px;
+    padding:8px 12px;
     min-height:38px;
   }
   .view-toggle{width:auto;}
   .view-btn{flex:0 0 auto;padding:6px 12px;text-align:left;}
+  /* Restore compare button on desktop */
+  .hw-card-compare-btn{display:flex !important}
+  /* Restore card-header auto metric column and metric chip sizing */
+  .card-header{grid-template-columns:40px 52px 1fr auto;gap:10px;padding:13px 13px 10px}
+  .card-metric-chip{min-width:56px;width:auto;padding:8px 9px 7px;border-radius:12px;overflow:visible}
+  .card-metric{font-size:27px;letter-spacing:-.5px}
+  .card-metric.elite{font-size:28px}
+  .card-metric-label{font-size:6.5px;letter-spacing:1.2px}
+  .card-chips-row{flex-wrap:wrap;max-height:36px;overflow:hidden;gap:4px}
 
   /* ── Modal — centered dialog on desktop ──────────────────────────────── */
   .modal-overlay{
@@ -5943,12 +6009,9 @@ function setView(v) {
 
   var el = document.getElementById('board2026Content');
 
-  // Invalidate cache for the incoming view so it always re-renders fresh.
-  // Without this, switching A→B→A would hit the stale A cache and bail.
-  hwInvalidateCache(v);
-  hwInvalidateCache('cards');
-  hwInvalidateCache('table');
-  hwInvalidateCache('bigboard');
+  // Invalidate all board view caches so every view switch always re-renders fresh.
+  // Non-board caches (analytics, history, future) are unaffected.
+  ['cards','table','bigboard'].forEach(hwInvalidateCache);
 
   // Skip animation for reduced-motion preference
   var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -6446,7 +6509,7 @@ function buildPlayerCard(p, tierKey) {
   // ── Chips row (position + role) ──────────────────────────────────────
   var chipsHtml = '';
   if (p.position)    chipsHtml += '<span class="tag pos ' + posCls + '">' + p.position + '</span>';
-  if (p.torvik_role) chipsHtml += '<span class="tag role">' + p.torvik_role + '</span>';
+  if (p.torvik_role) chipsHtml += '<span class="tag role">' + escHtml(p.torvik_role) + '</span>';
 
   // ── Bio strip: left pills (class / weight / height) + right ht pct ──
   var bioLeftHtml = '';
@@ -7574,7 +7637,7 @@ function showCompExplorer() {
   h += avatarHtml(player.name, player.position||'', '56px', '9px');
   h += '<div class="comp-header-text">';
   h += '<div class="comp-header-name">#'+player.rank+' '+base+'</div>';
-  h += '<div class="comp-header-sub">'+(school||'')+(player.torvik_role?' &middot; '+player.torvik_role:'')+(player.position?' &middot; '+player.position:'')+'</div>';
+  h += '<div class="comp-header-sub">'+(school||'')+(player.torvik_role?' &middot; '+escHtml(player.torvik_role):'')+(player.position?' &middot; '+escHtml(player.position):'')+'</div>';
   h += '</div>';
   if (player.metric&&player.metric>0) {
     h += '<div class="comp-header-metric">';
@@ -7873,6 +7936,11 @@ function renderMocks() {
   const yearData = DATA.mocks[yr] || {};
   const snapshots= Object.keys(yearData);
 
+  // Cache by year + snapshot count — prevents re-render on repeated onchange
+  var _mSig = 'mocks|' + yr + '|' + snapshots.length;
+  if (_hwCacheValid('mocks', _mSig)) { return; }
+  _hwCacheSet('mocks', _mSig);
+
   if (!snapshots.length) {
     document.getElementById('mocksContent').innerHTML =
       '<div class="empty"><div class="empty-icon">📋</div><p>No mock draft data for this year yet</p></div>';
@@ -8137,7 +8205,7 @@ function renderHistory() {
   const yr = document.getElementById('histYear').value;
   const search = (document.getElementById('histSearch').value||'').toLowerCase();
   var _hSig = ['history', yr, search, _histSortKey||'', _histSortDir].join('|');
-  if (_hwCacheValid('history', _hSig) && document.getElementById('historyContent').innerHTML) { return; }
+  if (_hwCacheValid('history', _hSig)) { return; }
   _hwCacheSet('history', _hSig);
   let players = (DATA.historical[yr]||[]).filter(p => !search || (p.name||'').toLowerCase().includes(search));
   if (_histSortKey) {
@@ -8238,7 +8306,7 @@ function renderFuture() {
   var el = document.getElementById('futureContent');
   if (!el) return;
   var _fSig = ['future', players.length, _future2027View || 'cards'].join('|');
-  if (_hwCacheValid('future', _fSig) && el.innerHTML) { return; }
+  if (_hwCacheValid('future', _fSig)) { return; }
   _hwCacheSet('future', _fSig);
   if (!players.length) {
     el.innerHTML = '<div class="empty"><div class="empty-icon">🔭</div><p>No 2027 data yet</p></div>';
@@ -8319,7 +8387,7 @@ function _renderFuture2027Cards(players) {
       out += '<div class="future-card-tags">';
       if (p.position) out += '<span class="tag pos '+posCls+'">'+p.position+'</span>';
       if (p.cls)      out += '<span class="tag cls">'+p.cls+'</span>';
-      if (p.age)      out += '<span class="tag age">'+parseFloat(p.age).toFixed(1)+' yrs</span>';
+      if (p.age)      out += '<span class="tag age">'+parseFloat(p.age||0).toFixed(1)+' yrs</span>';
       if (p.ht)       out += '<span class="tag ht">'+Math.floor(p.ht/12)+"'"+p.ht%12+'"'+'</span>';
       if (p.wt)       out += '<span class="tag wt">'+p.wt+' lbs</span>';
       out += '</div>';
@@ -8412,7 +8480,7 @@ function openFutureModal(rank) {
     if (p.barefoot)       body += '<div class="meas-item"><div class="val">' + Math.floor(p.barefoot/12) + "\'" + Math.round(p.barefoot%12) + '"</div><div class="lbl">Barefoot</div></div>';
     if (p.wingspan)       body += '<div class="meas-item"><div class="val">' + Math.floor(p.wingspan/12) + "\'" + Math.round(p.wingspan%12) + '"</div><div class="lbl">Wingspan</div></div>';
     if (p.standing_reach) body += '<div class="meas-item"><div class="val">' + Math.floor(p.standing_reach/12) + "\'" + Math.round(p.standing_reach%12) + '"</div><div class="lbl">Standing Reach</div></div>';
-    if (p.age)            body += '<div class="meas-item"><div class="val">' + parseFloat(p.age).toFixed(1) + '</div><div class="lbl">Age (8/1)</div></div>';
+    if (p.age)            body += '<div class="meas-item"><div class="val">' + parseFloat(p.age||0).toFixed(1) + '</div><div class="lbl">Age (8/1)</div></div>';
     body += '</div></div>';
   }
 
@@ -8512,6 +8580,12 @@ function renderResources() {
   var search = (document.getElementById("resourceSearch").value || "").toLowerCase();
   var catF   = document.getElementById("resourceCategory").value;
   var sections = DATA.resources || [];
+
+  // Cache by search + category — prevents re-render on repeated onchange
+  var _rSig = 'resources|' + search + '|' + catF;
+  if (_hwCacheValid('resources', _rSig)) { return; }
+  _hwCacheSet('resources', _rSig);
+
   var total = 0;
   var out = "";
   var catLabels = { NBA: "NBA", College: "College Basketball", Other: "Other / Dev" };
@@ -8711,12 +8785,18 @@ function _hwCacheSig(key, players) {
   var p = players || [];
   var s = AppState.get().board || {};
   var tc = typeof TIER_CUTS !== 'undefined' ? TIER_CUTS : {};
+  // Hash full rank array (not just first/last) — prevents false hits when
+  // filtered sets have same length/endpoints but different middle players.
+  var rankHash = p.reduce(function(acc, pl) { return (acc * 31 + (pl.rank || 0)) & 0xFFFFFF; }, 0);
   return [key, typeof currentView !== 'undefined' ? currentView : '',
-    p.length,
-    p.length ? p[0].rank : 0,
-    p.length > 1 ? p[p.length-1].rank : 0,
+    p.length, rankHash,
     s.sortCol||'', s.sortDir||'',
-    tc.franchise||'', tc.lottery||'', tc.lateFirst||'', tc.second||''].join('|');
+    tc.franchise||'', tc.lottery||'', tc.lateFirst||'', tc.second||'',
+    // BB-specific state included so bigboard cache invalidates on range/mode changes
+    typeof bbRangeFrom !== 'undefined' ? bbRangeFrom : '',
+    typeof bbRangeTo   !== 'undefined' ? bbRangeTo   : '',
+    typeof bbSubMode   !== 'undefined' ? bbSubMode   : '',
+    typeof bbTwoCol    !== 'undefined' ? bbTwoCol    : ''].join('|');
 }
 function _hwCacheValid(key, sig) {
   var e = _hwRenderCache[key]; return e && e.sig === sig;
@@ -9288,8 +9368,8 @@ function gsStatPills(p) {
   if (p.metric)  pills.push('Metric: ' + Number(p.metric).toFixed(1));
   if (p.ts_pct)  pills.push('TS: ' + (p.ts_pct*100).toFixed(1)+'%');
   if (p.pa2_usg) pills.push('P+A/USG: ' + Math.round(p.pa2_usg));
-  if (p.stl_bl)  pills.push('Stl+Bl: ' + parseFloat(p.stl_bl).toFixed(1));
-  if (p.ato)     pills.push('A/TO: ' + parseFloat(p.ato).toFixed(2));
+  if (p.stl_bl  != null) pills.push('Stl+Bl: ' + parseFloat(p.stl_bl).toFixed(1));
+  if (p.ato     != null) pills.push('A/TO: ' + parseFloat(p.ato).toFixed(2));
   if (p.bpm)     pills.push('BPM: ' + p.bpm);
   return pills.map(function(t){
     return '<span class="gs-stat">'+t+'</span>';
@@ -9718,7 +9798,7 @@ function bbBuildRow(p, idx) {
     // 5. Position + Role
     +'<div class="bb-tags bb-ctag">'
       +(p.position    ? '<span class="bb-tag '+bbTagCls(p.position)+'">'+p.position+'</span>' : '')
-      +(p.torvik_role ? '<span class="bb-tag bb-tag-r">'+p.torvik_role+'</span>' : '')
+      +(p.torvik_role ? '<span class="bb-tag bb-tag-r">'+escHtml(p.torvik_role)+'</span>' : '')
     +'</div>'
     // 6. Metric — glow number
     +'<div class="bb-met-cell bb-cmet">'
@@ -9751,7 +9831,10 @@ function renderBoardBigboard(players) {
   var el = document.getElementById('board2026Content');
   if (!el) return;
 
-  // ── Range: use module-level state (bbRangeFrom/bbRangeTo).
+  // Cache check — sig includes BB-specific state (range, mode, two-col) via _hwCacheSig
+  var _bbSig = _hwCacheSig('bigboard', players);
+  if (_hwCacheValid('bigboard', _bbSig)) { return; }
+  _hwCacheSet('bigboard', _bbSig);
   // setBBSubMode and bbSetRange both update state then re-render, so these
   // values are always current. Filter players to the selected rank window.
   var rankFrom = bbRangeFrom;
@@ -10356,7 +10439,7 @@ function mdcRenderPicks() {
       html += '  <div class="mdc-picked-name">' + pBase + '</div>';
       html += '  <div class="mdc-picked-meta">' + (pSchool || '')
             + (player.position ? ' · ' + player.position : '')
-            + (player.torvik_role ? ' · ' + player.torvik_role : '') + '</div>';
+            + (player.torvik_role ? ' · ' + escHtml(player.torvik_role) : '') + '</div>';
       html += '</div>';
       // Value badge + metric pill
       html += valueBadge(slot.pick, player.rank);
@@ -10614,6 +10697,9 @@ function mdcFilterPool(val) {
   if (_mdcSearchTimer) clearTimeout(_mdcSearchTimer);
   _mdcSearchTimer = setTimeout(function() { mdcRenderPool(); }, 120);
 }
+// mdcDebouncedFilter: pool search handler — delegates to mdcFilterPool which
+// internally debounces via _mdcSearchTimer (120ms). Kept as named function
+// so HTML oninput="mdcDebouncedFilter(this.value)" wiring stays intact.
 function mdcDebouncedFilter(val) { mdcFilterPool(val); }
 
 function mdcSave() {
@@ -11031,7 +11117,7 @@ function renderCompare() {
          + '<div class="crl-dot" style="background:'+COMPARE_COLORS[ci]+'"></div>'
          + '<span style="font-weight:'+(isLdr?'800':'600')+';color:var(--navy)">'
          + (isLdr ? '<span style="color:#B8860F;margin-right:2px">★</span>' : '')
-         + p.name
+         + escHtml(p.name)
          + '</span>'
          + '<span style="font-size:9px;color:var(--gray-400);font-weight:500">\''+((p._year||'2026').slice(2))+'</span>'
          + '</div>';
@@ -11134,7 +11220,7 @@ function renderCompare() {
               + '<div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0">'
               + avatarHtml(p.name,p.position||'','28px','5px')
               + '<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:13px;font-weight:800;color:var(--navy);white-space:nowrap">'
-              + (isLdr ? '\u2605 ' : '') + p.name + '</span>'
+              + (isLdr ? '\u2605 ' : '') + escHtml(p.name) + '</span>'
               + '<span style="font-size:9px;color:var(--gray-400)">'+(p._year||'2026')+'</span>'
               + '</div></th>';
   });
@@ -11360,11 +11446,11 @@ function renderTweetCardModal(p) {
   }).join('<div style="width:1px;background:#F1F5F9;align-self:stretch"></div>');
 
   var compHtml = p.comp
-    ? '<div style="margin-top:10px;padding:8px 12px;background:#F8FAFC;border-radius:6px;font-size:11px;color:#475569"><span style="font-weight:700;color:#0A1628">Comp: </span>' + p.comp + '</div>'
+    ? '<div style="margin-top:10px;padding:8px 12px;background:#F8FAFC;border-radius:6px;font-size:11px;color:#475569"><span style="font-weight:700;color:#0A1628">Comp: </span>' + escHtml(p.comp) + '</div>'
     : '';
 
   var roleTagHtml = p.torvik_role
-    ? '<span style="background:' + tierColor + '22;color:' + tierColor + ';font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;border:1px solid ' + tierColor + '44">' + p.torvik_role + '</span>'
+    ? '<span style="background:' + tierColor + '22;color:' + tierColor + ';font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;border:1px solid ' + tierColor + '44">' + escHtml(p.torvik_role) + '</span>'
     : '';
 
   var clsTagHtml = p.cls
@@ -12622,6 +12708,12 @@ function urlToast(msg) {
 function urlRestoreState() {
   var p=urlGetState();
   if(!p.tab) return;
+  // Allowlist: only accept known tab IDs from the URL hash.
+  // p.tab comes from decodeURIComponent(location.hash) — never use raw in DOM API.
+  var VALID_TABS = {board2026:1,methodology:1,mocks:1,compare:1,scatter:1,comps:1,
+                   future:1,history:1,analytics:1,resources:1};
+  var VALID_VIEWS = {cards:1,table:1,bigboard:1,freeform:1};
+  if (!VALID_TABS[p.tab]) return;
   var navTab=document.querySelector('.nav-tab[data-tab="'+p.tab+'"]');
   if(navTab){
     document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
@@ -12630,7 +12722,7 @@ function urlRestoreState() {
     var panel=document.getElementById('tab-'+p.tab);
     if(panel) panel.classList.add('active');
   }
-  if(p.view){
+  if(p.view && VALID_VIEWS[p.view]){
     currentView=p.view;
     ['Cards','Table','Bigboard','Freeform'].forEach(function(v){
       var el=document.getElementById('view'+v);
@@ -15616,6 +15708,8 @@ var IntelService = (function() {
   // ── 3. DATA_REFRESHED → re-render active tab ─────────────────────────────
   AppState.subscribe(function(state, prev, action) {
     if (action.type !== 'DATA_REFRESHED') return;
+    // Flush all render caches — data has changed, every view is stale
+    hwInvalidateCache();
     var activeTab = document.querySelector('.nav-tab.active');
     if (!activeTab) { populateCompSelect(); return; }
     var tab = activeTab.dataset.tab;
