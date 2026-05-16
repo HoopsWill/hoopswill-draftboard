@@ -122,255 +122,94 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 
 .cards-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(278px,1fr));
-  gap:14px
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:16px
 }
 
-/* Card base: pure white, layered shadow elevation */
+/* Card base */
 .player-card{
-  background:#FFFFFF;
-  border:none;
-  border-radius:16px;
-  padding:0;
-  cursor:pointer;
-  box-shadow:
-    0 0 0 1px rgba(10,22,40,.08),
-    0 2px 8px rgba(10,22,40,.05),
-    0 8px 24px rgba(10,22,40,.07);
-  transition:
-    transform 220ms cubic-bezier(.22,1,.36,1),
-    box-shadow 220ms cubic-bezier(.22,1,.36,1);
-  overflow:hidden;
-  display:flex;
-  flex-direction:row;
-  will-change:transform;
-  /* C3: Skip paint/layout for off-screen cards. contain-intrinsic-size gives the
-     browser a placeholder height so scroll position stays stable before paint.
-     ~220px ≈ typical card height at 2-col mobile; browser adjusts on first paint. */
-  content-visibility:auto;
-  contain-intrinsic-size:0 220px;
+  background:#FFFFFF;border:none;border-radius:16px;padding:0;cursor:pointer;
+  box-shadow:0 0 0 1px rgba(10,22,40,.08),0 2px 8px rgba(10,22,40,.05),0 8px 24px rgba(10,22,40,.07);
+  transition:transform 220ms cubic-bezier(.22,1,.36,1),box-shadow 220ms cubic-bezier(.22,1,.36,1);
+  overflow:hidden;display:flex;flex-direction:row;will-change:transform;
+  content-visibility:auto;contain-intrinsic-size:0 260px;
 }
 .player-card:hover{
-  transform:translateY(-4px) scale(1.012);
-  box-shadow:
-    0 0 0 1px rgba(10,22,40,.10),
-    0 4px 12px rgba(10,22,40,.08),
-    0 16px 40px rgba(10,22,40,.13)
+  transform:translateY(-3px) scale(1.008);
+  box-shadow:0 0 0 1px rgba(10,22,40,.10),0 4px 12px rgba(10,22,40,.08),0 16px 40px rgba(10,22,40,.13)
 }
-.player-card:active{
-  transform:translateY(-1px) scale(1.003);
-  transition-duration:80ms
-}
-
-/* ── Left vertical tier bar — replaces top accent strip ── */
+.player-card:active{transform:translateY(-1px) scale(1.003);transition-duration:80ms}
 .pc-tier-bar{width:5px;flex-shrink:0;align-self:stretch}
 .player-card.franchise .pc-tier-bar{background:linear-gradient(180deg,#92400E,#D97706,#F59E0B)}
 .player-card.lottery   .pc-tier-bar{background:linear-gradient(180deg,#5B21B6,#7C3AED,#A78BFA)}
 .player-card.late1     .pc-tier-bar{background:linear-gradient(180deg,#1D4ED8,#2563EB,#93C5FD)}
 .player-card.second    .pc-tier-bar{background:linear-gradient(180deg,#0E7490,#0891B2,#67E8F9)}
 .player-card.udfa      .pc-tier-bar{background:linear-gradient(180deg,#047857,#059669,#6EE7B7)}
-/* Legacy top bar — hidden, replaced by side bar */
 .pc-accent{display:none}
-
-/* ── Card inner content column ── */
 .pc-inner{flex:1;min-width:0;display:flex;flex-direction:column}
-
-/* ── Header: 4-col grid: rank | avatar | identity | metric ── */
-.card-header{
-  display:grid;
-  grid-template-columns:40px 52px 1fr auto;
-  align-items:center;
-  gap:10px;
-  padding:13px 13px 10px;
-}
-
-/* ── Avatar spotlight: hover glow + zoom (restored from prior design) ── */
-.card-avatar-wrap{
-  overflow:visible !important;
-  isolation:isolate;
-  transition:
-    box-shadow 280ms cubic-bezier(.22,1,.36,1),
-    transform  220ms cubic-bezier(.22,1,.36,1);
-}
-.card-avatar-img{
-  border-radius:inherit;
-  display:block;
-  transition:transform 320ms cubic-bezier(.22,1,.36,1);
-  transform-origin:50% 40%;
-  image-rendering:-webkit-optimize-contrast;
-  -webkit-backface-visibility:hidden;
-  backface-visibility:hidden;
-}
-.card-avatar-wrap .avatar-fallback{
-  border-radius:inherit;
-  transition:transform 320ms cubic-bezier(.22,1,.36,1);
-}
-.player-card:hover .card-avatar-wrap{
-  box-shadow:
-    0 0 0 2.5px rgba(var(--tier-glow),.28),
-    0 0 14px 4px  rgba(var(--tier-glow),.16),
-    0 0 28px 8px  rgba(var(--tier-glow),.06);
-}
-.player-card:hover .card-avatar-img,
-.player-card:hover .card-avatar-wrap .avatar-fallback{
-  transform:scale(1.08);
-}
-.player-card:active .card-avatar-wrap{
-  box-shadow:
-    0 0 0 2px rgba(var(--tier-glow),.22),
-    0 0 10px 3px rgba(var(--tier-glow),.12);
-}
-.player-card:active .card-avatar-img,
-.player-card:active .card-avatar-wrap .avatar-fallback{
-  transform:scale(1.02);
-  transition-duration:80ms;
-}
-@media(pointer:coarse){
-  .player-card:hover .card-avatar-img,
-  .player-card:hover .card-avatar-wrap .avatar-fallback{
-    transform:scale(1.05);
-  }
-}
-
-/* Rank: RANK label + large number two-line stack */
-.card-rank-badge{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  flex-shrink:0;text-align:center;
-}
-.card-rank-label{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:9px;font-weight:700;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--gray-400);line-height:1;
-}
-.card-rank-num{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:30px;font-weight:900;color:var(--navy);
-  letter-spacing:-1px;line-height:1;margin-top:1px;
-}
-
-/* ── Identity: name / school row / chips ── */
-.card-identity{
-  flex:1;min-width:0;overflow:hidden;
-  display:flex;flex-direction:column;justify-content:center;gap:0;
-}
-.card-name{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:clamp(15px,4.8vw,19px);font-weight:900;
-  color:var(--navy);line-height:1.05;letter-spacing:-.3px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.card-school-row{
-  display:flex;align-items:center;gap:5px;
-  min-width:0;overflow:hidden;margin-top:3px;
-}
+.card-header{display:flex;flex-direction:row;align-items:stretch;gap:0;padding:0}
+.card-header-left{display:flex;flex-direction:row;align-items:flex-start;gap:10px;padding:14px 12px 12px;flex:1;min-width:0}
+.card-rank-badge{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;flex-shrink:0;text-align:center;padding-top:2px;min-width:34px}
+.card-rank-label{font-family:'Barlow Condensed',sans-serif;font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-400);line-height:1}
+.card-rank-num{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;color:var(--navy);letter-spacing:-1.5px;line-height:1;margin-top:1px}
+.card-rank-crown{font-size:14px;line-height:1;margin-top:3px;display:block}
+.card-avatar-wrap{overflow:visible !important;isolation:isolate;transition:box-shadow 280ms cubic-bezier(.22,1,.36,1),transform 220ms cubic-bezier(.22,1,.36,1)}
+.card-avatar-img{border-radius:inherit;display:block;transition:transform 320ms cubic-bezier(.22,1,.36,1);transform-origin:50% 40%;image-rendering:-webkit-optimize-contrast;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.card-avatar-wrap .avatar-fallback{border-radius:inherit;transition:transform 320ms cubic-bezier(.22,1,.36,1)}
+.player-card:hover .card-avatar-wrap{box-shadow:0 0 0 2.5px rgba(var(--tier-glow),.28),0 0 14px 4px rgba(var(--tier-glow),.16),0 0 28px 8px rgba(var(--tier-glow),.06)}
+.player-card:hover .card-avatar-img,.player-card:hover .card-avatar-wrap .avatar-fallback{transform:scale(1.08)}
+.player-card:active .card-avatar-wrap{box-shadow:0 0 0 2px rgba(var(--tier-glow),.22),0 0 10px 3px rgba(var(--tier-glow),.12)}
+.player-card:active .card-avatar-img,.player-card:active .card-avatar-wrap .avatar-fallback{transform:scale(1.02);transition-duration:80ms}
+@media(pointer:coarse){.player-card:hover .card-avatar-img,.player-card:hover .card-avatar-wrap .avatar-fallback{transform:scale(1.05)}}
+.card-identity{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-start;gap:0}
+.card-name{font-family:'Barlow Condensed',sans-serif;font-size:clamp(17px,3.6vw,22px);font-weight:900;color:var(--navy);line-height:1.0;letter-spacing:-.3px;white-space:normal;word-break:break-word}
+.card-school-row{display:flex;align-items:center;gap:5px;min-width:0;margin-top:4px}
 .card-school-logo{display:flex;align-items:center}
-.card-logo-ring{
-  width:18px;height:18px;
-  display:inline-flex;align-items:center;justify-content:center;
-  overflow:hidden;flex-shrink:0;border-radius:3px;
-  background:rgba(10,22,40,.04);
-}
+.card-logo-ring{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;border-radius:3px;background:rgba(10,22,40,.04)}
 .card-logo-ring img{width:100%;height:100%;object-fit:contain}
-.card-school-name{
-  font-size:11px;font-weight:500;color:var(--gray-500);
-  letter-spacing:.01em;line-height:1.2;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  max-width:120px;min-width:0;
-}
+.card-school-name{font-size:12px;font-weight:500;color:var(--gray-500);letter-spacing:.01em;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.card-role-line{font-size:11px;font-weight:600;color:var(--gray-400);margin-top:3px;line-height:1.2}
+.card-role-line .role-name{color:#16A34A;font-weight:700}
 .card-school{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--gray-500);font-weight:500;margin-top:2px}
-.card-chips-row{
-  display:flex;align-items:center;flex-wrap:wrap;
-  gap:4px;row-gap:2px;overflow:hidden;max-height:36px;margin-top:5px;
-}
-
-/* ── Tags ── */
-.tag{
-  display:inline-flex;align-items:center;
-  font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;
-  line-height:1;padding:2px 5px;border-radius:4px;letter-spacing:.01em;white-space:nowrap;
-}
-.tag.pos{
-  font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-  border:1px solid currentColor;
-}
-.tag.pos.guard  {background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.tag{display:inline-flex;align-items:center;font-family:'Barlow Condensed',sans-serif;font-size:9.5px;font-weight:800;line-height:1;padding:3px 7px;border-radius:4px;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+.tag.pos{border:1.5px solid currentColor}
+.tag.pos.guard{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
 .tag.pos.forward{background:#F5F3FF;color:#5B21B6;border-color:#DDD6FE}
-.tag.pos.center {background:#ECFEFF;color:#0E7490;border-color:#A5F3FC}
-.tag.role{
-  font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-  background:#F1F5F9;color:#475569;border:1px solid #CBD5E1;
-}
-.tag.age,.tag.ht{
-  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;
-  letter-spacing:-.1px;border-radius:5px;padding:2px 6px;
-}
-
-/* ── Metric chip — right column, full header height ── */
-.card-metric-chip{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  flex-shrink:0;min-width:56px;padding:8px 9px 7px;
-  border-radius:12px;text-align:center;align-self:stretch;
-}
-.card-metric{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:27px;font-weight:900;line-height:1;color:inherit;letter-spacing:-.5px;
-}
-.card-metric.elite{font-size:28px}
-.card-metric-label{
-  font-size:6.5px;font-weight:800;text-transform:uppercase;
-  letter-spacing:1.2px;opacity:.55;color:inherit;margin-top:3px;
-}
-.card-elite-pip{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:8px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
-  background:rgba(146,64,14,.14);color:inherit;
-  padding:2px 5px;border-radius:3px;margin-top:3px;white-space:nowrap;
-}
-
-/* ── Bio strip: pill-based, left physicals / right height pct ── */
-.card-measurables{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:7px 13px 8px;
-  background:#F8FAFC;
-  border-top:1px solid rgba(10,22,40,.06);
-  border-bottom:1px solid rgba(10,22,40,.06);
-  gap:6px;
-}
+.tag.pos.center{background:#ECFEFF;color:#0E7490;border-color:#A5F3FC}
+.tag.role{background:#F1F5F9;color:#475569;border:1.5px solid #CBD5E1}
+.tag.age,.tag.ht{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:-.1px;border-radius:5px;padding:2px 6px}
+.card-metric-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;width:86px;padding:10px 10px 12px;text-align:center;border-left:1px solid rgba(10,22,40,.06)}
+.card-metric-chip{display:none}
+.card-metric{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:900;line-height:1;color:inherit;letter-spacing:-1px}
+.card-metric.elite{color:inherit}
+.card-metric-label{font-size:7px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;opacity:.6;color:inherit;margin-top:4px}
+.card-elite-pip{font-family:'Barlow Condensed',sans-serif;font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;background:currentColor;border-radius:3px;padding:1px 6px;margin-bottom:3px;display:inline-block;min-height:14px;line-height:14px}
+.card-elite-pip-inner{color:white;mix-blend-mode:difference}
+.card-elite-pip-spacer{min-height:14px;margin-bottom:3px}
+.card-metric-pct{font-size:10px;font-weight:700;color:inherit;margin-top:6px;opacity:.7;line-height:1.3;text-align:center}
+.card-metric-pct sup{font-size:7px;vertical-align:super;line-height:0}
+.card-measurables{display:flex;align-items:stretch;padding:0;background:#F8FAFC;border-top:1px solid rgba(10,22,40,.06);border-bottom:1px solid rgba(10,22,40,.06)}
+.card-bio-item{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;min-width:0;padding:7px 4px;position:relative;text-align:center}
+.card-bio-item+.card-bio-item::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:1px;background:rgba(10,22,40,.07)}
+.card-bio-icon{font-size:10px;flex-shrink:0;opacity:.4;margin-bottom:1px}
+.card-bio-val{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--navy);white-space:nowrap;line-height:1}
+.card-bio-pct{font-size:8px;font-weight:700;color:var(--gray-400);vertical-align:super;line-height:0;margin-left:1px}
+.card-bio-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-400);margin-top:2px}
 .card-bio-left{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;min-width:0;overflow:hidden}
 .card-bio-right{display:flex;align-items:center;gap:4px;flex-shrink:0}
-.bio-pill{
-  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;
-  letter-spacing:.01em;white-space:nowrap;
-  background:white;border:1px solid rgba(10,22,40,.09);border-radius:5px;
-  padding:2px 8px;color:#334155;flex-shrink:0;line-height:1.4;
-}
-.bio-pill.cls-pill{
-  background:#EEF2FF;border-color:#C7D2FE;color:#3730A3;
-  font-size:11px;letter-spacing:.06em;text-transform:uppercase;
-}
-.bio-ht-pct{
-  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;
-  border-radius:4px;padding:2px 6px;flex-shrink:0;
-}
+.bio-pill{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.01em;white-space:nowrap;background:white;border:1px solid rgba(10,22,40,.09);border-radius:5px;padding:2px 8px;color:#334155;flex-shrink:0;line-height:1.4}
+.bio-pill.cls-pill{background:#EEF2FF;border-color:#C7D2FE;color:#3730A3;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.bio-ht-pct{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;border-radius:4px;padding:2px 6px;flex-shrink:0}
 .bio-ht-pct sup{font-size:7px;font-weight:700;vertical-align:super;line-height:0}
 .bio-ht-label{font-size:9.5px;font-weight:500;color:var(--gray-400);letter-spacing:.01em;flex-shrink:0}
-/* Legacy meas-* selectors kept for non-card usage */
 .meas-cls{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);flex-shrink:0}
 .meas-dot{font-size:11px;font-weight:400;color:rgba(10,22,40,.22);margin:0 4px;flex-shrink:0;line-height:1;align-self:center;user-select:none}
 .meas-item{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#334155;letter-spacing:-.1px;flex-shrink:0}
 .meas-pct{display:inline-flex;align-items:baseline;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;border-radius:3px;padding:1px 5px;flex-shrink:0}
 .meas-pct sup{font-size:7px;font-weight:700;vertical-align:super;line-height:0;letter-spacing:0}
 .meas-pos{font-size:9.5px;font-weight:500;color:rgba(10,22,40,.35);letter-spacing:.01em;flex-shrink:0}
-
-/* ── Stats grid: 2×3 ── */
-.card-stats{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:5px;padding:11px 12px 12px;
-}
-.stat-cell{
-  position:relative;text-align:center;
-  background:rgba(10,22,40,.03);border-radius:9px;padding:9px 4px 7px;
-}
+.card-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:10px 12px 11px}
+.stat-cell{position:relative;text-align:center;background:rgba(10,22,40,.03);border-radius:9px;padding:9px 4px 7px}
 .pos-ring{position:absolute;top:3px;right:3px;width:13px;height:13px;pointer-events:none;flex-shrink:0}
 .pos-ring circle{fill:none;stroke-width:2;stroke-linecap:round}
 .pos-ring .ring-track{stroke:rgba(10,22,40,.08)}
@@ -378,22 +217,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--navy
 .stat-val{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:900;color:inherit;line-height:1}
 .stat-bar{height:2px;border-radius:1px;margin:4px auto 0;opacity:.35;min-width:3px}
 .stat-lbl{font-size:8.5px;color:inherit;opacity:.65;text-transform:uppercase;letter-spacing:.4px;font-weight:600;display:block;margin-top:4px}
-
-/* ── Comp footer: COMPS label + individual name pills ── */
-.card-comp{
-  display:flex;align-items:center;gap:5px;flex-wrap:wrap;
-  padding:8px 13px 11px;border-top:1px solid rgba(10,22,40,.06);margin-top:auto;
-}
-.card-comp-label{
-  font-size:8.5px;font-weight:700;text-transform:uppercase;
-  letter-spacing:.08em;color:var(--gray-400);flex-shrink:0;
-}
-.card-comp-name{
-  font-size:10px;font-weight:600;color:var(--gray-600);
-  background:#F1F5F9;border:1px solid rgba(10,22,40,.07);
-  border-radius:4px;padding:2px 7px;white-space:nowrap;
-}
+.card-comp{display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:6px 12px 9px;border-top:1px solid rgba(10,22,40,.06);margin-top:auto}
+.card-comp-label{font-size:7.5px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);flex-shrink:0}
+.card-comp-pill{display:inline-flex;align-items:center;gap:4px;background:#F8FAFC;border:1px solid rgba(10,22,40,.08);border-radius:20px;padding:2px 7px 2px 3px}
+.card-comp-avatar{width:16px;height:16px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--gray-200);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:7px;font-weight:800;color:var(--gray-500)}
+.card-comp-name{font-size:10px;font-weight:700;color:var(--gray-700);white-space:nowrap}
 .card-comp strong{color:var(--blue);font-weight:600}
+
 
 /* ── Championship trophy badge ─────────────────────────────────────────── */
 /* Appears inline after the player name in both Cards and Big Board views.  */
@@ -910,30 +740,36 @@ tr:hover td{background:var(--gray-50)}
   .tier-editor > div{flex-wrap:wrap;gap:12px;padding:4px 0}
   .tier-ed-group{flex:1 0 140px}
 
-  /* C-04: Cards — 2-column grid on mobile */
-  .cards-grid{grid-template-columns:1fr 1fr;gap:8px}
-
-  /* New layout: tier bar + 4-col header grid */
+  /* C-04: Cards — single column on mobile for new design */
+  .cards-grid{grid-template-columns:1fr;gap:10px}
   .pc-tier-bar{width:4px}
-  .card-header{grid-template-columns:30px 40px 1fr auto;gap:7px;padding:10px 10px 8px}
-  .card-avatar-wrap{width:40px !important;height:40px !important}
-  .card-rank-label{font-size:8px}
-  .card-rank-num{font-size:22px}
-  .card-name{font-size:clamp(12px,3.4vw,15px);line-height:1.05}
-  .card-school-name{font-size:9.5px;max-width:80px}
-  .card-logo-ring{width:14px;height:14px}
-  .card-school{font-size:9px;gap:3px;margin-top:1px}
-  .card-metric-chip{min-width:46px;padding:6px 7px 5px;border-radius:10px;align-self:stretch}
-  .card-metric{font-size:20px}
-  .card-metric.elite{font-size:22px}
+  .card-header-left{padding:11px 10px 10px;gap:8px}
+  .card-rank-num{font-size:24px}
+  .card-name{font-size:clamp(16px,4.5vw,20px)}
+  .card-school-name{font-size:11px}
+  .card-role-line{font-size:10px;margin-top:2px}
+  .tag{font-size:8.5px;padding:2px 6px}
+  .card-metric-panel{width:72px;padding:8px 7px 10px}
+  .card-metric{font-size:26px}
   .card-metric-label{font-size:6px}
-  .card-elite-pip{font-size:7px;padding:1px 4px;margin-top:2px}
-  .card-bio-left{gap:4px}
-  .card-chips-row{gap:3px;margin-top:3px}
-  .tag{font-size:8px;padding:1px 4px}
+  .card-elite-pip{font-size:7px;padding:1px 5px;margin-bottom:2px;min-height:12px;line-height:12px}
+  .card-elite-pip-spacer{min-height:12px;margin-bottom:2px}
+  .card-metric-pct{font-size:9px;margin-top:4px}
+  .card-bio-item{padding:6px 3px}
+  .card-bio-val{font-size:13px}
+  .card-bio-icon{font-size:9px}
+  .card-bio-lbl{font-size:7px}
+  .card-stats{gap:4px;padding:8px 10px 9px}
+  .stat-cell{padding:8px 3px 6px;border-radius:8px}
+  .stat-val{font-size:15px}
+  .stat-lbl{font-size:7.5px;margin-top:3px}
   .stat-bar{display:block !important;opacity:.38;height:2px;margin-top:3px}
   .pos-ring{width:11px;height:11px;top:2px;right:2px}
-  .card-comp{display:none !important}
+  .stat-cell--secondary{display:none}
+  .card-comp-pill{padding:2px 6px 2px 2px;gap:3px}
+  .card-comp-avatar{width:14px;height:14px;font-size:6.5px}
+  .card-comp-name{font-size:9px}
+  .hw-card-compare-btn{display:none !important}
 
   /* Table: sticky rank + player columns — background must track the row colour.
      Using background:inherit on sticky cells means they automatically adopt
@@ -1787,16 +1623,10 @@ tr:hover td{background:var(--gray-50)}
   .card-metric{font-size:18px;letter-spacing:-.5px}
   .card-metric.elite{font-size:19px}
   .card-metric-label{font-size:5.5px;letter-spacing:.8px}
-  .card-elite-pip{font-size:6px;padding:1px 3px;margin-top:1px}
-  /* Identity: clip chips to single line so they never push into metric */
+  .card-elite-pip{font-size:5.5px;padding:1px 3px;margin-bottom:1px;min-height:10px;line-height:10px}
+  .card-elite-pip-spacer{min-height:10px;margin-bottom:1px}
+  /* Identity: clip long content so it never pushes into metric */
   .card-identity{min-width:0;overflow:hidden}
-  .card-chips-row{
-    flex-wrap:nowrap;
-    overflow:hidden;
-    max-height:20px;
-    margin-top:3px;
-    gap:3px;
-  }
 
   /* ── 3. Filter selects: stack vertically in their own sub-grid ──────────
      Row 2 becomes a 2-row sub-structure:
@@ -2407,15 +2237,14 @@ tr:hover td{background:var(--gray-50)}
   .filter-select{min-width:76px;font-size:16px;padding:5px 6px}
   .cards-grid{gap:6px}
   .pc-tier-bar{width:3px}
-  .card-header{grid-template-columns:24px 32px 1fr 42px;gap:5px;padding:8px 8px 6px}
+  .card-header-left{padding:9px 8px 8px;gap:7px}
   .card-rank-label{font-size:7px}
-  .card-rank-num{font-size:18px}
-  .card-avatar-wrap{width:32px !important;height:32px !important}
-  .card-name{font-size:clamp(11px,3vw,13px) !important}
-  .card-school-name{max-width:64px !important}
-  .card-metric-chip{min-width:0;width:42px;padding:5px 3px 4px}
-  .card-metric{font-size:15px}
-  .card-metric.elite{font-size:16px}
+  .card-rank-num{font-size:20px}
+  .card-name{font-size:clamp(15px,4.2vw,18px) !important}
+  .card-school-name{font-size:10px}
+  .card-metric-panel{width:64px;padding:9px 6px 8px}
+  .card-metric{font-size:22px}
+  .card-metric-pct{font-size:8px;margin-top:3px}
   .bio-pill{font-size:10px !important;padding:1px 5px !important}
   .bio-pill.cls-pill{font-size:9px !important}
   .tag{font-size:7.5px !important;padding:1px 3px !important}
@@ -2491,15 +2320,30 @@ tr:hover td{background:var(--gray-50)}
   }
   .view-toggle{width:auto;}
   .view-btn{flex:0 0 auto;padding:6px 12px;text-align:left;}
+  /* ── Cards — 3-col on desktop ──────────────────────────────── */
+  .cards-grid{grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+  .card-header-left{padding:14px 12px 12px;gap:10px}
+  .card-rank-num{font-size:32px}
+  .card-name{font-size:clamp(17px,3.6vw,22px)}
+  .card-metric-panel{width:86px;padding:10px 10px 12px}
+  .card-metric{font-size:34px}
+  .card-metric-label{font-size:7px}
+  .card-elite-pip{font-size:8px;padding:1px 6px;margin-bottom:3px;min-height:14px;line-height:14px}
+  .card-elite-pip-spacer{min-height:14px;margin-bottom:3px}
+  .card-metric-pct{font-size:10px;margin-top:6px}
+  .card-bio-item{padding:7px 4px}
+  .card-bio-val{font-size:14px}
+  .card-bio-lbl{font-size:8px}
+  .card-stats{gap:5px;padding:10px 12px 11px}
+  .stat-cell{padding:9px 4px 7px}
+  .stat-val{font-size:17px}
+  .stat-lbl{font-size:8.5px}
+  .stat-cell--secondary{display:block}
   /* Restore compare button on desktop */
   .hw-card-compare-btn{display:flex !important}
   /* Restore card-header auto metric column and metric chip sizing */
-  .card-header{grid-template-columns:40px 52px 1fr auto;gap:10px;padding:13px 13px 10px}
-  .card-metric-chip{min-width:56px;width:auto;padding:8px 9px 7px;border-radius:12px;overflow:visible}
-  .card-metric{font-size:27px;letter-spacing:-.5px}
-  .card-metric.elite{font-size:28px}
-  .card-metric-label{font-size:6.5px;letter-spacing:1.2px}
-  .card-chips-row{flex-wrap:wrap;max-height:36px;overflow:hidden;gap:4px}
+  .card-metric-chip{display:none}
+  .tag{font-size:9.5px;padding:3px 7px}
 
   /* ── Modal — centered dialog on desktop ──────────────────────────────── */
   .modal-overlay{
@@ -6461,21 +6305,24 @@ function ordSfx(n) {
 }
 
 function buildPlayerCard(p, tierKey) {
-  var name   = escHtml(p.name   || '');
+  var name   = escHtml(splitName(p.name || '')[0]);
   var school = escHtml(p.school || '');
 
   // ── Metric ───────────────────────────────────────────────────────────
-  var gm          = gradStyle(p.metric, 'metric');
-  var mv          = p.metric ? Number(p.metric).toFixed(1) : '—';
-  var isElite     = p.metric > 140;
-  var metricClass = isElite ? 'card-metric elite' : 'card-metric';
+  var gm      = gradStyle(p.metric, 'metric');
+  var mv      = p.metric ? Number(p.metric).toFixed(1) : '—';
+  var isElite = p.metric > 140;
 
-  // ── School logo (18px ring, same helper as before) ───────────────────
+  // Metric percentile among ALL 104 players (not position-filtered)
+  var allMetrics = DataService.getBoard('2026').map(function(x){ return x.metric; }).filter(Boolean);
+  var metPct = null;
+  if (p.metric && allMetrics.length) {
+    var below = allMetrics.filter(function(m){ return m < p.metric; }).length;
+    metPct = Math.round((below / allMetrics.length) * 100);
+  }
+
+  // ── School logo ──────────────────────────────────────────────────────
   var logoHtml = buildSchoolLogoHtml(school);
-
-  // ── Position chip class ──────────────────────────────────────────────
-  var posClassMap = { 'Guard':'guard', 'Forward':'forward', 'Center':'center' };
-  var posCls      = posClassMap[p.position] || 'forward';
 
   // ── Class abbreviation ───────────────────────────────────────────────
   var clsAbbr = '';
@@ -6488,48 +6335,97 @@ function buildPlayerCard(p, tierKey) {
     else                                                    clsAbbr = p.cls.slice(0,3).toUpperCase();
   }
 
-  // ── Height display ───────────────────────────────────────────────────
+  // ── Height display + percentile (all players) ────────────────────────
   var htDisplay = p.ht ? (Math.floor(p.ht/12) + '\'' + (p.ht%12) + '"') : '';
-
-  // ── Height percentile within position group ──────────────────────────
-  var htPct = null, htPctSty = '';
-  if (p.ht && p.position && POS_HT_SORTED[p.position] && POS_HT_SORTED[p.position].length) {
-    var htArr   = POS_HT_SORTED[p.position];
-    var htValN  = parseFloat(p.ht);
+  var htPct = null;
+  if (p.ht && POS_HT_SORTED[p.position] && POS_HT_SORTED[p.position].length) {
+    var htArr  = POS_HT_SORTED[p.position];
     var htBelow = 0;
-    for (var hi = 0; hi < htArr.length; hi++) { if (htArr[hi] < htValN) htBelow++; }
+    var htN = parseFloat(p.ht);
+    for (var hi = 0; hi < htArr.length; hi++) { if (htArr[hi] < htN) htBelow++; }
     htPct = Math.round((htBelow / htArr.length) * 100);
-    var pctR   = htPct / 100;
-    var pctHue = Math.round(pctR * 120);
-    var pctBgL = Math.round(94 - pctR * 8);
-    var pctFgL = Math.round(34 - pctR * 12);
-    htPctSty = 'background:hsl(' + pctHue + ',68%,' + pctBgL + '%);color:hsl(' + pctHue + ',60%,' + pctFgL + '%);';
   }
 
-  // ── Chips row (position + role) ──────────────────────────────────────
-  var chipsHtml = '';
-  if (p.position)    chipsHtml += '<span class="tag pos ' + posCls + '">' + p.position + '</span>';
-  if (p.torvik_role) chipsHtml += '<span class="tag role">' + escHtml(p.torvik_role) + '</span>';
+  // ── Tier glow ────────────────────────────────────────────────────────
+  var _tierGlow = tierKey==='franchise' ? '245,158,11'
+                : tierKey==='lottery'   ? '139,92,246'
+                : tierKey==='late1'     ? '59,130,246'
+                : tierKey==='second'    ? '8,145,178'
+                : tierKey==='udfa'      ? '5,150,105'
+                : '10,22,40';
 
-  // ── Bio strip: left pills (class / weight / height) + right ht pct ──
-  var bioLeftHtml = '';
-  if (clsAbbr) bioLeftHtml += '<span class="bio-pill cls-pill">' + clsAbbr + '</span>';
-  if (p.wt)    bioLeftHtml += '<span class="bio-pill wt-pill">' + p.wt + ' lb</span>';
-  if (htDisplay) bioLeftHtml += '<span class="bio-pill">' + htDisplay + '</span>';
+  // ── Crown for top 3 ──────────────────────────────────────────────────
+  var crownHtml = (p.rank <= 3)
+    ? '<span class="card-rank-crown">' + (p.rank===1?'👑':p.rank===2?'🥈':'🥉') + '</span>'
+    : '';
 
-  var bioRightHtml = '';
-  if (htPct !== null) {
-    bioRightHtml = '<span class="bio-ht-pct" style="' + htPctSty + '">'
-      + htPct + '<sup>' + ordSfx(htPct) + '</sup></span>'
-      + '<span class="bio-ht-label">ht%ile</span>';
+  // ── Metric panel gradient style ──────────────────────────────────────
+  // Extract bg/fg from gradStyle string so metric panel uses same colors
+  var gmBg = gm.match(/background:([^;]+)/);
+  var gmFg = gm.match(/color:([^;]+)/);
+  var panelStyle = (gmBg ? 'background:' + gmBg[1] + ';' : '')
+                 + (gmFg ? 'color:' + gmFg[1] + ';' : '');
+
+  // ── Metric percentile label ──────────────────────────────────────────
+  var metPctHtml = '';
+  if (metPct !== null) {
+    metPctHtml = '<div class="card-metric-pct">'
+      + metPct + '<sup>' + ordSfx(metPct) + '</sup><br>PERCENTILE'
+      + '</div>';
   }
 
-  var bioHtml = '<div class="card-measurables">'
-    + '<div class="card-bio-left">' + bioLeftHtml + '</div>'
-    + (bioRightHtml ? '<div class="card-bio-right">' + bioRightHtml + '</div>' : '')
-    + '</div>';
+  // ── ELITE pip (rendered above number; spacer keeps alignment when absent)
+  var elitePipHtml = isElite
+    ? '<div class="card-elite-pip"><span class="card-elite-pip-inner">ELITE</span></div>'
+    : '<div class="card-elite-pip-spacer"></div>';
 
-  // ── Six stat cells ───────────────────────────────────────────────────
+  // ── Role line (torvik_role · position) ───────────────────────────────
+  var roleParts = [];
+  if (p.torvik_role) roleParts.push('<span class="role-name">' + escHtml(p.torvik_role) + '</span>');
+  if (p.position)    roleParts.push(escHtml(p.position));
+  var roleLineHtml = roleParts.length
+    ? '<div class="card-role-line">' + roleParts.join(' <span style="opacity:.4">·</span> ') + '</div>'
+    : '';
+
+  // ── Bio strip: class / height+%ile / weight / age ────────────────────
+  var bioItems = '';
+  // Class
+  if (clsAbbr) {
+    bioItems += '<div class="card-bio-item">'
+      + '<span class="card-bio-icon">🎓</span>'
+      + '<div class="card-bio-val">' + clsAbbr + '</div>'
+      + '<div class="card-bio-lbl">Class</div>'
+      + '</div>';
+  }
+  // Height + percentile
+  if (htDisplay) {
+    var htPctStr = htPct !== null
+      ? '<span class="card-bio-pct">' + htPct + ordSfx(htPct) + '</span>'
+      : '';
+    bioItems += '<div class="card-bio-item">'
+      + '<span class="card-bio-icon">📏</span>'
+      + '<div class="card-bio-val">' + htDisplay + htPctStr + '</div>'
+      + '<div class="card-bio-lbl">Height</div>'
+      + '</div>';
+  }
+  // Weight
+  if (p.wt) {
+    bioItems += '<div class="card-bio-item">'
+      + '<span class="card-bio-icon">⚖️</span>'
+      + '<div class="card-bio-val">' + p.wt + ' lb</div>'
+      + '<div class="card-bio-lbl">Weight</div>'
+      + '</div>';
+  }
+  // Age
+  if (p.age) {
+    bioItems += '<div class="card-bio-item">'
+      + '<span class="card-bio-icon">📅</span>'
+      + '<div class="card-bio-val">' + parseFloat(p.age||0).toFixed(1) + '</div>'
+      + '<div class="card-bio-lbl">Age</div>'
+      + '</div>';
+  }
+
+  // ── Stat cells ───────────────────────────────────────────────────────
   var gs1 = gradStyle(p.ts_pct,  'ts_pct');
   var gs2 = gradStyle(p.pa2_usg, 'pa2_usg');
   var gs3 = gradStyle(p.stl_bl,  'stl_bl');
@@ -6540,102 +6436,98 @@ function buildPlayerCard(p, tierKey) {
   var statsHtml =
     '<div class="stat-cell" style="' + gs1 + '">'
       + '<div class="stat-val">' + (p.ts_pct  ? (p.ts_pct*100).toFixed(1)+'%' : '—') + '</div>'
-      + statBarHtml(p.ts_pct, 'ts_pct')
-      + '<div class="stat-lbl">TS%</div>'
+      + statBarHtml(p.ts_pct, 'ts_pct') + '<div class="stat-lbl">TS%</div>'
       + posRingHtml(p.ts_pct,  'ts_pct',  p.position)
     + '</div>'
     + '<div class="stat-cell" style="' + gs2 + '">'
       + '<div class="stat-val">' + (p.pa2_usg ? Math.round(p.pa2_usg) : '—') + '</div>'
-      + statBarHtml(p.pa2_usg, 'pa2_usg')
-      + '<div class="stat-lbl">P+A/USG</div>'
+      + statBarHtml(p.pa2_usg, 'pa2_usg') + '<div class="stat-lbl">P+A/USG</div>'
       + posRingHtml(p.pa2_usg, 'pa2_usg', p.position)
     + '</div>'
     + '<div class="stat-cell" style="' + gs3 + '">'
       + '<div class="stat-val">' + (p.stl_bl  ? parseFloat(p.stl_bl).toFixed(1) : '—') + '</div>'
-      + statBarHtml(p.stl_bl, 'stl_bl')
-      + '<div class="stat-lbl">Stl+Bl</div>'
+      + statBarHtml(p.stl_bl, 'stl_bl') + '<div class="stat-lbl">Stl+Bl</div>'
       + posRingHtml(p.stl_bl,  'stl_bl',  p.position)
     + '</div>'
     + '<div class="stat-cell stat-cell--secondary" style="' + gs4 + '">'
       + '<div class="stat-val">' + (p.ftar    ? parseFloat(p.ftar).toFixed(3) : '—') + '</div>'
-      + statBarHtml(p.ftar, 'ftar')
-      + '<div class="stat-lbl">FTAr</div>'
+      + statBarHtml(p.ftar, 'ftar') + '<div class="stat-lbl">FTAr</div>'
       + posRingHtml(p.ftar,    'ftar',    p.position)
     + '</div>'
     + '<div class="stat-cell stat-cell--secondary" style="' + gs5 + '">'
       + '<div class="stat-val">' + (p.tpar    ? parseFloat(p.tpar).toFixed(3) : '—') + '</div>'
-      + statBarHtml(p.tpar, 'tpar')
-      + '<div class="stat-lbl">3PAr</div>'
+      + statBarHtml(p.tpar, 'tpar') + '<div class="stat-lbl">3PAr</div>'
       + posRingHtml(p.tpar,    'tpar',    p.position)
     + '</div>'
     + '<div class="stat-cell" style="' + gs6 + '">'
       + '<div class="stat-val">' + (p.ato     ? parseFloat(p.ato).toFixed(2) : '—') + '</div>'
-      + statBarHtml(p.ato, 'ato')
-      + '<div class="stat-lbl">A/TO</div>'
+      + statBarHtml(p.ato, 'ato') + '<div class="stat-lbl">A/TO</div>'
       + posRingHtml(p.ato,     'ato',     p.position)
     + '</div>';
 
-  // ── Comp footer: COMPS label + individual name pills ─────────────────
+  // ── Comp pills with avatar initials ─────────────────────────────────
   var compHtml = '';
   if (p.comp || p.comp_tool) {
-    var compParts = (p.comp || p.comp_tool)
-      .split(/[\/,·]/).map(function(s){ return s.trim(); }).filter(Boolean);
-    var compPills = compParts.map(function(n){
-      return '<span class="card-comp-name">' + escHtml(n) + '</span>';
+    var compStr = p.comp || p.comp_tool;
+    var compParts = compStr.split(/[\/,·+]/).map(function(s){ return s.trim(); }).filter(Boolean).slice(0,4);
+    var pills = compParts.map(function(n) {
+      // Generate initials from comp name (first letter of each word, max 2)
+      var initials = n.replace(/[^a-zA-Z\s]/g,'').trim().split(/\s+/)
+        .map(function(w){ return w[0]||''; }).join('').slice(0,2).toUpperCase();
+      return '<span class="card-comp-pill">'
+        + '<span class="card-comp-avatar">' + initials + '</span>'
+        + '<span class="card-comp-name">' + escHtml(n) + '</span>'
+        + '</span>';
     }).join('');
-    compHtml = '<div class="card-comp"><span class="card-comp-label">Comps</span>' + compPills + '</div>';
+    compHtml = '<div class="card-comp">'
+      + '<span class="card-comp-label">Comp Archetypes</span>'
+      + pills
+      + '</div>';
   }
 
-  // ── Tier glow variable (for avatar ring on hover) ────────────────────
-  var _tierGlow = tierKey==='franchise' ? '245,158,11'
-                : tierKey==='lottery'   ? '139,92,246'
-                : tierKey==='late1'     ? '59,130,246'
-                : tierKey==='second'    ? '8,145,178'
-                : tierKey==='udfa'      ? '5,150,105'
-                : '10,22,40';
-
   // ── CARD HTML ────────────────────────────────────────────────────────
-  // Structure: [tier bar] | [pc-inner: header / bio / stats / comp]
-  // Header grid: rank (40px) | avatar (52px) | identity (1fr) | metric (auto)
   return '<div class="player-card ' + tierKey + '" onclick="openPlayerModal(' + p.rank + ')" data-rank="' + p.rank + '"'
     + ' style="--tier-glow:' + _tierGlow + ';">'
 
     + '<div class="pc-tier-bar"></div>'
-
     + '<div class="pc-inner">'
 
       + '<div class="card-header">'
+        + '<div class="card-header-left">'
 
-        + '<div class="card-rank-badge">'
-          + '<span class="card-rank-label">Rank</span>'
-          + '<span class="card-rank-num">' + p.rank + '</span>'
-        + '</div>'
-
-        + avatarHtml(p.name, p.position || '', '52px', '10px', true)
-
-        + '<div class="card-identity">'
-          + '<div class="card-name">' + name + getBadgeHtml(p.name) + '</div>'
-          + '<div class="card-school-row">'
-            + (logoHtml ? '<div class="card-school-logo">' + logoHtml + '</div>' : '')
-            + '<span class="card-school-name">' + (school || '—') + '</span>'
+          + '<div class="card-rank-badge">'
+            + '<span class="card-rank-label">Rank</span>'
+            + '<span class="card-rank-num">' + p.rank + '</span>'
+            + crownHtml
           + '</div>'
-          + (chipsHtml ? '<div class="card-chips-row">' + chipsHtml + '</div>' : '')
+
+          + avatarHtml(p.name, p.position || '', '60px', '10px', true)
+
+          + '<div class="card-identity">'
+            + '<div class="card-name">' + name + getBadgeHtml(p.name) + '</div>'
+            + '<div class="card-school-row">'
+              + (logoHtml ? '<div class="card-school-logo">' + logoHtml + '</div>' : '')
+              + '<span class="card-school-name">' + (school || '—') + '</span>'
+            + '</div>'
+            + roleLineHtml
+          + '</div>'
+
         + '</div>'
 
-        + '<div class="card-metric-chip" style="' + gm + '">'
-          + '<div class="' + metricClass + '">' + mv + '</div>'
-          + '<div class="card-metric-label">METRIC</div>'
-          + (isElite ? '<div class="card-elite-pip">ELITE</div>' : '')
+        + '<div class="card-metric-panel" style="' + panelStyle + '">'
+          + elitePipHtml
+          + '<div class="card-metric' + (isElite ? ' elite' : '') + '">' + mv + '</div>'
+          + '<div class="card-metric-label">HW Metric</div>'
+          + metPctHtml
         + '</div>'
 
       + '</div>'
 
-      + bioHtml
+      + '<div class="card-measurables">' + bioItems + '</div>'
       + '<div class="card-stats">' + statsHtml + '</div>'
       + compHtml
 
     + '</div>'
-
     + '<button class="hw-card-compare-btn" onclick="event.stopPropagation();addCardToCompare(' + p.rank + ')" title="Add to Compare">⊕</button>'
     + '</div>';
 }
